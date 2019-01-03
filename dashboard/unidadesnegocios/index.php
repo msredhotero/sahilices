@@ -76,15 +76,15 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title><?php echo $tituloWeb; ?></title>
-    <!-- Favicon-->
-    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<title><?php echo $tituloWeb; ?></title>
+	<!-- Favicon-->
+	<link rel="icon" href="../../favicon.ico" type="image/x-icon">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 	<?php echo $baseHTML->cargarArchivosCSS('../../'); ?>
 
@@ -100,15 +100,19 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	<script src="https://unpkg.com/vue-swal"></script>
 
 	<!-- Bootstrap Material Datetime Picker Css -->
-    <link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+	<link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 
 	<!-- Dropzone Css -->
-    <link href="../../plugins/dropzone/dropzone.css" rel="stylesheet">
-
-    <style>
-        .alert > i{ vertical-align: middle !important; }
+	<link href="../../plugins/dropzone/dropzone.css" rel="stylesheet">
 
 
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.bootstrap.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css">
+	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.css">
+
+	<style>
+		.alert > i{ vertical-align: middle !important; }
 	</style>
 
 
@@ -153,13 +157,13 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 <?php echo $baseHTML->cargarNAV($breadCumbs); ?>
 <!-- #Top Bar -->
 <?php echo $baseHTML->cargarSECTION($_SESSION['usua_sahilices'], $_SESSION['nombre_sahilices'], $resMenu,'../../'); ?>
-<main id="app">
+
 <section class="content" style="margin-top:-15px;">
 
 	<div class="container-fluid">
 		<div class="row clearfix">
 
-        	<div class="row">
+			<div class="row">
 
 
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -181,47 +185,90 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 						</div>
 						<div class="body table-responsive">
 							<form class="form" id="formCountry">
-							<div class="row">
 
-								<?php echo $frmUnidadNegocios; ?>
+								<div class="row">
+									<div class="col-lg-12 col-md-12">
+										<div class="button-demo">
+											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
+												<i class="material-icons">add</i>
+												<span>NUEVO</span>
+											</button>
 
-							</div>
-							<div class="row">
-								<div class="col-lg-12 col-md-12">
-									<div class="button-demo">
-										<button type="submit" class="btn bg-light-blue waves-effect">
-	                      <i class="material-icons">save</i>
-	                      <span>GUARDAR</span>
-	                  </button>
-
+										</div>
 									</div>
 								</div>
-							</div>
 
+								<div class="row" style="padding: 5px 20px;">
 
+									<table id="example" class="display table " style="width:100%">
+										<thead>
+											<tr>
+												<th>Unidad de Negocio</th>
+												<th>Activo</th>
+												<th>Acciones</th>
+											</tr>
+										</thead>
+										<tfoot>
+											<tr>
+												<th>Unidad de Negocio</th>
+												<th>Activo</th>
+												<th>Acciones</th>
+											</tr>
+										</tfoot>
+									</table>
+								</div>
 							</form>
-
-
 							</div>
 						</div>
 					</div>
 				</div>
-
-
 			</div>
-
-
-
-
 		</div>
-
-
 	</div>
-
-
-
-
 </section>
+
+
+<!-- NUEVO -->
+	<form class="formulario" role="form">
+	   <div class="modal fade" id="lgmNuevo" tabindex="-1" role="dialog">
+	       <div class="modal-dialog modal-lg" role="document">
+	           <div class="modal-content">
+	               <div class="modal-header">
+	                   <h4 class="modal-title" id="largeModalLabel">NUEVA UNIDAD DE NEGOCIO</h4>
+	               </div>
+	               <div class="modal-body">
+	                  <?php echo $frmUnidadNegocios; ?>
+	               </div>
+	               <div class="modal-footer">
+	                   <button type="button" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
+	                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
+	               </div>
+	           </div>
+	       </div>
+	   </div>
+		<input type="hidden" id="accion" name="accion" value="insertarUnidadesnegocios"/>
+	</form>
+
+	<!-- MODIFICAR -->
+		<form class="formulario" role="form">
+		   <div class="modal fade" id="lgmModificar" tabindex="-1" role="dialog">
+		       <div class="modal-dialog modal-lg" role="document">
+		           <div class="modal-content">
+		               <div class="modal-header">
+		                   <h4 class="modal-title" id="largeModalLabel">MODIFICAR UNIDAD DE NEGOCIO</h4>
+		               </div>
+		               <div class="modal-body frmAjaxModificar">
+
+		               </div>
+		               <div class="modal-footer">
+		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
+		                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
+		               </div>
+		           </div>
+		       </div>
+		   </div>
+			<input type="hidden" id="accion" name="accion" value="modificarUnidadesnegocios"/>
+		</form>
 
 
 <?php echo $baseHTML->cargarArchivosJS('../../'); ?>
@@ -234,259 +281,172 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
 <script src="../../plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 
-<!-- Dropzone Plugin Js -->
-<script src="../../plugins/dropzone/dropzone.js"></script>
-
-<!-- Modal Large Size -->
-<transition name="fade">
-<form class="form" @submit.prevent="guardarDelegado">
-<?php //echo $baseHTML->modalHTML('modalPerfil','Perfil','GUARDAR','Ingrese sus datos personales y los Email de los contactos','frmPerfil',$frmPerfil,'iddelegado','Delegados','VguardarDelegado'); ?>
-</form>
-</transition>
-
-
-<form class="form" @submit.prevent="realizarConsulta">
-<script type="text/x-template" id="modal-template">
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-
-          <div class="modal-header">
-            <slot name="header">
-              default header
-            </slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body">
-			  <h4>Ingrese su consulta y en la brevedad se comunicarán con usted</h4>
-			  	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<label class="form-label">Mensaje</label>
-					<div class="form-group">
-						<div class="form-line">
-							<input type="text" class="form-control" id="mensaje" name="mensaje" />
-
-						</div>
-					</div>
-				</div>
-            </slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-			<button class="btn bg-grey waves-effect" @click="$emit('close')">
-                CANCELAR
-			  </button>
-			  <button type="button" class="btn bg-green waves-effect" @click="enviarConsulta()">
-					<i class="material-icons">send</i>
-					<span>ENVIAR</span>
-				</button>
-
-            </slot>
-          </div>
-        </div>
-      </div>
-    </div>
-  </transition>
-</script>
-</form>
-
-
-  <!-- use the modal component, pass in the prop -->
-  <modal v-if="showModal" @close="showModal = false">
-    <!--
-      you can use custom content here to overwrite
-      default content
-    -->
-    <h3 slot="header">Realizar Consulta</h3>
-  </modal>
-
-
-</main>
-
-
+<script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
 
 
 <script>
-
-	function traerImagen() {
-		$.ajax({
-			data:  {id: <?php echo $_SESSION['idclub_sahilices']; ?>,
-					accion: 'traerImgenCountry'},
-			url:   '../../ajax/ajax.php',
-			type:  'post',
-			beforeSend: function () {
-
-			},
-			success:  function (response) {
-
-				$(".thumbnail img").attr("src",response);
-
+	$(document).ready(function(){
+		var table = $('#example').DataTable({
+			"bProcessing": true,
+			"bServerSide": true,
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=unidadnegocio",
+			"language": {
+				"emptyTable":     "No hay datos cargados",
+				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
+				"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
+				"infoFiltered":   "(filtrados del total de _MAX_ filas)",
+				"infoPostFix":    "",
+				"thousands":      ",",
+				"lengthMenu":     "Mostrar _MENU_ filas",
+				"loadingRecords": "Cargando...",
+				"processing":     "Procesando...",
+				"search":         "Buscar:",
+				"zeroRecords":    "No se encontraron resultados",
+				"paginate": {
+					"first":      "Primero",
+					"last":       "Ultimo",
+					"next":       "Siguiente",
+					"previous":   "Anterior"
+				},
+				"aria": {
+					"sortAscending":  ": activate to sort column ascending",
+					"sortDescending": ": activate to sort column descending"
+				}
 			}
 		});
-	}
 
-	Dropzone.prototype.defaultOptions.dictFileTooBig = "Este archivo es muy grande ({{filesize}}MiB). Peso Maximo: {{maxFilesize}}MiB.";
+		$('#activo').prop('checked',true);
 
-	Dropzone.options.frmFileUpload = {
-		maxFilesize: 2,
-		addRemoveLinks: true,
-		acceptedFiles: ".png,.jpg,.gif,.bmp,.jpeg",
-		accept: function(file, done) {
-			done();
-		},
-		init: function() {
-			this.on('success', function( file, resp ){
-				traerImagen();
-				swal("Correcto!", resp.replace("1", ""), "success");
-			});
+		function frmAjaxModificar(id) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {accion: 'frmAjaxModificar',tabla: 'tbunidadesnegocios', id: id},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$('.frmAjaxModificar').html('');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
 
-			this.on('error', function( file, resp ){
-				swal("Error!", resp.replace("1", ""), "warning");
-			});
-		}
-	};
-
-	var myDropzone = new Dropzone("#archivos", {
-		url: 'subir.php'
-	});
-
-	$(document).ready(function(){
-
-		var $demoMaskedInput = $('.demo-masked-input');
-
-		//Date
-		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
-
-
-
-	});
-</script>
-
-
-
-
-<script>
-	const paramsGetDelegado = new URLSearchParams();
-    paramsGetDelegado.append('accion','VtraerDelegadosPorId');
-	paramsGetDelegado.append('iddelegado',<?php echo $_SESSION['usuaid_sahilices']; ?>);
-
-	const paramsGetCountry = new URLSearchParams();
-    paramsGetCountry.append('accion','traerCountriesPorId');
-	paramsGetCountry.append('idcountrie',<?php echo $_SESSION['idclub_sahilices']; ?>);
-
-
-	Vue.component('modal', {
-		template: '#modal-template',
-		methods: {
-			enviarConsulta () {
-
-				paramsNotificacion.set('mensaje',$('#mensaje').val());
-
-				axios.post('../../ajax/ajax.php', paramsNotificacion)
-				.then(res => {
-					//this.setMensajes(res)
-
-
-					if (!res.data.error) {
-						this.$swal("Ok!", res.data.mensaje, "success")
-						this.$emit('close')
+					if (data != '') {
+						$('.frmAjaxModificar').html(data);
 					} else {
-						this.$swal("Error!", res.data.mensaje, "error")
+						swal("Error!", data, "warning");
+
+						$("#load").html('');
 					}
-
-				});
-			}
-		}
-	})
-
-	const app = new Vue({
-		el: "#app",
-		data: {
-			pag: 1,
-			idclub: 5,
-			activeClass: 'waves-effect',
-			errorMensaje: '',
-			successMensaje: '',
-			activeDelegados: {},
-			activeCountry: {},
-			showModal: false
-
-		},
-		mounted () {
-			this.getDelegado()
-			this.getCountry()
-		},
-		computed: {
-
-		},
-		methods: {
-
-			setMensajes (res) {
-				this.getDelegado()
-
-				if (res.data.error) {
-					this.errorMensaje = res.data.mensaje
-				} else {
-					this.successMensaje = res.data.mensaje
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
 				}
+			});
 
-				setTimeout(() => {
-					this.errorMensaje = ''
-					this.successMensaje = ''
-				}, 3000);
-
-			},
-			getDelegado () {
-					axios.post('../../ajax/ajax.php',paramsGetDelegado)
-					.then(res => {
-
-                        //this.$refs['ref_nombres'].value = res.data.datos[0].nombres
-						this.activeDelegados = res.data.datos[0]
-					})
-			},
-			guardarDelegado (e) {
-				axios.post('../../ajax/ajax.php', new FormData(e.target))
-				.then(res => {
-					//this.setMensajes(res)
-
-					if (!res.data.error) {
-						this.$swal("Ok!", res.data.mensaje, "success")
-					} else {
-						this.$swal("Error!", res.data.mensaje, "error")
-					}
-
-				});
-
-
-			},
-			getCountry () {
-					axios.post('../../ajax/ajax.php',paramsGetCountry)
-					.then(res => {
-
-                        //this.$refs['ref_nombres'].value = res.data.datos[0].nombres
-						this.activeCountry = res.data.datos[0]
-					})
-			},
-			guardarCountry (e) {
-				axios.post('../../ajax/ajax.php', new FormData(e.target))
-				.then(res => {
-					//this.setMensajes(res)
-
-					if (!res.data.error) {
-						this.$swal("Ok!", res.data.mensaje, "success")
-					} else {
-						this.$swal("Error!", res.data.mensaje, "error")
-					}
-
-				});
-
-
-			}
 		}
-	})
+
+
+		$("#example").on("click",'.btnModificar', function(){
+			idTable =  $(this).attr("id");
+			frmAjaxModificar(idTable);
+			$('#lgmModificar').modal();
+		});//fin del boton eliminar
+
+		$('.nuevo').click(function(){
+
+			//información del formulario
+			var formData = new FormData($(".formulario")[0]);
+			var message = "";
+			//hacemos la petición ajax
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+						swal("Correcto!", "Se cargo exitosamente la unidad de negocio. ", "success");
+						$('#lgmNuevo').modal('hide');
+						table.ajax.reload();
+					} else {
+						swal("Error!", data, "warning");
+
+						$("#load").html('');
+					}
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+		});
+
+
+		$('.modificar').click(function(){
+
+			//información del formulario
+			var formData = new FormData($(".formulario")[1]);
+			var message = "";
+			//hacemos la petición ajax
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+						swal("Correcto!", "Se modifico exitosamente la unidad de negocio. ", "success");
+						$('#lgmModificar').modal('hide');
+						table.ajax.reload();
+					} else {
+						swal("Error!", data, "warning");
+
+						$("#load").html('');
+					}
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+		});
+	});
 </script>
+
+
+
+
+
+
+
+
 </body>
 <?php } ?>
 </html>

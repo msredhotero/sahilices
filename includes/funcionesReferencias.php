@@ -1043,16 +1043,37 @@ return $res;
 }
 
 
-function traerUnidadesnegocios() {
-$sql = "select
-u.idunidadnegocio,
-u.unidadnegocio,
-u.activo
-from tbunidadesnegocios u
-order by 1";
-$res = $this->query($sql,0);
-return $res;
-}
+	function traerUnidadesnegocios() {
+		$sql = "select
+		u.idunidadnegocio,
+		u.unidadnegocio,
+		(case when u.activo = 1 then 'Si' else 'No' end) activo
+		from tbunidadesnegocios u
+		order by u.unidadnegocio";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerUnidadesnegociosajax($length, $start, $busqueda) {
+
+		$where = '';
+
+		$busqueda = str_replace("'","",$busqueda);
+		if ($busqueda != '') {
+			$where = "where u.unidadnegocio like '%".$busqueda."%' or u.activo = '".$busqueda."'";
+		}
+
+		$sql = "select
+		u.idunidadnegocio,
+		u.unidadnegocio,
+		(case when u.activo = 1 then 'Si' else 'No' end) activo
+		from tbunidadesnegocios u
+		".$where."
+		order by u.unidadnegocio";
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
 
 
 function traerUnidadesnegociosPorId($id) {
