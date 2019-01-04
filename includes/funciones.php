@@ -1043,6 +1043,7 @@ class Servicios {
 
 		$camposEscondido = "";
 		$lblObligatorio = '';
+		$valorBit = 0;
 		/* Analizar para despues */
 		/*if (count($refencias) > 0) {
 			$j = 0;
@@ -1135,17 +1136,26 @@ class Servicios {
 								if (mysql_result($resMod,0,$row[0])==1){
 									$activo = 'checked';
 								}
-
+								$valorBit = mysql_result($resMod,0,$row[0]);
 								$form	=	$form.'
 
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-									<div class="switch">
-										<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox" '.(mysql_result($resMod,0,$row[0]) == '1' ? 'checked' : '').'/><span class="lever switch-col-green"></span></label>
+									<div class="switch">';
+								if (isset($valorBit)) {
+									$form	=	$form.'	<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox" checked/><span class="lever switch-col-green"></span></label>
 									</div>
 								</div>
 
 								';
+								} else {
+									$form	=	$form.'	<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox"/><span class="lever switch-col-green"></span></label>
+									</div>
+								</div>
+
+								';
+								}
+
 
 
 							} else {
