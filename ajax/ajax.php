@@ -620,8 +620,10 @@ echo json_encode($resV);
 function insertarEmpleados($serviciosReferencias, $serviciosValidador) {
    $error = '';
 
-   $apellido = ($serviciosValidador->validaRequerido($_POST['apellido']) == true ? $_POST['apellido'] : $error.= 'El campo apellido es obligatorio');
-   $nombre = ($serviciosValidador->validaRequerido($_POST['nombre']) == true ? $_POST['nombre'] : $error.= 'El campo nombre es obligatorio');
+   $apellido = ($serviciosValidador->validaRequerido($_POST['apellido']) == true ? $_POST['apellido'] : $error.= 'El campo apellido es obligatorio
+   ');
+   $nombre = ($serviciosValidador->validaRequerido($_POST['nombre']) == true ? $_POST['nombre'] : $error.= 'El campo nombre es obligatorio
+   ');
    $nrodocumento = $_POST['nrodocumento'];
    $cuit = $_POST['cuit'];
    $fechanacimiento = $_POST['fechanacimiento'];
