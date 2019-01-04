@@ -1137,6 +1137,7 @@ class Servicios {
 									$activo = 'checked';
 								}
 								$valorBit = mysql_result($resMod,0,$row[0]);
+								die(var_dump($valorBit));
 								$form	=	$form.'
 
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
