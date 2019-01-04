@@ -135,7 +135,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 				</div>
 			</div>
 		</div>
-		<p>Please wait...</p>
+		<p>Cargando...</p>
 	</div>
 </div>
 <!-- #END# Page Loader -->
@@ -261,7 +261,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 		               </div>
 		               <div class="modal-footer">
-		                   <button type="submit" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
+		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
 		                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
 		               </div>
 		           </div>
@@ -546,7 +546,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 								showConfirmButton: false
 						});
 
-						
+
 					}
 				},
 				//si ha ocurrido un error

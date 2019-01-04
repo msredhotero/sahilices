@@ -32,6 +32,9 @@ switch ($tabla) {
 		$label = array('btnModificar','btnEliminar');
 		$class = array('bg-amber','bg-red');
 		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 2;
+		$termina = 5;
 
 		break;
 
@@ -49,11 +52,13 @@ header("content-type: Access-Control-Allow-Origin: *");
 $ar = array();
 
 $cad = '';
+$id = 0;
 	while ($row = mysql_fetch_array($resAjax)) {
+		$id = $row[$indiceID];
 
-		array_push($ar, array($row[1],
-									$row[2],
-									armarAcciones($row[0],$label,$class,$icon)));
+		array_push($row, armarAcciones($id,$label,$class,$icon));
+
+		array_push($ar, array_slice($row, $empieza,$termina));
 	}
 
 $cad = substr($cad, 0, -1);
