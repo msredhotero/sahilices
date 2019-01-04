@@ -538,18 +538,17 @@ class Servicios {
 
 									/*if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){*/
 										$form	=	$form.'
-
-										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
-											<label class="form-label">'.$label.'</label>
-											<div class="form-group">
-												<div class="form-line">
-													<input type="text" class="date form-control" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'>
-
-												</div>
-											</div>
-										</div>
-
-
+										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                  <b>'.$label.'</b>
+                                  <div class="input-group">
+                                      <span class="input-group-addon">
+                                          <i class="material-icons">date_range</i>
+                                      </span>
+                                      <div class="form-line">
+                                          <input type="text" class="form-control date" placeholder="Ej: 2019-01-01" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'>
+                                      </div>
+                                  </div>
+                              </div>
 										';
 
 								} else {
@@ -663,22 +662,43 @@ class Servicios {
 												</div>
 													';
 												}else {
-													$label = ucwords($label);
-													$campo = strtolower($row[0]);
+													if (strpos($row[1],"int") !== false) {
+														$label = ucwords($label);
+														$campo = strtolower($row[0]);
 
 
-													$form	=	$form.'
-													<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
-														<label class="form-label">'.$label.'</label>
-														<div class="form-group">
-															<div class="form-line">
-																<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'/>
+														$form	=	$form.'
+														<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
+															<label class="form-label">'.$label.'</label>
+															<div class="form-group">
+																<div class="form-line">
+																	<input type="number" class="form-control" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'/>
 
+																</div>
 															</div>
 														</div>
-													</div>
 
-													';
+														';
+
+													} else {
+														$label = ucwords($label);
+														$campo = strtolower($row[0]);
+
+
+														$form	=	$form.'
+														<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
+															<label class="form-label">'.$label.'</label>
+															<div class="form-group">
+																<div class="form-line">
+																	<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'/>
+
+																</div>
+															</div>
+														</div>
+
+														';
+													}
+
 												}
 
 											}
@@ -1040,6 +1060,22 @@ class Servicios {
 				$sqlMod = "select idmotivooportunidad,
 													motivo,
 													(case when activo = 1 then 'Si' else 'No' end) activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
+			case 'dbempleados':
+				$sqlMod = "select idempleado,
+										apellido,
+										nombre,
+										nrodocumento,
+										cuit,
+										fechanacimiento,
+										domicilio,
+										telefonofijo,
+										telefonomovil,
+										sexo,
+										email,
+										(case when activo = 1 then 'Si' else 'No' end) as activo
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;

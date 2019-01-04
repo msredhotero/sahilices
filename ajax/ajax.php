@@ -5,6 +5,7 @@ include ('../includes/funciones.php');
 include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesReferencias.php');
 include ('../includes/funcionesNotificaciones.php');
+include ('../includes/validadores.php');
 
 
 $serviciosUsuarios  		= new ServiciosUsuarios();
@@ -12,6 +13,7 @@ $serviciosFunciones 		= new Servicios();
 $serviciosHTML				= new ServiciosHTML();
 $serviciosReferencias		= new ServiciosReferencias();
 $serviciosNotificaciones	= new ServiciosNotificaciones();
+$serviciosValidador        = new serviciosValidador();
 
 
 $accion = $_POST['accion'];
@@ -100,7 +102,7 @@ switch ($accion) {
       traerContactosPorId($serviciosReferencias);
    break;
    case 'insertarEmpleados':
-      insertarEmpleados($serviciosReferencias);
+      insertarEmpleados($serviciosReferencias, $serviciosValidador);
    break;
    case 'modificarEmpleados':
       modificarEmpleados($serviciosReferencias);
@@ -328,18 +330,18 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refdescripcion = array();
          $refCampo 	=  array();
          break;
-     case 'tbtipostrabajos':
-        $modificar = "modificarTipostrabajos";
-        $idTabla = "idtipotrabajo";
+      case 'tbtipostrabajos':
+         $modificar = "modificarTipostrabajos";
+         $idTabla = "idtipotrabajo";
 
-        $lblCambio	 	= array("tipotrabajo");
-        $lblreemplazo	= array("Tipo de Trabajo");
+         $lblCambio	 	= array("tipotrabajo");
+         $lblreemplazo	= array("Tipo de Trabajo");
 
-        $cadRef 	= '';
+         $cadRef 	= '';
 
-        $refdescripcion = array();
-        $refCampo 	=  array();
-        break;
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
       case 'tbtipomonedas':
          $modificar = "modificarTipomonedas";
          $idTabla = "idtipomoneda";
@@ -352,42 +354,42 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refdescripcion = array();
          $refCampo 	=  array();
          break;
-     case 'tbtipoconceptos':
-        $modificar = "modificarTipoconceptos";
-        $idTabla = "idtipoconcepto";
+      case 'tbtipoconceptos':
+         $modificar = "modificarTipoconceptos";
+         $idTabla = "idtipoconcepto";
 
-        $lblCambio	 	= array("tipoconcepto");
-        $lblreemplazo	= array("Tipo de Concepto");
+         $lblCambio	 	= array("tipoconcepto");
+         $lblreemplazo	= array("Tipo de Concepto");
 
-        $cadRef 	= '';
+         $cadRef 	= '';
 
-        $refdescripcion = array();
-        $refCampo 	=  array();
-        break;
-    case 'tbtipoclientes':
-       $modificar = "modificarTipoclientes";
-       $idTabla = "idtipocliente";
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
+      case 'tbtipoclientes':
+         $modificar = "modificarTipoclientes";
+         $idTabla = "idtipocliente";
 
-       $lblCambio	 	= array("tipocliente");
-       $lblreemplazo	= array("Tipo de Clientes");
+         $lblCambio	 	= array("tipocliente");
+         $lblreemplazo	= array("Tipo de Clientes");
 
-       $cadRef 	= '';
+         $cadRef 	= '';
 
-       $refdescripcion = array();
-       $refCampo 	=  array();
-       break;
-   case 'tbmotivosoportunidades':
-      $modificar = "modificarMotivosoportunidades";
-      $idTabla = "idmotivooportunidad";
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
+      case 'tbmotivosoportunidades':
+         $modificar = "modificarMotivosoportunidades";
+         $idTabla = "idmotivooportunidad";
 
-      $lblCambio	 	= array();
-      $lblreemplazo	= array();
+         $lblCambio	 	= array();
+         $lblreemplazo	= array();
 
-      $cadRef 	= '';
+         $cadRef 	= '';
 
-      $refdescripcion = array();
-      $refCampo 	=  array();
-      break;
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
       case 'tbrecursosnecesarios':
          $modificar = "modificarRecursosnecesarios";
          $idTabla = "idrecursonecesario";
@@ -400,6 +402,18 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refdescripcion = array();
          $refCampo 	=  array();
          break;
+      case 'dbempleados':
+            $modificar = "modificarEmpleados";
+            $idTabla = "idempleado";
+
+            $lblCambio	 	= array('nrodocumento','fechanacimiento','telefonofijo','telefonomovil');
+            $lblreemplazo	= array('Nro Documento','Fecha Nacimiento','Tel. Fijo','Tel. Movil');
+
+            $cadRef 	= '';
+
+            $refdescripcion = array();
+            $refCampo 	=  array();
+            break;
 
       default:
          // code...
@@ -603,28 +617,44 @@ header('Content-type: application/json');
 echo json_encode($resV);
 }
 
-function insertarEmpleados($serviciosReferencias) {
-$apellido = $_POST['apellido'];
-$nombre = $_POST['nombre'];
-$nrodocumento = $_POST['nrodocumento'];
-$cuit = $_POST['cuit'];
-$fechanacimiento = $_POST['fechanacimiento'];
-$domicilio = $_POST['domicilio'];
-$telefonofijo = $_POST['telefonofijo'];
-$telefonomovil = $_POST['telefonomovil'];
-$sexo = $_POST['sexo'];
-$email = $_POST['email'];
-if (isset($_POST['activo'])) {
-$activo	= 1;
-} else {
-$activo = 0;
-}
-$res = $serviciosReferencias->insertarEmpleados($apellido,$nombre,$nrodocumento,$cuit,$fechanacimiento,$domicilio,$telefonofijo,$telefonomovil,$sexo,$email,$activo);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+function insertarEmpleados($serviciosReferencias, $serviciosValidador) {
+   $error = '';
+
+   $apellido = ($serviciosValidador->validaRequerido($_POST['apellido']) == true ? $_POST['apellido'] : $error.= 'El campo apellido es obligatorio');
+   $nombre = ($serviciosValidador->validaRequerido($_POST['nombre']) == true ? $_POST['nombre'] : $error.= 'El campo nombre es obligatorio');
+   $nrodocumento = $_POST['nrodocumento'];
+   $cuit = $_POST['cuit'];
+   $fechanacimiento = $_POST['fechanacimiento'];
+   $domicilio = $_POST['domicilio'];
+   $telefonofijo = $_POST['telefonofijo'];
+   $telefonomovil = $_POST['telefonomovil'];
+   $sexo = $_POST['sexo'];
+   $email = $_POST['email'];
+
+   if (isset($_POST['activo'])) {
+      $activo	= 1;
+   } else {
+      $activo = 0;
+   }
+
+   $existe = $serviciosReferencias->existeEmpleado($nrodocumento);
+
+   if ($error != '') {
+      echo $error;
+   } else {
+      if ($existe != 0) {
+         echo 'Ya existe el Nro de documento ingresado';
+      } else {
+         $res = $serviciosReferencias->insertarEmpleados($apellido,$nombre,$nrodocumento,$cuit,$fechanacimiento,$domicilio,$telefonofijo,$telefonomovil,$sexo,$email,$activo);
+
+         if ((integer)$res > 0) {
+            echo '';
+         } else {
+            echo 'Huvo un error al insertar datos';
+         }
+      }
+   }
+
 }
 
 function modificarEmpleados($serviciosReferencias) {
@@ -653,9 +683,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarEmpleados($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarEmpleados($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarEmpleados($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerEmpleados($serviciosReferencias) {

@@ -79,6 +79,26 @@ class ServiciosReferencias {
         return '';
 	}
 
+	function existe($sql) {
+
+	    $res = $this->query($sql,0);
+
+	    if (mysql_num_rows($res)>0) {
+	        return 1;
+	    }
+	    return 0;
+	}
+
+	function existeDevuelveId($sql) {
+
+	    $res = $this->query($sql,0);
+
+	    if (mysql_num_rows($res)>0) {
+	        return mysql_result($res,0,0);
+	    }
+	    return 0;
+	}
+
 
 	function devolverIdEstado($tabla,$id, $idlbl) {
 		$sql = "select refestados
@@ -359,6 +379,16 @@ return $res;
 
 /* PARA Empleados */
 
+function existeEmpleado($nroDocumento) {
+    $sql = "select idempleado from dbempleados where nrodocumento = ".$nroDocumento;
+    $res = $this->query($sql,0);
+
+    if (mysql_num_rows($res)>0) {
+        return 1;
+    }
+    return 0;
+}
+
 function insertarEmpleados($apellido,$nombre,$nrodocumento,$cuit,$fechanacimiento,$domicilio,$telefonofijo,$telefonomovil,$sexo,$email,$activo) {
 $sql = "insert into dbempleados(idempleado,apellido,nombre,nrodocumento,cuit,fechanacimiento,domicilio,telefonofijo,telefonomovil,sexo,email,activo)
 values ('','".($apellido)."','".($nombre)."',".$nrodocumento.",'".($cuit)."','".($fechanacimiento)."','".($domicilio)."','".($telefonofijo)."','".($telefonomovil)."','".($sexo)."','".($email)."',".$activo.")";
@@ -383,6 +413,34 @@ return $res;
 }
 
 
+function traerEmpleadosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where e.apellido like '%".$busqueda."%' and e.nombre like '%".$busqueda."%' and e.nrodocumento like '%".$busqueda."%' and e.cuit like '%".$busqueda."%' and e.fechanacimiento like '%".$busqueda."%' and e.telefonomovil like '%".$busqueda."%' and e.email like '%".$busqueda."%' or e.activo = '".$busqueda."'";
+	}
+
+	$sql = "select
+	e.idempleado,
+	e.apellido,
+	e.nombre,
+	e.nrodocumento,
+	e.cuit,
+	e.fechanacimiento,
+	e.telefonomovil,
+	e.email,
+	(case when e.activo = 1 then 'Si' else 'No' end) as activo
+	from dbempleados e
+	".$where."
+	order by e.apellido, e.nombre";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerEmpleados() {
 $sql = "select
 e.idempleado,
@@ -391,14 +449,11 @@ e.nombre,
 e.nrodocumento,
 e.cuit,
 e.fechanacimiento,
-e.domicilio,
-e.telefonofijo,
 e.telefonomovil,
-e.sexo,
 e.email,
-e.activo
+(case when e.activo = 1 then 'Si' else 'No' end) as activo
 from dbempleados e
-order by 1";
+order by e.apellido, e.nombre";
 $res = $this->query($sql,0);
 return $res;
 }

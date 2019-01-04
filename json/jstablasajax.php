@@ -33,76 +33,87 @@ switch ($tabla) {
 		$class = array('bg-amber','bg-red');
 		$icon = array('create','delete');
 		$indiceID = 0;
-		$empieza = 2;
-		$termina = 5;
+		$empieza = 1;
+		$termina = 2;
 
 		break;
 	case 'tipostrabajos':
-			$resAjax = $serviciosReferencias->traerTipostrabajosajax($length, $start, $busqueda);
-			$res = $serviciosReferencias->traerTipostrabajos();
-			$label = array('btnModificar','btnEliminar');
-			$class = array('bg-amber','bg-red');
-			$icon = array('create','delete');
-			$indiceID = 0;
-			$empieza = 2;
-			$termina = 5;
+		$resAjax = $serviciosReferencias->traerTipostrabajosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerTipostrabajos();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 2;
 
-			break;
+		break;
 	case 'tipomonedas':
-			$resAjax = $serviciosReferencias->traerTipomonedasajax($length, $start, $busqueda);
-			$res = $serviciosReferencias->traerTipomonedas();
-			$label = array('btnModificar','btnEliminar');
-			$class = array('bg-amber','bg-red');
-			$icon = array('create','delete');
-			$indiceID = 0;
-			$empieza = 2;
-			$termina = 5;
+		$resAjax = $serviciosReferencias->traerTipomonedasajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerTipomonedas();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 2;
 
-			break;
+		break;
 	case 'tipoconceptos':
-			$resAjax = $serviciosReferencias->traerTipoconceptosajax($length, $start, $busqueda);
-			$res = $serviciosReferencias->traerTipoconceptos();
-			$label = array('btnModificar','btnEliminar');
-			$class = array('bg-amber','bg-red');
-			$icon = array('create','delete');
-			$indiceID = 0;
-			$empieza = 1;
-			$termina = 4;
+		$resAjax = $serviciosReferencias->traerTipoconceptosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerTipoconceptos();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 1;
 
-			break;
+		break;
 	case 'tipoclientes':
-			$resAjax = $serviciosReferencias->traerTipoclientesajax($length, $start, $busqueda);
-			$res = $serviciosReferencias->traerTipoclientes();
-			$label = array('btnModificar','btnEliminar');
-			$class = array('bg-amber','bg-red');
-			$icon = array('create','delete');
-			$indiceID = 0;
-			$empieza = 1;
-			$termina = 4;
+		$resAjax = $serviciosReferencias->traerTipoclientesajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerTipoclientes();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 1;
 
-			break;
+		break;
 	case 'motivosoportunidades':
-			$resAjax = $serviciosReferencias->traerMotivosoportunidadesajax($length, $start, $busqueda);
-			$res = $serviciosReferencias->traerMotivosoportunidades();
-			$label = array('btnModificar','btnEliminar');
-			$class = array('bg-amber','bg-red');
-			$icon = array('create','delete');
-			$indiceID = 0;
-			$empieza = 2;
-			$termina = 5;
+		$resAjax = $serviciosReferencias->traerMotivosoportunidadesajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerMotivosoportunidades();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 2;
 
-			break;
+		break;
 	case 'recursosnecesarios':
-			$resAjax = $serviciosReferencias->traerRecursosnecesariosajax($length, $start, $busqueda);
-			$res = $serviciosReferencias->traerRecursosnecesarios();
-			$label = array('btnModificar','btnEliminar');
-			$class = array('bg-amber','bg-red');
-			$icon = array('create','delete');
-			$indiceID = 0;
-			$empieza = 2;
-			$termina = 5;
+		$resAjax = $serviciosReferencias->traerRecursosnecesariosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerRecursosnecesarios();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 2;
 
-			break;
+		break;
+	case 'empleados':
+		$resAjax = $serviciosReferencias->traerEmpleadosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerEmpleados();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 8;
+
+		break;
 
 	default:
 		// code...
@@ -116,15 +127,22 @@ $cantidadFilas = mysql_num_rows($res);
 header("content-type: Access-Control-Allow-Origin: *");
 
 $ar = array();
-
+$arAux = array();
 $cad = '';
 $id = 0;
 	while ($row = mysql_fetch_array($resAjax)) {
-		$id = $row[$indiceID];
+		//$id = $row[$indiceID];
 
-		array_push($row, armarAcciones($id,$label,$class,$icon));
+		for ($i=$empieza;$i<=$termina;$i++) {
+			array_push($arAux, $row[$i]);
+		}
 
-		array_push($ar, array_slice($row, $empieza,$termina));
+		array_push($arAux, armarAcciones($row[0],$label,$class,$icon));
+
+		array_push($ar, $arAux);
+
+		$arAux = array();
+		//die(var_dump($ar));
 	}
 
 $cad = substr($cad, 0, -1);

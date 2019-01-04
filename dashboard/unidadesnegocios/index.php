@@ -341,6 +341,18 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 					"sortDescending": ": activate to sort column descending"
 				}
 			}
+			/* para cambiarle el color a las filas
+			,
+			"rowCallback": function( row, data, index ) {
+				if ( data[1] == "Si" )
+				{
+					$('td', row).css('background-color', 'Red');
+				}
+				else
+				{
+					$('td', row).css('background-color', 'Orange');
+				}
+			}*/
 		});
 
 		$("#sign_in").submit(function(e){

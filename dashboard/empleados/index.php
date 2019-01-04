@@ -24,13 +24,13 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../recursosnecesarios/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../empleados/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Recursos Necesarios",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Empleados",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
@@ -39,24 +39,24 @@ $tituloWeb = mysql_result($configuracion,0,'sistema');
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Recurso Necesario";
+$singular = "Empleado";
 
-$plural = "Recursos Necesarios";
+$plural = "Empleados";
 
-$eliminar = "eliminarRecursosnecesarios";
+$eliminar = "eliminarEmpleados";
 
-$insertar = "insertarRecursosnecesarios";
+$insertar = "insertarEmpleados";
 
-$modificar = "modificarRecursosnecesarios";
+$modificar = "modificarEmpleados";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbrecursosnecesarios";
+$tabla 			= "dbempleados";
 
-$lblCambio	 	= array('recursonecesario');
-$lblreemplazo	= array('Recurso Necesario');
+$lblCambio	 	= array('nrodocumento','fechanacimiento','telefonofijo','telefonomovil');
+$lblreemplazo	= array('Nro Documento','Fecha Nacimiento','Tel. Fijo','Tel. Movil');
 
 
 $cadRef 	= '';
@@ -200,14 +200,26 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
-												<th>Motivo de Oportunidad</th>
+												<th>Apellido</th>
+												<th>Nombre</th>
+												<th>Nro doc.</th>
+												<th>CUIT</th>
+												<th>Fec.Nac.</th>
+												<th>Tel.Movil</th>
+												<th>Email</th>
 												<th>Activo</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tfoot>
 											<tr>
-												<th>Tipo de Concepto</th>
+												<th>Apellido</th>
+												<th>Nombre</th>
+												<th>Nro doc.</th>
+												<th>CUIT</th>
+												<th>Fec.Nac.</th>
+												<th>Tel.Movil</th>
+												<th>Email</th>
 												<th>Activo</th>
 												<th>Acciones</th>
 											</tr>
@@ -233,8 +245,10 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	               <div class="modal-header">
 	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
 	               </div>
-	               <div class="modal-body">
+	               <div class="modal-body demo-masked-input">
+							<div class="row">
 	                  <?php echo $frmUnidadNegocios; ?>
+							</div>
 	               </div>
 	               <div class="modal-footer">
 	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
@@ -254,8 +268,12 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		               <div class="modal-header">
 		                   <h4 class="modal-title" id="largeModalLabel">MODIFICAR <?php echo strtoupper($singular); ?></h4>
 		               </div>
-		               <div class="modal-body frmAjaxModificar">
+		               <div class="modal-body">
+								<div class="row">
+									<div class="frmAjaxModificar demo-masked-input">
 
+									</div>
+								</div>
 		               </div>
 		               <div class="modal-footer">
 		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
@@ -314,7 +332,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=recursosnecesarios",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=empleados",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -339,6 +357,12 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 				}
 			}
 		});
+
+		var $demoMaskedInput = $('.demo-masked-input');
+
+		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
+
+		$demoMaskedInput.find('#cuit').inputmask('99999999999', { placeholder: '___________' });
 
 		$("#sign_in").submit(function(e){
 			e.preventDefault();
