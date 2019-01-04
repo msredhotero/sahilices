@@ -19,7 +19,7 @@ function armarAcciones($id,$label='',$class,$icon) {
 	for ($j=0; $j<count($class); $j++) {
 		$cad .= '<button type="button" class="btn '.$class[$j].' btn-circle waves-effect waves-circle waves-float '.$label[$j].'" id="'.$id.'">
 				<i class="material-icons">'.$icon[$j].'</i>
-			</button>';
+			</button> ';
 	}
 
 	return $cad;
