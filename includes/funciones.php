@@ -1142,7 +1142,7 @@ class Servicios {
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 									<div class="switch">';
-								if (isset($valorBit)) {
+								if ($valorBit == 1) {
 									$form	=	$form.'	<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox" checked/><span class="lever switch-col-green"></span></label>
 									</div>
 								</div>
