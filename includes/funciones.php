@@ -1022,8 +1022,12 @@ class Servicios {
 	function camposTablaModificar($id,$lblid,$accion,$tabla,$lblcambio,$lblreemplazo,$refdescripcion,$refCampo) {
 
 		switch ($tabla) {
-			case 'dbtorneos':
-
+			case 'tbunidadesnegocios':
+				$sqlMod = "select idunidadnegocio,
+													unidadnegocio,
+													(case when activo = 1 then 'Si' else 'No' end) activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
 				break;
 
 			default:
@@ -1137,13 +1141,13 @@ class Servicios {
 									$activo = 'checked';
 								}
 								$valorBit = mysql_result($resMod,0,$row[0]);
-								die(var_dump($valorBit));
+
 								$form	=	$form.'
 
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 									<div class="switch">';
-								if ($valorBit == 1) {
+								if ($valorBit == 'Si') {
 									$form	=	$form.'	<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox" checked/><span class="lever switch-col-green"></span></label>
 									</div>
 								</div>
