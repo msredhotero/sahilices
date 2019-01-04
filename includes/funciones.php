@@ -1141,7 +1141,7 @@ class Servicios {
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 									<div class="switch">
-										<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox" '.(mysql_result($resMod,0,$row[0]) == 1 ? 'checked' : '').'/><span class="lever switch-col-green"></span></label>
+										<label><input name="'.$campo.'" id="'.$campo.'" type="checkbox" '.(mysql_result($resMod,0,$row[0]) == '1' ? 'checked' : '').'/><span class="lever switch-col-green"></span></label>
 									</div>
 								</div>
 
