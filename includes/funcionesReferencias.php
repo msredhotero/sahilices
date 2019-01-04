@@ -700,13 +700,37 @@ return $res;
 }
 
 
+
+function traerMotivosoportunidadesajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where m.motivo like '%".$busqueda."%' or m.activo = '".$busqueda."'";
+	}
+
+	$sql = "select
+	m.idmotivooportunidad,
+	m.motivo,
+	(case when m.activo = 1 then 'Si' else 'No' end) activo
+	from tbmotivosoportunidades m
+	".$where."
+	order by m.motivo";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+
 function traerMotivosoportunidades() {
 $sql = "select
 m.idmotivooportunidad,
 m.motivo,
-m.activo
+(case when m.activo = 1 then 'Si' else 'No' end) activo
 from tbmotivosoportunidades m
-order by 1";
+order by m.motivo";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -749,13 +773,34 @@ return $res;
 }
 
 
+function traerRecursosnecesariosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where r.recursonecesario like '%".$busqueda."%' or r.letra = '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	r.idrecursonecesario,
+	r.recursonecesario,
+	r.letra
+	from tbrecursosnecesarios r
+	".$where."
+	order by r.recursonecesario";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 function traerRecursosnecesarios() {
 $sql = "select
 r.idrecursonecesario,
 r.recursonecesario,
 r.letra
 from tbrecursosnecesarios r
-order by 1";
+order by r.recursonecesario";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -849,12 +894,35 @@ return $res;
 }
 
 
+
+
+function traerTipoclientesajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where t.tipocliente like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	t.idtipocliente,
+	t.tipocliente
+	from tbtipoclientes t
+	".$where."
+	order by t.tipocliente";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerTipoclientes() {
 $sql = "select
 t.idtipocliente,
 t.tipocliente
 from tbtipoclientes t
-order by 1";
+order by t.tipocliente";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -897,12 +965,33 @@ return $res;
 }
 
 
+function traerTipoconceptosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where t.tipoconcepto like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	t.idtipoconcepto,
+	t.tipoconcepto
+	from tbtipoconceptos t
+	".$where."
+	order by t.tipoconcepto";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerTipoconceptos() {
 $sql = "select
 t.idtipoconcepto,
 t.tipoconcepto
 from tbtipoconceptos t
-order by 1";
+order by t.tipoconcepto";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -945,13 +1034,34 @@ return $res;
 }
 
 
+function traerTipomonedasajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where t.tipomoneda like '%".$busqueda."%' or t.abreviatura like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	t.idtipomoneda,
+	t.tipomoneda,
+	t.abreviatura
+	from tbtipomonedas t
+	".$where."
+	order by t.abreviatura";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 function traerTipomonedas() {
 $sql = "select
 t.idtipomoneda,
 t.tipomoneda,
 t.abreviatura
 from tbtipomonedas t
-order by 1";
+order by t.abreviatura";
 $res = $this->query($sql,0);
 return $res;
 }
@@ -993,14 +1103,34 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerTipostrabajosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where t.tipotrabajo like '%".$busqueda."%' or t.activo = '".$busqueda."'";
+	}
+
+	$sql = "select
+	t.idtipotrabajo,
+	t.tipotrabajo,
+	(case when t.activo = 1 then 'Si' else 'No' end) activo
+	from tbtipostrabajos t
+	".$where."
+	order by t.tipotrabajo";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
 
 function traerTipostrabajos() {
 $sql = "select
 t.idtipotrabajo,
 t.tipotrabajo,
-t.activo
+(case when t.activo = 1 then 'Si' else 'No' end) activo
 from tbtipostrabajos t
-order by 1";
+order by t.tipotrabajo";
 $res = $this->query($sql,0);
 return $res;
 }

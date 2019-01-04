@@ -37,6 +37,72 @@ switch ($tabla) {
 		$termina = 5;
 
 		break;
+	case 'tipostrabajos':
+			$resAjax = $serviciosReferencias->traerTipostrabajosajax($length, $start, $busqueda);
+			$res = $serviciosReferencias->traerTipostrabajos();
+			$label = array('btnModificar','btnEliminar');
+			$class = array('bg-amber','bg-red');
+			$icon = array('create','delete');
+			$indiceID = 0;
+			$empieza = 2;
+			$termina = 5;
+
+			break;
+	case 'tipomonedas':
+			$resAjax = $serviciosReferencias->traerTipomonedasajax($length, $start, $busqueda);
+			$res = $serviciosReferencias->traerTipomonedas();
+			$label = array('btnModificar','btnEliminar');
+			$class = array('bg-amber','bg-red');
+			$icon = array('create','delete');
+			$indiceID = 0;
+			$empieza = 2;
+			$termina = 5;
+
+			break;
+	case 'tipoconceptos':
+			$resAjax = $serviciosReferencias->traerTipoconceptosajax($length, $start, $busqueda);
+			$res = $serviciosReferencias->traerTipoconceptos();
+			$label = array('btnModificar','btnEliminar');
+			$class = array('bg-amber','bg-red');
+			$icon = array('create','delete');
+			$indiceID = 0;
+			$empieza = 1;
+			$termina = 4;
+
+			break;
+	case 'tipoclientes':
+			$resAjax = $serviciosReferencias->traerTipoclientesajax($length, $start, $busqueda);
+			$res = $serviciosReferencias->traerTipoclientes();
+			$label = array('btnModificar','btnEliminar');
+			$class = array('bg-amber','bg-red');
+			$icon = array('create','delete');
+			$indiceID = 0;
+			$empieza = 1;
+			$termina = 4;
+
+			break;
+	case 'motivosoportunidades':
+			$resAjax = $serviciosReferencias->traerMotivosoportunidadesajax($length, $start, $busqueda);
+			$res = $serviciosReferencias->traerMotivosoportunidades();
+			$label = array('btnModificar','btnEliminar');
+			$class = array('bg-amber','bg-red');
+			$icon = array('create','delete');
+			$indiceID = 0;
+			$empieza = 2;
+			$termina = 5;
+
+			break;
+	case 'recursosnecesarios':
+			$resAjax = $serviciosReferencias->traerRecursosnecesariosajax($length, $start, $busqueda);
+			$res = $serviciosReferencias->traerRecursosnecesarios();
+			$label = array('btnModificar','btnEliminar');
+			$class = array('bg-amber','bg-red');
+			$icon = array('create','delete');
+			$indiceID = 0;
+			$empieza = 2;
+			$termina = 5;
+
+			break;
 
 	default:
 		// code...

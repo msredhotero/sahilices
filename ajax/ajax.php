@@ -328,6 +328,78 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refdescripcion = array();
          $refCampo 	=  array();
          break;
+     case 'tbtipostrabajos':
+        $modificar = "modificarTipostrabajos";
+        $idTabla = "idtipotrabajo";
+
+        $lblCambio	 	= array("tipotrabajo");
+        $lblreemplazo	= array("Tipo de Trabajo");
+
+        $cadRef 	= '';
+
+        $refdescripcion = array();
+        $refCampo 	=  array();
+        break;
+      case 'tbtipomonedas':
+         $modificar = "modificarTipomonedas";
+         $idTabla = "idtipomoneda";
+
+         $lblCambio	 	= array("tipomoneda");
+         $lblreemplazo	= array("Tipo de Moneda");
+
+         $cadRef 	= '';
+
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
+     case 'tbtipoconceptos':
+        $modificar = "modificarTipoconceptos";
+        $idTabla = "idtipoconcepto";
+
+        $lblCambio	 	= array("tipoconcepto");
+        $lblreemplazo	= array("Tipo de Concepto");
+
+        $cadRef 	= '';
+
+        $refdescripcion = array();
+        $refCampo 	=  array();
+        break;
+    case 'tbtipoclientes':
+       $modificar = "modificarTipoclientes";
+       $idTabla = "idtipocliente";
+
+       $lblCambio	 	= array("tipocliente");
+       $lblreemplazo	= array("Tipo de Clientes");
+
+       $cadRef 	= '';
+
+       $refdescripcion = array();
+       $refCampo 	=  array();
+       break;
+   case 'tbmotivosoportunidades':
+      $modificar = "modificarMotivosoportunidades";
+      $idTabla = "idmotivooportunidad";
+
+      $lblCambio	 	= array();
+      $lblreemplazo	= array();
+
+      $cadRef 	= '';
+
+      $refdescripcion = array();
+      $refCampo 	=  array();
+      break;
+      case 'tbrecursosnecesarios':
+         $modificar = "modificarRecursosnecesarios";
+         $idTabla = "idrecursonecesario";
+
+         $lblCambio	 	= array('recursonecesario');
+         $lblreemplazo	= array('Recurso Necesario');
+
+         $cadRef 	= '';
+
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
 
       default:
          // code...
@@ -1035,9 +1107,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarMotivosoportunidades($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarMotivosoportunidades($id);
-echo $res;
+  $id = $_POST['id'];
+
+  $res = $serviciosReferencias->eliminarMotivosoportunidades($id);
+
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerMotivosoportunidades($serviciosReferencias) {
@@ -1075,9 +1153,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarRecursosnecesarios($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarRecursosnecesarios($id);
-echo $res;
+  $id = $_POST['id'];
+
+  $res = $serviciosReferencias->eliminarRecursosnecesarios($id);
+
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerRecursosnecesarios($serviciosReferencias) {
@@ -1205,9 +1289,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarTipoclientes($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarTipoclientes($id);
-echo $res;
+  $id = $_POST['id'];
+
+  $res = $serviciosReferencias->eliminarTipoclientes($id);
+
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerTipoclientes($serviciosReferencias) {
@@ -1243,9 +1333,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarTipoconceptos($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarTipoconceptos($id);
-echo $res;
+  $id = $_POST['id'];
+
+  $res = $serviciosReferencias->eliminarTipoconceptos($id);
+
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerTipoconceptos($serviciosReferencias) {
@@ -1283,9 +1379,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarTipomonedas($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarTipomonedas($id);
-echo $res;
+  $id = $_POST['id'];
+
+  $res = $serviciosReferencias->eliminarTipomonedas($id);
+
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerTipomonedas($serviciosReferencias) {
@@ -1331,9 +1433,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarTipostrabajos($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarTipostrabajos($id);
-echo $res;
+  $id = $_POST['id'];
+
+  $res = $serviciosReferencias->eliminarTipostrabajos($id);
+
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerTipostrabajos($serviciosReferencias) {

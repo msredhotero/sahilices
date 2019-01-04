@@ -1029,6 +1029,20 @@ class Servicios {
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;
+			case 'tbtipostrabajos':
+				$sqlMod = "select idtipotrabajo,
+													tipotrabajo,
+													(case when activo = 1 then 'Si' else 'No' end) activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
+			case 'tbmotivosoportunidades':
+				$sqlMod = "select idmotivooportunidad,
+													motivo,
+													(case when activo = 1 then 'Si' else 'No' end) activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
 
 			default:
 				$sqlMod = "select * from ".$tabla." where ".$lblid." = ".$id;
