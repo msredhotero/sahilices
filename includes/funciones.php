@@ -672,7 +672,7 @@ class Servicios {
 														<label class="form-label">'.$label.'</label>
 														<div class="form-group">
 															<div class="form-line">
-																<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'>
+																<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'/>
 
 															</div>
 														</div>

@@ -229,7 +229,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 
 <!-- NUEVO -->
-	<form class="formulario" role="form">
+	<form class="formulario" role="form" id="sign_in">
 	   <div class="modal fade" id="lgmNuevo" tabindex="-1" role="dialog">
 	       <div class="modal-dialog modal-lg" role="document">
 	           <div class="modal-content">
@@ -240,7 +240,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	                  <?php echo $frmUnidadNegocios; ?>
 	               </div>
 	               <div class="modal-footer">
-	                   <button type="button" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
+	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
 	                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
 	               </div>
 	           </div>
@@ -250,7 +250,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	</form>
 
 	<!-- MODIFICAR -->
-		<form class="formulario" role="form">
+		<form class="formulario" role="form" id="sign_in">
 		   <div class="modal fade" id="lgmModificar" tabindex="-1" role="dialog">
 		       <div class="modal-dialog modal-lg" role="document">
 		           <div class="modal-content">
@@ -261,7 +261,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 		               </div>
 		               <div class="modal-footer">
-		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
+		                   <button type="submit" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
 		                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
 		               </div>
 		           </div>
@@ -271,12 +271,40 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		</form>
 
 
+	<!-- ELIMINAR -->
+		<form class="formulario" role="form" id="sign_in">
+		   <div class="modal fade" id="lgmEliminar" tabindex="-1" role="dialog">
+		       <div class="modal-dialog modal-lg" role="document">
+		           <div class="modal-content">
+		               <div class="modal-header">
+		                   <h4 class="modal-title" id="largeModalLabel">ELIMINAR UNIDAD DE NEGOCIO</h4>
+		               </div>
+		               <div class="modal-body">
+										 <p>¿Esta seguro que desea eliminar el registro?</p>
+										 <small>* Si este registro esta relacionado con algun otro dato no se podría eliminar.</small>
+		               </div>
+		               <div class="modal-footer">
+		                   <button type="button" class="btn btn-danger waves-effect eliminar">ELIMINAR</button>
+		                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
+		               </div>
+		           </div>
+		       </div>
+		   </div>
+			<input type="hidden" id="accion" name="accion" value="eliminarUnidadesnegocios"/>
+			<input type="hidden" name="ideliminar" id="ideliminar" value="0">
+		</form>
+
+
 <?php echo $baseHTML->cargarArchivosJS('../../'); ?>
 <!-- Wait Me Plugin Js -->
 <script src="../../plugins/waitme/waitMe.js"></script>
 
 <!-- Custom Js -->
 <script src="../../js/pages/cards/colored.js"></script>
+
+<script src="../../plugins/jquery-validation/jquery.validate.js"></script>
+
+<script src="../../js/pages/examples/sign-in.js"></script>
 
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
 <script src="../../plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
@@ -315,6 +343,10 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 			}
 		});
 
+		$("#sign_in").submit(function(e){
+			e.preventDefault();
+		});
+
 		$('#activo').prop('checked',true);
 
 		function frmAjaxModificar(id) {
@@ -349,11 +381,71 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		}
 
 
+		function frmAjaxEliminar(id) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {accion: 'eliminarUnidadesnegocios', id: id},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+						swal({
+								title: "Respuesta",
+								text: "Registro Eliminado con exito!!",
+								type: "success",
+								timer: 1500,
+								showConfirmButton: false
+						});
+						$('#lgmEliminar').modal('toggle');
+						table.ajax.reload();
+					} else {
+						swal({
+								title: "Respuesta",
+								text: data,
+								type: "error",
+								timer: 2000,
+								showConfirmButton: false
+						});
+
+					}
+				},
+				//si ha ocurrido un error
+				error: function(){
+					swal({
+							title: "Respuesta",
+							text: 'Actualice la pagina',
+							type: "error",
+							timer: 2000,
+							showConfirmButton: false
+					});
+
+				}
+			});
+
+		}
+
+		$("#example").on("click",'.btnEliminar', function(){
+			idTable =  $(this).attr("id");
+			$('#ideliminar').val(idTable);
+			$('#lgmEliminar').modal();
+		});//fin del boton eliminar
+
+		$('.eliminar').click(function() {
+			frmAjaxEliminar($('#ideliminar').val());
+		});
+
 		$("#example").on("click",'.btnModificar', function(){
 			idTable =  $(this).attr("id");
 			frmAjaxModificar(idTable);
 			$('#lgmModificar').modal();
-		});//fin del boton eliminar
+		});//fin del boton modificar
 
 		$('.nuevo').click(function(){
 
@@ -379,13 +471,27 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 				success: function(data){
 
 					if (data == '') {
-						swal("Correcto!", "Se cargo exitosamente la unidad de negocio. ", "success");
+						swal({
+								title: "Respuesta",
+								text: "Registro Creado con exito!!",
+								type: "success",
+								timer: 1500,
+								showConfirmButton: false
+						});
+
 						$('#lgmNuevo').modal('hide');
+						$('#unidadnegocio').val('');
 						table.ajax.reload();
 					} else {
-						swal("Error!", data, "warning");
+						swal({
+								title: "Respuesta",
+								text: data,
+								type: "error",
+								timer: 2500,
+								showConfirmButton: false
+						});
 
-						$("#load").html('');
+
 					}
 				},
 				//si ha ocurrido un error
@@ -421,13 +527,26 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 				success: function(data){
 
 					if (data == '') {
-						swal("Correcto!", "Se modifico exitosamente la unidad de negocio. ", "success");
+						swal({
+								title: "Respuesta",
+								text: "Registro Modificado con exito!!",
+								type: "success",
+								timer: 1500,
+								showConfirmButton: false
+						});
+
 						$('#lgmModificar').modal('hide');
 						table.ajax.reload();
 					} else {
-						swal("Error!", data, "warning");
+						swal({
+								title: "Respuesta",
+								text: data,
+								type: "error",
+								timer: 2500,
+								showConfirmButton: false
+						});
 
-						$("#load").html('');
+						
 					}
 				},
 				//si ha ocurrido un error

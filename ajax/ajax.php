@@ -1348,40 +1348,60 @@ echo json_encode($resV);
 }
 
 function insertarUnidadesnegocios($serviciosReferencias) {
-$unidadnegocio = $_POST['unidadnegocio'];
-if (isset($_POST['activo'])) {
-$activo	= 1;
-} else {
-$activo = 0;
-}
-$res = $serviciosReferencias->insertarUnidadesnegocios($unidadnegocio,$activo);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+  $unidadnegocio = trim($_POST['unidadnegocio']);
+
+  if (isset($_POST['activo'])) {
+    $activo	= 1;
+  } else {
+    $activo = 0;
+  }
+
+  if ($unidadnegocio != '') {
+    $res = $serviciosReferencias->insertarUnidadesnegocios($unidadnegocio,$activo);
+
+    if ((integer)$res > 0) {
+      echo '';
+    } else {
+      echo 'Huvo un error al insertar datos';
+    }
+  } else {
+    echo 'El campo Unidad de negocios es obligatorio';
+  }
+
 }
 
 function modificarUnidadesnegocios($serviciosReferencias) {
-$id = $_POST['id'];
-$unidadnegocio = $_POST['unidadnegocio'];
-if (isset($_POST['activo'])) {
-$activo	= 1;
-} else {
-$activo = 0;
-}
-$res = $serviciosReferencias->modificarUnidadesnegocios($id,$unidadnegocio,$activo);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+  $id = $_POST['id'];
+  $unidadnegocio = trim($_POST['unidadnegocio']);
+
+  if (isset($_POST['activo'])) {
+    $activo	= 1;
+  } else {
+    $activo = 0;
+  }
+
+  if ($unidadnegocio != '') {
+    $res = $serviciosReferencias->modificarUnidadesnegocios($id,$unidadnegocio,$activo);
+
+    if ($res == true) {
+      echo '';
+    } else {
+      echo 'Huvo un error al modificar datos';
+    }
+  } else {
+    echo 'El campo Unidad de negocios es obligatorio';
+  }
+
 }
 
 function eliminarUnidadesnegocios($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarUnidadesnegocios($id);
-echo $res;
+  $id = $_POST['id'];
+  $res = $serviciosReferencias->eliminarUnidadesnegocios($id);
+  if ($res == true) {
+    echo '';
+  } else {
+    echo 'Huvo un error al modificar datos';
+  }
 }
 
 function traerUnidadesnegocios($serviciosReferencias) {
