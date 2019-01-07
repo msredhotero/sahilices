@@ -114,6 +114,17 @@ switch ($tabla) {
 		$termina = 8;
 
 		break;
+	case 'conceptos':
+		$resAjax = $serviciosReferencias->traerConceptosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerConceptos();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 4;
+
+		break;
 
 	default:
 		// code...

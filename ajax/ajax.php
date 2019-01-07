@@ -403,17 +403,35 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refCampo 	=  array();
          break;
       case 'dbempleados':
-            $modificar = "modificarEmpleados";
-            $idTabla = "idempleado";
+         $res = $serviciosReferencias->traerEmpleadosPorId($id);
+         $modificar = "modificarEmpleados";
+         $idTabla = "idempleado";
 
-            $lblCambio	 	= array('nrodocumento','fechanacimiento','telefonofijo','telefonomovil');
-            $lblreemplazo	= array('Nro Documento','Fecha Nacimiento','Tel. Fijo','Tel. Movil');
+         $lblCambio	 	= array('nrodocumento','fechanacimiento','telefonofijo','telefonomovil');
+         $lblreemplazo	= array('Nro Documento','Fecha Nacimiento','Tel. Fijo','Tel. Movil');
 
-            $cadRef 	= '';
+         if (mysql_result($res,0,'sexo') == 'F') {
+            $cadRef 	= '<option value="F" selected>Femenino</option><option value="M">Masculino</option>';
+         } else {
+            $cadRef 	= '<option value="F">Femenino</option><option value="M" selected>Masculino</option>';
+         }
 
-            $refdescripcion = array();
-            $refCampo 	=  array();
-            break;
+
+         $refdescripcion = array(0=>$cadRef);
+         $refCampo 	=  array('sexo');
+         break;
+      case 'dbconceptos':
+         $modificar = "modificarConceptos";
+         $idTabla = "idconcepto";
+
+         $lblCambio	 	= array();
+         $lblreemplazo	= array();
+
+         $cadRef 	= '';
+
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
 
       default:
          // code...
@@ -511,9 +529,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarConceptos($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarConceptos($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarConceptos($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerConceptos($serviciosReferencias) {
@@ -620,13 +644,20 @@ echo json_encode($resV);
 function insertarEmpleados($serviciosReferencias, $serviciosValidador) {
    $error = '';
 
-   $apellido = ($serviciosValidador->validaRequerido($_POST['apellido']) == true ? $_POST['apellido'] : $error.= 'El campo apellido es obligatorio
+   $apellido = ($serviciosValidador->validaRequerido($_POST['apellido']) == true ? trim($_POST['apellido']) : $error.= 'El campo Apellido es obligatorio
    ');
-   $nombre = ($serviciosValidador->validaRequerido($_POST['nombre']) == true ? $_POST['nombre'] : $error.= 'El campo nombre es obligatorio
+   $nombre = ($serviciosValidador->validaRequerido($_POST['nombre']) == true ? trim($_POST['nombre']) : $error.= 'El campo Nombre es obligatorio
    ');
-   $nrodocumento = $_POST['nrodocumento'];
+   $nrodocumento = ($serviciosValidador->validaRequerido($_POST['nrodocumento']) == true
+                     ?
+                     (($serviciosValidador->validarEnteroRango($_POST['nrodocumento'],5000000,99999999)  == true
+                     ?
+                     $_POST['nrodocumento'] : $error.= 'El Nro Documento esta fuera de los intervalos
+                     ')) : $error.= 'El campo Nro Documento es obligatorio
+                     ');
    $cuit = $_POST['cuit'];
-   $fechanacimiento = $_POST['fechanacimiento'];
+   $fechanacimiento = ($serviciosValidador->validar_fecha_espanol( $_POST['fechanacimiento']) == true ? $_POST['fechanacimiento'] : $error.= 'Formato incorrecto en Fecha Nacimiento
+   ');
    $domicilio = $_POST['domicilio'];
    $telefonofijo = $_POST['telefonofijo'];
    $telefonomovil = $_POST['telefonomovil'];
@@ -639,11 +670,12 @@ function insertarEmpleados($serviciosReferencias, $serviciosValidador) {
       $activo = 0;
    }
 
-   $existe = $serviciosReferencias->existeEmpleado($nrodocumento);
-
    if ($error != '') {
       echo $error;
    } else {
+
+      $existe = $serviciosReferencias->existeEmpleado($nrodocumento);
+
       if ($existe != 0) {
          echo 'Ya existe el Nro de documento ingresado';
       } else {

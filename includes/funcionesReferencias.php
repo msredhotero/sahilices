@@ -247,13 +247,36 @@ return $res;
 }
 
 
+function traerConceptosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where c.concepto like '%".$busqueda."%' or c.abreviatura like '%".$busqueda."%' or c.leyenda like '%".$busqueda."%' or (case when c.activo = 1 then 'Si' else 'No' end) = '".$busqueda."'";
+	}
+
+	$sql = "select
+	c.idconcepto,
+	c.concepto,
+	c.abreviatura,
+	c.leyenda,
+	(case when c.activo = 1 then 'Si' else 'No' end) as activo
+	from dbconceptos c
+	".$where."
+	order by c.concepto";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 function traerConceptos() {
 $sql = "select
 c.idconcepto,
 c.concepto,
 c.abreviatura,
 c.leyenda,
-c.activo
+(case when c.activo = 1 then 'Si' else 'No' end) as activo
 from dbconceptos c
 order by 1";
 $res = $this->query($sql,0);
@@ -419,7 +442,7 @@ function traerEmpleadosajax($length, $start, $busqueda) {
 
 	$busqueda = str_replace("'","",$busqueda);
 	if ($busqueda != '') {
-		$where = "where e.apellido like '%".$busqueda."%' and e.nombre like '%".$busqueda."%' and e.nrodocumento like '%".$busqueda."%' and e.cuit like '%".$busqueda."%' and e.fechanacimiento like '%".$busqueda."%' and e.telefonomovil like '%".$busqueda."%' and e.email like '%".$busqueda."%' or e.activo = '".$busqueda."'";
+		$where = "where e.apellido like '%".$busqueda."%' or e.nombre like '%".$busqueda."%' or e.nrodocumento like '%".$busqueda."%' or e.cuit like '%".$busqueda."%' or e.fechanacimiento like '%".$busqueda."%' or e.telefonomovil like '%".$busqueda."%' or e.email like '%".$busqueda."%' or (case when e.activo = 1 then 'Si' else 'No' end) = '".$busqueda."'";
 	}
 
 	$sql = "select
@@ -762,7 +785,7 @@ function traerMotivosoportunidadesajax($length, $start, $busqueda) {
 
 	$busqueda = str_replace("'","",$busqueda);
 	if ($busqueda != '') {
-		$where = "where m.motivo like '%".$busqueda."%' or m.activo = '".$busqueda."'";
+		$where = "where m.motivo like '%".$busqueda."%' or (case when m.activo = 1 then 'Si' else 'No' end) = '".$busqueda."'";
 	}
 
 	$sql = "select
@@ -1164,7 +1187,7 @@ function traerTipostrabajosajax($length, $start, $busqueda) {
 
 	$busqueda = str_replace("'","",$busqueda);
 	if ($busqueda != '') {
-		$where = "where t.tipotrabajo like '%".$busqueda."%' or t.activo = '".$busqueda."'";
+		$where = "where t.tipotrabajo like '%".$busqueda."%' or (case when t.activo = 1 then 'Si' else 'No' end) = '".$busqueda."'";
 	}
 
 	$sql = "select
@@ -1245,7 +1268,7 @@ return $res;
 
 		$busqueda = str_replace("'","",$busqueda);
 		if ($busqueda != '') {
-			$where = "where u.unidadnegocio like '%".$busqueda."%' or u.activo = '".$busqueda."'";
+			$where = "where u.unidadnegocio like '%".$busqueda."%' or (case when u.activo = 1 then 'Si' else 'No' end) = '".$busqueda."'";
 		}
 
 		$sql = "select

@@ -24,13 +24,13 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../recursosnecesarios/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../conceptos/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Recursos Necesarios",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Conceptos",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
@@ -39,24 +39,24 @@ $tituloWeb = mysql_result($configuracion,0,'sistema');
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Recurso Necesario";
+$singular = "Concepto";
 
-$plural = "Recursos Necesarios";
+$plural = "Conceptos";
 
-$eliminar = "eliminarRecursosnecesarios";
+$eliminar = "eliminarConceptos";
 
-$insertar = "insertarRecursosnecesarios";
+$insertar = "insertarConceptos";
 
-$modificar = "modificarRecursosnecesarios";
+$modificar = "modificarConceptos";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbrecursosnecesarios";
+$tabla 			= "dbconceptos";
 
-$lblCambio	 	= array('recursonecesario');
-$lblreemplazo	= array('Recurso Necesario');
+$lblCambio	 	= array();
+$lblreemplazo	= array();
 
 
 $cadRef 	= '';
@@ -200,14 +200,18 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
-												<th>Motivo de Oportunidad</th>
+												<th>Concepto</th>
+												<th>Abreviatura</th>
+												<th>Leyenda</th>
 												<th>Activo</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tfoot>
 											<tr>
-												<th>Tipo de Concepto</th>
+												<th>Concepto</th>
+												<th>Abreviatura</th>
+												<th>Leyenda</th>
 												<th>Activo</th>
 												<th>Acciones</th>
 											</tr>
@@ -234,7 +238,10 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
 	               </div>
 	               <div class="modal-body">
-	                  <?php echo $frmUnidadNegocios; ?>
+							<div class="">
+								<?php echo $frmUnidadNegocios; ?>
+							</div>
+
 	               </div>
 	               <div class="modal-footer">
 	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
@@ -254,8 +261,13 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		               <div class="modal-header">
 		                   <h4 class="modal-title" id="largeModalLabel">MODIFICAR <?php echo strtoupper($singular); ?></h4>
 		               </div>
-		               <div class="modal-body frmAjaxModificar">
+		               <div class="modal-body">
+								<div class="row">
+									<div class="frmAjaxModificar">
 
+									</div>
+
+								</div>
 		               </div>
 		               <div class="modal-footer">
 		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
@@ -314,7 +326,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=recursosnecesarios",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=conceptos",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",

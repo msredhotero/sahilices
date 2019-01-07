@@ -59,10 +59,10 @@ $lblCambio	 	= array('nrodocumento','fechanacimiento','telefonofijo','telefonomo
 $lblreemplazo	= array('Nro Documento','Fecha Nacimiento','Tel. Fijo','Tel. Movil');
 
 
-$cadRef 	= '';
+$cadRef 	= '<option value="F">Femenino</option><option value="M">Masculino</option>';
 
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef);
+$refCampo 	=  array('sexo');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////

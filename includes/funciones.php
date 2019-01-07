@@ -1079,6 +1079,15 @@ class Servicios {
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;
+			case 'dbconceptos':
+				$sqlMod = "select idconcepto,
+										concepto,
+										abreviatura,
+										leyenda,
+										(case when activo = 1 then 'Si' else 'No' end) as activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
 
 			default:
 				$sqlMod = "select * from ".$tabla." where ".$lblid." = ".$id;
