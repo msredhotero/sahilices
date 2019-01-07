@@ -195,6 +195,31 @@ return $res;
 }
 
 
+function traerClientesajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where c.razonsocial like '%".$busqueda."%' or c.cuit like '%".$busqueda."%' or c.direccion like '%".$busqueda."%' or c.email like '%".$busqueda."%' or c.telefono like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	c.idcliente,
+	c.razonsocial,
+	c.cuit,
+	c.direccion,
+	c.email,
+	c.telefono
+	from dbclientes c
+	".$where."
+	order by c.razonsocial";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerClientes() {
 $sql = "select
 c.idcliente,
@@ -412,6 +437,16 @@ function existeEmpleado($nroDocumento) {
     return 0;
 }
 
+function existeEmpleadoModificar($nroDocumento, $id) {
+    $sql = "select idempleado from dbempleados where nrodocumento = ".$nroDocumento." and idempleado <> ".$id;
+    $res = $this->query($sql,0);
+
+    if (mysql_num_rows($res)>0) {
+        return 1;
+    }
+    return 0;
+}
+
 function insertarEmpleados($apellido,$nombre,$nrodocumento,$cuit,$fechanacimiento,$domicilio,$telefonofijo,$telefonomovil,$sexo,$email,$activo) {
 $sql = "insert into dbempleados(idempleado,apellido,nombre,nrodocumento,cuit,fechanacimiento,domicilio,telefonofijo,telefonomovil,sexo,email,activo)
 values ('','".($apellido)."','".($nombre)."',".$nrodocumento.",'".($cuit)."','".($fechanacimiento)."','".($domicilio)."','".($telefonofijo)."','".($telefonomovil)."','".($sexo)."','".($email)."',".$activo.")";
@@ -589,6 +624,42 @@ return $res;
 }
 
 
+function traerPlantasPorCliente($idcliente) {
+$sql = "select
+p.idplanta,
+p.refclientes,
+p.planta
+from dbplantas p
+inner join dbclientes cli ON cli.idcliente = p.refclientes
+where p.refclientes = ".$idcliente."
+order by p.planta";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerPlantasajaxPorCliente($length, $start, $busqueda, $idcliente) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "and p.planta like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	p.idplanta,
+	p.planta
+	from dbplantas p
+	inner join dbclientes cli ON cli.idcliente = p.refclientes
+	where p.refclientes = ".$idcliente." ".$where."
+	order by p.planta";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerPlantasPorId($id) {
 $sql = "select idplanta,refclientes,planta from dbplantas where idplanta =".$id;
 $res = $this->query($sql,0);
@@ -635,6 +706,21 @@ from dbsectores s
 inner join dbplantas pla ON pla.idplanta = s.refplantas
 inner join dbclientes cl ON cl.idcliente = pla.refclientes
 order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerSectoresPorCliente($idcliente) {
+$sql = "select
+s.idsector,
+s.refplantas,
+s.sector
+from dbsectores s
+inner join dbplantas pla ON pla.idplanta = s.refplantas
+inner join dbclientes cl ON cl.idcliente = pla.refclientes
+where cl.idcliente = ".$idcliente."
+order by s.sector";
 $res = $this->query($sql,0);
 return $res;
 }

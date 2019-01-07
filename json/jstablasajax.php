@@ -13,6 +13,14 @@ $start = $_GET['iDisplayStart'];
 $length = $_GET['iDisplayLength'];
 $busqueda = $_GET['sSearch'];
 
+$referencia1 = 0;
+
+if (isset($_GET['referencia1'])) {
+	$referencia1 = $_GET['referencia1'];
+} else {
+	$referencia1 = 0;
+}
+
 function armarAcciones($id,$label='',$class,$icon) {
 	$cad = "";
 
@@ -123,6 +131,28 @@ switch ($tabla) {
 		$indiceID = 0;
 		$empieza = 1;
 		$termina = 4;
+
+		break;
+	case 'clientes':
+		$resAjax = $serviciosReferencias->traerClientesajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerClientes();
+		$label = array('btnModificar','btnEliminar','btnVer');
+		$class = array('bg-amber','bg-red','bg-blue');
+		$icon = array('create','delete','search');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 5;
+
+		break;
+	case 'plantas':
+		$resAjax = $serviciosReferencias->traerPlantasajaxPorCliente($length, $start, $busqueda, $referencia1);
+		$res = $serviciosReferencias->traerPlantas();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 1;
 
 		break;
 

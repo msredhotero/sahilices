@@ -29,6 +29,8 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../clientes/
 
 $fecha = date('Y-m-d');
 
+$id = $_GET['id'];
+
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Clientes",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
@@ -51,6 +53,7 @@ $modificar = "modificarClientes";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
+$resultado = $serviciosReferencias->traerClientesPorId($id);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbclientes";
@@ -64,7 +67,9 @@ $cadRef 	= '';
 $refdescripcion = array();
 $refCampo 	=  array();
 
-$frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$idTabla = 'idcliente';
+
+$frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 ?>
@@ -87,14 +92,6 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 	<link href="../../plugins/waitme/waitMe.css" rel="stylesheet" />
 	<link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
-
-	<!-- VUE JS -->
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-	<!-- axios -->
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-	<script src="https://unpkg.com/vue-swal"></script>
 
 	<!-- Bootstrap Material Datetime Picker Css -->
 	<link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
@@ -159,15 +156,12 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 	<div class="container-fluid">
 		<div class="row clearfix">
-
 			<div class="row">
-
-
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="card ">
 						<div class="header bg-blue">
 							<h2>
-								<?php echo strtoupper($plural); ?>
+								<?php echo strtoupper($singular); ?>: <?php echo strtoupper(mysql_result($resultado,0,'razonsocial')); ?>
 							</h2>
 							<ul class="header-dropdown m-r--5">
 								<li class="dropdown">
@@ -180,53 +174,167 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 								</li>
 							</ul>
 						</div>
-						<div class="body table-responsive">
+						<div class="body">
+
 							<form class="form" id="formCountry">
-
 								<div class="row">
-									<div class="col-lg-12 col-md-12">
-										<div class="button-demo">
-											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
-												<i class="material-icons">add</i>
-												<span>NUEVO</span>
-											</button>
+									<?php echo $frm; ?>
+								</div>
 
+
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div class="card ">
+						<div class="header bg-green">
+							<h2>
+								Estructuras
+							</h2>
+							<ul class="header-dropdown m-r--5">
+								<li class="dropdown">
+									<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+										<i class="material-icons">more_vert</i>
+									</a>
+									<ul class="dropdown-menu pull-right">
+
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<div class="body">
+
+							<form class="form" id="formCountry">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+										<div class="row">
+											<div class="col-lg-12 col-md-12">
+												<div class="button-demo">
+													<button type="button" class="btn bg-light-green waves-effect btnNuevoPlanta" data-toggle="modal" data-target="#lgmNuevo">
+														<i class="material-icons">add</i>
+														<span>NUEVO</span>
+													</button>
+
+												</div>
+											</div>
+										</div>
+
+										<div class="panel-group" id="accordion_17" role="tablist" aria-multiselectable="true">
+											<div class="panel panel-col-teal">
+		                              <div class="panel-heading" role="tab" id="headingOne_17">
+		                                 <h4 class="panel-title">
+		                                    <a role="button" data-toggle="collapse" data-parent="#accordion_17" href="#collapseOne_17" aria-expanded="true" aria-controls="collapseOne_17">
+															<i class="material-icons">location_on</i> PLANTAS
+		                                    </a>
+		                                 </h4>
+		                              </div>
+		                              <div id="collapseOne_17" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_17">
+		                                 <div class="panel-body">
+														<div class="row lstPlantas">
+															<div class="row" style="padding: 5px 20px;">
+																<table id="examplePlanta" class="display table " style="width:100%">
+																	<thead>
+																		<tr>
+																			<th>Planta</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</thead>
+																	<tfoot>
+																		<tr>
+																			<th>Planta</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</tfoot>
+																</table>
+															</div>
+														</div>
+		                                 </div>
+		                              </div>
+		                           </div>
+										</div>
+									</div>
+
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+										<div class="row">
+											<div class="col-lg-12 col-md-12">
+												<div class="button-demo">
+													<button type="button" class="btn bg-light-green waves-effect btnNuevoSector">
+														<i class="material-icons">add</i>
+														<span>NUEVO</span>
+													</button>
+
+												</div>
+											</div>
+										</div>
+
+										<div class="panel-group" id="accordion_18" role="tablist" aria-multiselectable="true">
+											<div class="panel panel-col-blue">
+		                              <div class="panel-heading" role="tab" id="headingOne_18">
+		                                 <h4 class="panel-title">
+		                                    <a role="button" data-toggle="collapse" data-parent="#accordion_18" href="#collapseOne_18" aria-expanded="true" aria-controls="collapseOne_18">
+															<i class="material-icons">location_searching</i> SECTORES
+		                                    </a>
+		                                 </h4>
+		                              </div>
+		                              <div id="collapseOne_18" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_18">
+		                                 <div class="panel-body">
+		                                     <div class="row lstSectores">
+
+		                                     </div>
+		                                 </div>
+		                              </div>
+		                           </div>
+										</div>
+									</div>
+
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-6">
+
+										<div class="row">
+											<div class="col-lg-12 col-md-12">
+												<div class="button-demo">
+													<button type="button" class="btn bg-light-green waves-effect btnNuevoContacto" target="#lgmNuevo">
+														<i class="material-icons">add</i>
+														<span>NUEVO</span>
+													</button>
+
+												</div>
+											</div>
+										</div>
+
+										<div class="panel-group" id="accordion_19" role="tablist" aria-multiselectable="true">
+											<div class="panel panel-col-orange">
+		                              <div class="panel-heading" role="tab" id="headingOne_19">
+		                                 <h4 class="panel-title">
+		                                    <a role="button" data-toggle="collapse" data-parent="#accordion_19" href="#collapseOne_19" aria-expanded="true" aria-controls="collapseOne_19">
+															<i class="material-icons">contact_phone</i> CONTACTOS
+		                                    </a>
+		                                 </h4>
+		                              </div>
+		                              <div id="collapseOne_19" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_19">
+		                                 <div class="panel-body">
+														<div class="row lstContactos">
+
+														</div>
+		                                 </div>
+		                              </div>
+		                           </div>
 										</div>
 									</div>
 								</div>
 
-								<div class="row" style="padding: 5px 20px;">
 
-									<table id="example" class="display table " style="width:100%">
-										<thead>
-											<tr>
-												<th>Razon Social</th>
-												<th>CUIT</th>
-												<th>Dirección</th>
-												<th>Email</th>
-												<th>Tel.</th>
-												<th>Acciones</th>
-											</tr>
-										</thead>
-										<tfoot>
-											<tr>
-												<th>Razon Social</th>
-												<th>CUIT</th>
-												<th>Dirección</th>
-												<th>Email</th>
-												<th>Tel.</th>
-												<th>Acciones</th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
 							</form>
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
+
 	</div>
 </section>
 
@@ -237,11 +345,11 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	       <div class="modal-dialog modal-lg" role="document">
 	           <div class="modal-content">
 	               <div class="modal-header">
-	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
+	                   <h4 class="modal-title" id="largeModalLabel">CREAR <span class="tituloNuevo"></span></h4>
 	               </div>
 	               <div class="modal-body demo-masked-input">
-							<div class="row">
-	                  <?php echo $frmUnidadNegocios; ?>
+							<div class="row frmAjaxNuevo">
+
 							</div>
 	               </div>
 	               <div class="modal-footer">
@@ -251,7 +359,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	           </div>
 	       </div>
 	   </div>
-		<input type="hidden" id="accion" name="accion" value="<?php echo $insertar; ?>"/>
+
 	</form>
 
 	<!-- MODIFICAR -->
@@ -276,7 +384,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		           </div>
 		       </div>
 		   </div>
-			<input type="hidden" id="accion" name="accion" value="<?php echo $modificar; ?>"/>
+			<input type="hidden" class="accionModificar" id="accion" name="accion" value=""/>
 		</form>
 
 
@@ -299,7 +407,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		           </div>
 		       </div>
 		   </div>
-			<input type="hidden" id="accion" name="accion" value="<?php echo $eliminar; ?>"/>
+			<input type="hidden" class="accionEliminar" id="accion" name="accion" value=""/>
 			<input type="hidden" name="ideliminar" id="ideliminar" value="0">
 		</form>
 
@@ -323,10 +431,11 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 <script>
 	$(document).ready(function(){
-		var table = $('#example').DataTable({
+
+		var table = $('#examplePlanta').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=clientes",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=plantas&referencia1=<?php echo $id; ?>",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -364,13 +473,13 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 		$('#activo').prop('checked',true);
 
-		function frmAjaxModificar(id) {
+		function frmAjaxModificar(id, tabla, referencia1) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
-				data: {accion: 'frmAjaxModificar',tabla: '<?php echo $tabla; ?>', id: id},
+				data: {accion: 'frmAjaxModificar',tabla: tabla, id: id, referencia1: referencia1},
 				//mientras enviamos el archivo
 				beforeSend: function(){
 					$('.frmAjaxModificar').html('');
@@ -396,13 +505,46 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		}
 
 
-		function frmAjaxEliminar(id) {
+		function frmAjaxNuevo(id, tabla) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
-				data: {accion: '<?php echo $eliminar; ?>', id: id},
+				data: {accion: 'frmAjaxNuevo',tabla: tabla, id: id},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+
+					$('.frmAjaxNuevo').html('');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data != '') {
+						$('.frmAjaxNuevo').html(data);
+					} else {
+						swal("Error!", data, "warning");
+
+						$("#load").html('');
+					}
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+
+		}
+
+
+		function frmAjaxEliminar(id, accion) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {accion: accion, id: id},
 				//mientras enviamos el archivo
 				beforeSend: function(){
 
@@ -446,27 +588,50 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 		}
 
-		$("#example").on("click",'.btnEliminar', function(){
+		$("#examplePlanta").on("click",'.btnEliminar', function(){
 			idTable =  $(this).attr("id");
+			$('.accionEliminar').val('eliminarPlantas');
 			$('#ideliminar').val(idTable);
 			$('#lgmEliminar').modal();
 		});//fin del boton eliminar
 
-		$('.eliminar').click(function() {
-			frmAjaxEliminar($('#ideliminar').val());
-		});
-
-		$("#example").on("click",'.btnVer', function(){
+		$("#examplePlanta").on("click",'.btnModificar', function(){
 			idTable =  $(this).attr("id");
-			url = "cliente.php?id=" + idTable;
-			$(location).attr('href',url);
-		});
-
-		$("#example").on("click",'.btnModificar', function(){
-			idTable =  $(this).attr("id");
-			frmAjaxModificar(idTable);
+			$('.accionModificar').val('modificarPlantas');
+			frmAjaxModificar(idTable, 'dbplantas', <?php echo $id; ?>);
 			$('#lgmModificar').modal();
 		});//fin del boton modificar
+
+		$('.eliminar').click(function() {
+			frmAjaxEliminar($('#ideliminar').val(), $('.accionEliminar').val());
+		});
+
+		$('.btnNuevoPlanta').click(function(){
+			var tabla =  'dbplantas';
+			var id = <?php echo $id; ?>;
+			$('.tituloNuevo').html('PLANTA');
+			$('#accion').html('insertarPlantas');
+			frmAjaxNuevo(id, tabla);
+
+		});//fin del boton nuevo planata
+
+
+		$('.btnNuevoSector').click(function(){
+			var tabla =  'dbsectores';
+			var id = <?php echo $id; ?>;
+			frmAjaxNuevo(id, tabla);
+			$('.tituloNuevo').html('SECTOR');
+		});//fin del boton nuevo sector
+
+		$('.btnNuevoContacto').click(function(){
+			var tabla =  'dbcontactos';
+			var id = <?php echo $id; ?>;
+			frmAjaxNuevo(id, tabla);
+			$('.tituloNuevo').html('CONTACTO');
+		});//fin del boton nuevo contacto
+
+
+
 
 		$('.nuevo').click(function(){
 

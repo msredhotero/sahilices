@@ -24,13 +24,13 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../recursosnecesarios/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../plantas/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Recursos Necesarios",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Plantas",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
@@ -39,24 +39,24 @@ $tituloWeb = mysql_result($configuracion,0,'sistema');
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Recurso Necesario";
+$singular = "Planta";
 
-$plural = "Recursos Necesarios";
+$plural = "Plantas";
 
-$eliminar = "eliminarRecursosnecesarios";
+$eliminar = "eliminarPlantas";
 
-$insertar = "insertarRecursosnecesarios";
+$insertar = "insertarPlantas";
 
-$modificar = "modificarRecursosnecesarios";
+$modificar = "modificarPlantas";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbrecursosnecesarios";
+$tabla 			= "dbplantas";
 
-$lblCambio	 	= array('recursonecesario');
-$lblreemplazo	= array('Recurso Necesario');
+$lblCambio	 	= array('refclientes');
+$lblreemplazo	= array('Cliente');
 
 
 $cadRef 	= '';

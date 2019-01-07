@@ -37,6 +37,14 @@ class serviciosValidador {
       }
    }
 
+   function validaLongitud($valor, $longitud) {
+      if (strlen($valor) != $longitud) {
+         return false;
+      } else {
+         return true;
+      }
+   }
+
    function validar_fecha_espanol($fecha){
    	$valores = explode('-', str_replace('_','',$fecha));
    	//die(var_dump((integer)$valores[1].(integer)$valores[2].(integer)$valores[0]));

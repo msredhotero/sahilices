@@ -42,10 +42,10 @@ switch ($accion) {
 
 
    case 'insertarClientes':
-      insertarClientes($serviciosReferencias);
+      insertarClientes($serviciosReferencias, $serviciosValidador);
    break;
    case 'modificarClientes':
-      modificarClientes($serviciosReferencias);
+      modificarClientes($serviciosReferencias, $serviciosValidador);
    break;
    case 'eliminarClientes':
       eliminarClientes($serviciosReferencias);
@@ -105,7 +105,7 @@ switch ($accion) {
       insertarEmpleados($serviciosReferencias, $serviciosValidador);
    break;
    case 'modificarEmpleados':
-      modificarEmpleados($serviciosReferencias);
+      modificarEmpleados($serviciosReferencias, $serviciosValidador);
    break;
    case 'eliminarEmpleados':
       eliminarEmpleados($serviciosReferencias);
@@ -306,6 +306,10 @@ switch ($accion) {
    case 'frmAjaxModificar':
       frmAjaxModificar($serviciosFunciones, $serviciosReferencias);
    break;
+   case 'frmAjaxNuevo':
+      frmAjaxNuevo($serviciosFunciones, $serviciosReferencias);
+   break;
+
 
 /* Fin */
 
@@ -432,6 +436,31 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refdescripcion = array();
          $refCampo 	=  array();
          break;
+      case 'dbclientes':
+         $modificar = "modificarClientes";
+         $idTabla = "idcliente";
+
+         $lblCambio	 	= array('razonsocial');
+         $lblreemplazo	= array('Razon Social');
+
+         $cadRef 	= '';
+
+         $refdescripcion = array();
+         $refCampo 	=  array();
+         break;
+      case 'dbplantas':
+         $modificar = "modificarPlantas";
+         $idTabla = "idplanta";
+
+         $lblCambio	 	= array('razonsocial');
+         $lblreemplazo	= array('Razon Social');
+
+         $resVar1 = $serviciosReferencias->traerClientesPorId($_POST['referencia1']);
+         $cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'', $_POST['referencia1']);
+
+         $refdescripcion = array(0=>$cadRef1);
+         $refCampo 	=  array('refclientes');
+         break;
 
       default:
          // code...
@@ -444,41 +473,135 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
 }
 
 
+function frmAjaxNuevo($serviciosFunciones, $serviciosReferencias) {
+   $tabla = $_POST['tabla'];
+   $id = $_POST['id'];
+
+   switch ($tabla) {
+      case 'dbplantas':
+
+         $insertar = "insertarPlantas";
+         $idTabla = "idplanta";
+
+         $lblCambio	 	= array("reflientes");
+         $lblreemplazo	= array("Cliente");
+
+         $resVar1 = $serviciosReferencias->traerClientesPorId($id);
+         $cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'', $id);
+
+         $refdescripcion = array(0=>$cadRef1);
+         $refCampo 	=  array('refclientes');
+         break;
+      case 'dbsectores':
+         $insertar = "insertarSectores";
+         $idTabla = "idsector";
+
+         $lblCambio	 	= array("refplantas");
+         $lblreemplazo	= array("Planta");
+
+         $resVar1 = $serviciosReferencias->traerPlantasPorCliente($id);
+         $cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(2),'');
+
+         $refdescripcion = array(0=>$cadRef1);
+         $refCampo 	=  array('refplantas');
+         break;
+      case 'dbcontactos':
+         $insertar = "insertarContactos";
+         $idTabla = "idcontacto";
+
+         $lblCambio	 	= array("refsectores");
+         $lblreemplazo	= array("Sector");
+
+         $resVar1 = $serviciosReferencias->traerPlantasPorCliente($id);
+         $cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(2),'');
+
+         $refdescripcion = array(0=>$cadRef1);
+         $refCampo 	=  array('refsectores');
+         break;
+
+
+      default:
+         // code...
+         break;
+   }
+
+   $formulario = $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+
+   echo $formulario;
+}
+
+
 /* PARA Unidadesnegocios */
 
-function insertarClientes($serviciosReferencias) {
-$razonsocial = $_POST['razonsocial'];
-$cuit = $_POST['cuit'];
-$direccion = $_POST['direccion'];
-$email = $_POST['email'];
-$telefono = $_POST['telefono'];
-$res = $serviciosReferencias->insertarClientes($razonsocial,$cuit,$direccion,$email,$telefono);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+function insertarClientes($serviciosReferencias, $serviciosValidador) {
+   $error = '';
+
+   $razonsocial = ( $serviciosValidador->validaRequerido( trim($_POST['razonsocial']) ) == true ? trim($_POST['razonsocial']) : $error .= 'El campo Razon Social es obligatorio
+   ');
+
+   $cuit = ( $serviciosValidador->validaRequerido( str_replace('_','',trim($_POST['cuit'])) ) == true ?
+               $serviciosValidador->validaLongitud( str_replace('_','',trim($_POST['cuit'])),11 ) == true ? str_replace('_','',trim($_POST['cuit'])) : $error .= 'El campo CUIT no valido
+   ' : $error .= 'El campo CUIT es obligatorio
+   ');
+
+   $direccion = $_POST['direccion'];
+   $email = $_POST['email'];
+   $telefono = $_POST['telefono'];
+
+   if ($error != '') {
+      echo $error;
+   } else {
+      $res = $serviciosReferencias->insertarClientes($razonsocial,$cuit,$direccion,$email,$telefono);
+
+      if ((integer)$res > 0) {
+         echo '';
+      } else {
+         echo 'Huvo un error al insertar datos';
+      }
+   }
+
 }
 
-function modificarClientes($serviciosReferencias) {
-$id = $_POST['id'];
-$razonsocial = $_POST['razonsocial'];
-$cuit = $_POST['cuit'];
-$direccion = $_POST['direccion'];
-$email = $_POST['email'];
-$telefono = $_POST['telefono'];
-$res = $serviciosReferencias->modificarClientes($id,$razonsocial,$cuit,$direccion,$email,$telefono);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+function modificarClientes($serviciosReferencias, $serviciosValidador) {
+   $error = '';
+
+   $id = $_POST['id'];
+   $razonsocial = ( $serviciosValidador->validaRequerido( trim($_POST['razonsocial']) ) == true ? trim($_POST['razonsocial']) : $error .= 'El campo Razon Social es obligatorio
+   ');
+
+   $cuit = ( $serviciosValidador->validaRequerido( str_replace('_','',trim($_POST['cuit'])) ) == true ?
+               $serviciosValidador->validaLongitud( str_replace('_','',trim($_POST['cuit'])),11 ) == true ? str_replace('_','',trim($_POST['cuit'])) : $error .= 'El campo CUIT no valido
+   ' : $error .= 'El campo CUIT es obligatorio
+   ');
+
+   $direccion = $_POST['direccion'];
+   $email = $_POST['email'];
+   $telefono = $_POST['telefono'];
+
+   if ($error != '') {
+      echo $error;
+   } else {
+      $res = $serviciosReferencias->modificarClientes($id,$razonsocial,$cuit,$direccion,$email,$telefono);
+
+      if ($res == true) {
+         echo '';
+      } else {
+         echo 'Huvo un error al modificar datos';
+      }
+   }
+
 }
 
 function eliminarClientes($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarClientes($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarClientes($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerClientes($serviciosReferencias) {
@@ -691,29 +814,55 @@ function insertarEmpleados($serviciosReferencias, $serviciosValidador) {
 
 }
 
-function modificarEmpleados($serviciosReferencias) {
-$id = $_POST['id'];
-$apellido = $_POST['apellido'];
-$nombre = $_POST['nombre'];
-$nrodocumento = $_POST['nrodocumento'];
-$cuit = $_POST['cuit'];
-$fechanacimiento = $_POST['fechanacimiento'];
-$domicilio = $_POST['domicilio'];
-$telefonofijo = $_POST['telefonofijo'];
-$telefonomovil = $_POST['telefonomovil'];
-$sexo = $_POST['sexo'];
-$email = $_POST['email'];
-if (isset($_POST['activo'])) {
-$activo	= 1;
-} else {
-$activo = 0;
-}
-$res = $serviciosReferencias->modificarEmpleados($id,$apellido,$nombre,$nrodocumento,$cuit,$fechanacimiento,$domicilio,$telefonofijo,$telefonomovil,$sexo,$email,$activo);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+function modificarEmpleados($serviciosReferencias, $serviciosValidador) {
+   $id = $_POST['id'];
+
+   $error = '';
+
+   $apellido = ($serviciosValidador->validaRequerido($_POST['apellido']) == true ? trim($_POST['apellido']) : $error.= 'El campo Apellido es obligatorio
+   ');
+   $nombre = ($serviciosValidador->validaRequerido($_POST['nombre']) == true ? trim($_POST['nombre']) : $error.= 'El campo Nombre es obligatorio
+   ');
+   $nrodocumento = ($serviciosValidador->validaRequerido($_POST['nrodocumento']) == true
+                     ?
+                     (($serviciosValidador->validarEnteroRango($_POST['nrodocumento'],5000000,99999999)  == true
+                     ?
+                     $_POST['nrodocumento'] : $error.= 'El Nro Documento esta fuera de los intervalos
+                     ')) : $error.= 'El campo Nro Documento es obligatorio
+                     ');
+   $cuit = $_POST['cuit'];
+   $fechanacimiento = ($serviciosValidador->validar_fecha_espanol( $_POST['fechanacimiento']) == true ? $_POST['fechanacimiento'] : $error.= 'Formato incorrecto en Fecha Nacimiento
+   ');
+   $domicilio = $_POST['domicilio'];
+   $telefonofijo = $_POST['telefonofijo'];
+   $telefonomovil = $_POST['telefonomovil'];
+   $sexo = $_POST['sexo'];
+   $email = $_POST['email'];
+
+   if (isset($_POST['activo'])) {
+      $activo	= 1;
+   } else {
+      $activo = 0;
+   }
+
+   if ($error != '') {
+      echo $error;
+   } else {
+
+      $existe = $serviciosReferencias->existeEmpleadoModificar($nrodocumento, $id);
+
+      if ($existe != 0) {
+         echo 'Ya existe el Nro de documento ingresado';
+      } else {
+         $res = $serviciosReferencias->modificarEmpleados($id,$apellido,$nombre,$nrodocumento,$cuit,$fechanacimiento,$domicilio,$telefonofijo,$telefonomovil,$sexo,$email,$activo);
+
+         if ($res == true) {
+            echo '';
+         } else {
+            echo 'Huvo un error al modificar datos';
+         }
+      }
+   }
 }
 
 function eliminarEmpleados($serviciosReferencias) {
@@ -805,21 +954,29 @@ echo 'Huvo un error al insertar datos';
 }
 
 function modificarPlantas($serviciosReferencias) {
-$id = $_POST['id'];
-$refclientes = $_POST['refclientes'];
-$planta = $_POST['planta'];
-$res = $serviciosReferencias->modificarPlantas($id,$refclientes,$planta);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+   $id = $_POST['id'];
+   $refclientes = $_POST['refclientes'];
+   $planta = $_POST['planta'];
+
+   $res = $serviciosReferencias->modificarPlantas($id,$refclientes,$planta);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function eliminarPlantas($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarPlantas($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarPlantas($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerPlantas($serviciosReferencias) {
