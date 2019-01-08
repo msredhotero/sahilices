@@ -24,13 +24,13 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../recursosnecesarios/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../conceptosviaticos/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Recursos Necesarios",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Conceptos Viaticos",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
@@ -39,30 +39,31 @@ $tituloWeb = mysql_result($configuracion,0,'sistema');
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Recurso Necesario";
+$singular = "Concepto Viatico";
 
-$plural = "Recursos Necesarios";
+$plural = "Conceptos Viaticos";
 
-$eliminar = "eliminarRecursosnecesarios";
+$eliminar = "eliminarConceptosviaticos";
 
-$insertar = "insertarRecursosnecesarios";
+$insertar = "insertarConceptosviaticos";
 
-$modificar = "modificarRecursosnecesarios";
+$modificar = "modificarConceptosviaticos";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbrecursosnecesarios";
+$tabla 			= "dbconceptosviaticos";
 
-$lblCambio	 	= array('recursonecesario');
-$lblreemplazo	= array('Recurso Necesario');
+$lblCambio	 	= array('refconceptos');
+$lblreemplazo	= array('Conceptos');
 
 
-$cadRef 	= '';
+$resVar1 = $serviciosReferencias->traerConceptos();
+$cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef1);
+$refCampo 	=  array('refconceptos');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -200,15 +201,17 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
-												<th>Motivo de Oportunidad</th>
-												<th>Activo</th>
+												<th>Concepto</th>
+												<th>Valor</th>
+												<th>Formula</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tfoot>
 											<tr>
-												<th>Tipo de Concepto</th>
-												<th>Activo</th>
+												<th>Concepto</th>
+												<th>Valor</th>
+												<th>Formula</th>
 												<th>Acciones</th>
 											</tr>
 										</tfoot>
@@ -234,7 +237,10 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
 	               </div>
 	               <div class="modal-body">
-	                  <?php echo $frmUnidadNegocios; ?>
+							<div class="row">
+								<?php echo $frmUnidadNegocios; ?>
+							</div>
+
 	               </div>
 	               <div class="modal-footer">
 	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
@@ -254,8 +260,10 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		               <div class="modal-header">
 		                   <h4 class="modal-title" id="largeModalLabel">MODIFICAR <?php echo strtoupper($singular); ?></h4>
 		               </div>
-		               <div class="modal-body frmAjaxModificar">
+		               <div class="modal-body">
+								<div class="row frmAjaxModificar">
 
+								</div>
 		               </div>
 		               <div class="modal-footer">
 		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
@@ -314,7 +322,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=recursosnecesarios",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=conceptosviaticos",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",

@@ -360,6 +360,31 @@ return $res;
 }
 
 
+function traerConceptosviaticosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where con.concepto like '%".$busqueda."%' or c.formula like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	c.idconceptoviatico,
+	con.concepto,
+	c.valor,
+	c.formula,
+	c.refconceptos
+	from dbconceptosviaticos c
+	inner join dbconceptos con ON con.idconcepto = c.refconceptos
+	".$where."
+	order by con.concepto";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerConceptosviaticosPorId($id) {
 $sql = "select idconceptoviatico,refconceptos,valor,formula from dbconceptosviaticos where idconceptoviatico =".$id;
 $res = $this->query($sql,0);

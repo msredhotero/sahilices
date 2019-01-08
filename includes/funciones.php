@@ -428,13 +428,15 @@ class Servicios {
 						if (in_array($row[0],$geoposicionamiento)) {
 							$form	=	$form.'
 
-							<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 								<label for="'.$label.'" class="control-label" style="text-align:left">'.ucwords($label).'</label>
-								<div class="input-group col-md-12">
-									<span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
-									<input type="text" class="form-control" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="0" required>
-
-								</div>
+								<div class="input-group">
+                           <span class="input-group-addon">$</span>
+                           <div class="form-line">
+                              <input type="text" class="form-control date" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="0" required>
+                           </div>
+                           <span class="input-group-addon">.00</span>
+                        </div>
 							</div>
 
 							';
@@ -443,13 +445,15 @@ class Servicios {
 
 							$form	=	$form.'
 
-							<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 								<label for="'.$label.'" class="control-label" style="text-align:left">'.ucwords($label).'</label>
-								<div class="input-group col-md-12">
-									<span class="input-group-addon">$</span>
-									<input type="text" class="form-control" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="0" required>
-									<span class="input-group-addon">.00</span>
-								</div>
+								<div class="input-group">
+                           <span class="input-group-addon">$</span>
+                           <div class="form-line">
+                              <input type="text" class="form-control date" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="0" '.$lblObligatorio.'>
+                           </div>
+                           <span class="input-group-addon">.00</span>
+                        </div>
 							</div>
 
 							';
@@ -1156,13 +1160,16 @@ class Servicios {
 					if (strpos($row[1],"decimal") !== false) {
 						$form	=	$form.'
 
-						<div class="form-group col-md-6" style="display:'.$lblOculta.'">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 							<label for="'.$label.'" class="control-label" style="text-align:left">'.ucwords($label).'</label>
-							<div class="input-group col-md-12">
-								<span class="input-group-addon">$</span>
-								<input type="text" class="form-control" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="'.mysql_result($resMod,0,$row[0]).'" required>
-								<span class="input-group-addon">.00</span>
-							</div>
+							<div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <div class="form-line">
+                           <input type="text" class="form-control date" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="'.mysql_result($resMod,0,$row[0]).'" '.$lblObligatorio.'>
+                        </div>
+                        <span class="input-group-addon">.00</span>
+                     </div>
+
 						</div>
 
 						';

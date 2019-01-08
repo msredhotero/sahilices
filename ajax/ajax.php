@@ -436,6 +436,22 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $refdescripcion = array();
          $refCampo 	=  array();
          break;
+      case 'dbconceptosviaticos':
+         $resultado = $serviciosReferencias->traerConceptosviaticosPorId($id);
+
+         $modificar = "modificarConceptosviaticos";
+         $idTabla = "idconceptoviatico";
+
+         $lblCambio	 	= array('refconceptos');
+         $lblreemplazo	= array('Conceptos');
+
+
+         $resVar1 = $serviciosReferencias->traerConceptos();
+         $cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'', mysql_result($resultado,0,'refconceptos'));
+
+         $refdescripcion = array(0=>$cadRef1);
+         $refCampo 	=  array('refconceptos');
+         break;
       case 'dbclientes':
          $modificar = "modificarClientes";
          $idTabla = "idcliente";
@@ -703,34 +719,44 @@ echo json_encode($resV);
 }
 
 function insertarConceptosviaticos($serviciosReferencias) {
-$refconceptos = $_POST['refconceptos'];
-$valor = $_POST['valor'];
-$formula = $_POST['formula'];
-$res = $serviciosReferencias->insertarConceptosviaticos($refconceptos,$valor,$formula);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+   $refconceptos = $_POST['refconceptos'];
+   $valor = $_POST['valor'];
+   $formula = $_POST['formula'];
+
+   $res = $serviciosReferencias->insertarConceptosviaticos($refconceptos,$valor,$formula);
+
+   if ((integer)$res > 0) {
+      echo '';
+   } else {
+      echo 'Huvo un error al insertar datos';
+   }
 }
 
 function modificarConceptosviaticos($serviciosReferencias) {
-$id = $_POST['id'];
-$refconceptos = $_POST['refconceptos'];
-$valor = $_POST['valor'];
-$formula = $_POST['formula'];
-$res = $serviciosReferencias->modificarConceptosviaticos($id,$refconceptos,$valor,$formula);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+   $id = $_POST['id'];
+   $refconceptos = $_POST['refconceptos'];
+   $valor = $_POST['valor'];
+   $formula = $_POST['formula'];
+
+   $res = $serviciosReferencias->modificarConceptosviaticos($id,$refconceptos,$valor,$formula);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function eliminarConceptosviaticos($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarConceptosviaticos($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarConceptosviaticos($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerConceptosviaticos($serviciosReferencias) {

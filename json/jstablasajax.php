@@ -176,6 +176,17 @@ switch ($tabla) {
 		$termina = 7;
 
 		break;
+	case 'conceptosviaticos':
+		$resAjax = $serviciosReferencias->traerConceptosviaticosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerConceptosviaticos();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 3;
+
+		break;
 
 	default:
 		// code...
