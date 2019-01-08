@@ -239,7 +239,10 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	               </div>
 	               <div class="modal-body">
 							<div class="">
-								<?php echo $frmUnidadNegocios; ?>
+								<div class="row">
+									<?php echo $frmUnidadNegocios; ?>
+								</div>
+
 							</div>
 
 	               </div>
