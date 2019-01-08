@@ -24,13 +24,13 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../recursosnecesarios/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../listasprecios/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Recursos Necesarios",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Lista de Precios",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
@@ -39,33 +39,36 @@ $tituloWeb = mysql_result($configuracion,0,'sistema');
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Recurso Necesario";
+$singular = "Lista de Precio";
 
-$plural = "Recursos Necesarios";
+$plural = "Lista de Precios";
 
-$eliminar = "eliminarRecursosnecesarios";
+$eliminar = "eliminarListasprecios";
 
-$insertar = "insertarRecursosnecesarios";
+$insertar = "insertarListasprecios";
 
-$modificar = "modificarRecursosnecesarios";
+$modificar = "modificarListasprecios";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "tbrecursosnecesarios";
+$tabla 			= "dblistasprecios";
 
-$lblCambio	 	= array('recursonecesario');
-$lblreemplazo	= array('Recurso Necesario');
+$lblCambio	 	= array('refconceptos','precio1','precio2','precio3','precio4','vigenciadesde','vigenciahasta');
+$lblreemplazo	= array('Conceptos','Precio 1','Precio 2','Precio 3','Precio 4','Vig. Desde','Vig. Hasta');
 
 
-$cadRef 	= '';
+$resVar1 = $serviciosReferencias->traerConceptos();
+$cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef1);
+$refCampo 	=  array('refconceptos');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
+
+$existe = $serviciosReferencias->existe('select idconcepto from dbconceptos');
 
 ?>
 
@@ -186,7 +189,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 								<div class="row">
 									<div class="col-lg-12 col-md-12">
 										<div class="button-demo">
-											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
+											<button <?php if ($existe == 0) { echo 'disabled="disabled"'; }?> type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
 												<i class="material-icons">add</i>
 												<span>NUEVO</span>
 											</button>
@@ -200,15 +203,29 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
-												<th>Motivo de Oportunidad</th>
-												<th>Activo</th>
+												<th>Nombre</th>
+												<th>Concepto</th>
+												<th>Precio 1</th>
+												<th>Precio 2</th>
+												<th>Precio 3</th>
+												<th>Precio 4</th>
+												<th>IVA</th>
+												<th>Vig. Desde</th>
+												<th>Vig. Hasta</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tfoot>
 											<tr>
-												<th>Tipo de Concepto</th>
-												<th>Activo</th>
+												<th>Nombre</th>
+												<th>Concepto</th>
+												<th>Precio 1</th>
+												<th>Precio 2</th>
+												<th>Precio 3</th>
+												<th>Precio 4</th>
+												<th>IVA</th>
+												<th>Vig. Desde</th>
+												<th>Vig. Hasta</th>
 												<th>Acciones</th>
 											</tr>
 										</tfoot>
@@ -233,8 +250,11 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	               <div class="modal-header">
 	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
 	               </div>
-	               <div class="modal-body">
-	                  <?php echo $frmUnidadNegocios; ?>
+	               <div class="modal-body demo-masked-input">
+							<div class="row">
+							<?php echo $frmUnidadNegocios; ?>
+							</div>
+
 	               </div>
 	               <div class="modal-footer">
 	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
@@ -247,7 +267,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 	</form>
 
 	<!-- MODIFICAR -->
-		<form class="formulario" role="form" id="sign_in">
+		<form class="formulario formMod" role="form" id="sign_in">
 		   <div class="modal fade" id="lgmModificar" tabindex="-1" role="dialog">
 		       <div class="modal-dialog modal-lg" role="document">
 		           <div class="modal-content">
@@ -314,7 +334,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=recursosnecesarios",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=listasprecios",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -346,7 +366,17 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 		$('#activo').prop('checked',true);
 
-		function frmAjaxModificar(id) {
+		$('#precio1').number( true, 2, '.', '' );
+		$('#precio2').number( true, 2, '.', '' );
+		$('#precio3').number( true, 2, '.', '' );
+		$('#precio4').number( true, 2, '.', '' );
+		$('#iva').number( true, 2, '.', '' );
+
+		var $demoMaskedInput = $('.demo-masked-input');
+
+		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
+
+		function frmAjaxModificar(id, $demoMaskedInput) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
 				type: 'POST',
@@ -362,6 +392,14 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 					if (data != '') {
 						$('.frmAjaxModificar').html(data);
+						$('.formMod #precio1').number( true, 2, '.', '' );
+						$('.formMod #precio2').number( true, 2, '.', '' );
+						$('.formMod #precio3').number( true, 2, '.', '' );
+						$('.formMod #precio4').number( true, 2, '.', '' );
+						$('.formMod #iva').number( true, 2, '.', '' );
+						$('.formMod #vigenciadesde').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
+						$('.formMod #vigenciahasta').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
+
 					} else {
 						swal("Error!", data, "warning");
 

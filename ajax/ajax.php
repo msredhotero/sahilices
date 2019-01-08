@@ -117,10 +117,10 @@ switch ($accion) {
       traerEmpleadosPorId($serviciosReferencias);
    break;
    case 'insertarListasprecios':
-      insertarListasprecios($serviciosReferencias);
+      insertarListasprecios($serviciosReferencias, $serviciosValidador);
    break;
    case 'modificarListasprecios':
-      modificarListasprecios($serviciosReferencias);
+      modificarListasprecios($serviciosReferencias, $serviciosValidador);
    break;
    case 'eliminarListasprecios':
       eliminarListasprecios($serviciosReferencias);
@@ -504,6 +504,20 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
 
          $refdescripcion = array(0=> $cadRef2);
          $refCampo 	=  array('refsectores');
+         break;
+      case 'dblistasprecios':
+         $resultado = $serviciosReferencias->traerListaspreciosPorId($id);
+         $modificar = "modificarListasprecios";
+         $idTabla = "idlistaprecio";
+
+         $lblCambio	 	= array('refconceptos');
+         $lblreemplazo	= array('Conceptos');
+
+         $resVar2 = $serviciosReferencias->traerConceptos();
+         $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),' - ', mysql_result($resultado,0,'refconceptos'));
+
+         $refdescripcion = array(0=> $cadRef2);
+         $refCampo 	=  array('refconceptos');
          break;
 
       default:
@@ -948,47 +962,103 @@ header('Content-type: application/json');
 echo json_encode($resV);
 }
 
-function insertarListasprecios($serviciosReferencias) {
-$nombre = $_POST['nombre'];
-$refconceptos = $_POST['refconceptos'];
-$precio1 = $_POST['precio1'];
-$precio2 = $_POST['precio2'];
-$precio3 = $_POST['precio3'];
-$precio4 = $_POST['precio4'];
-$iva = $_POST['iva'];
-$vigenciadesde = $_POST['vigenciadesde'];
-$vigenciahasta = $_POST['vigenciahasta'];
-$res = $serviciosReferencias->insertarListasprecios($nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+function insertarListasprecios($serviciosReferencias, $serviciosValidador) {
+   $error = '';
+
+   $nombre = trim($_POST['nombre']);
+   if ($serviciosValidador->validaRequerido($nombre) == false) {
+      $error .= 'El campo Nombre es obligatorio
+      ';
+   }
+
+   $refconceptos = $_POST['refconceptos'];
+
+   $precio1 = $_POST['precio1'];
+   $precio2 = $_POST['precio2'];
+   $precio3 = $_POST['precio3'];
+   $precio4 = $_POST['precio4'];
+   $iva = $_POST['iva'];
+
+   $vigenciadesde = str_replace('_','',trim($_POST['vigenciadesde']));
+   if ($serviciosValidador->validar_fecha_espanol($vigenciadesde) == false) {
+      $error .= 'Vig. Desde Fecha Invalida
+      ';
+   }
+
+   $vigenciahasta = str_replace('_','',trim($_POST['vigenciahasta']));
+   if ($serviciosValidador->validar_fecha_espanol($vigenciahasta) == false) {
+      $error .= 'Vig. Hasta Fecha Invalida
+      ';
+   }
+
+   if ($error == '') {
+      $res = $serviciosReferencias->insertarListasprecios($nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta);
+
+      if ((integer)$res > 0) {
+         echo '';
+      } else {
+         echo 'Huvo un error al insertar datos';
+      }
+   } else {
+      echo $error;
+   }
+
 }
 
-function modificarListasprecios($serviciosReferencias) {
-$id = $_POST['id'];
-$nombre = $_POST['nombre'];
-$refconceptos = $_POST['refconceptos'];
-$precio1 = $_POST['precio1'];
-$precio2 = $_POST['precio2'];
-$precio3 = $_POST['precio3'];
-$precio4 = $_POST['precio4'];
-$iva = $_POST['iva'];
-$vigenciadesde = $_POST['vigenciadesde'];
-$vigenciahasta = $_POST['vigenciahasta'];
-$res = $serviciosReferencias->modificarListasprecios($id,$nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+function modificarListasprecios($serviciosReferencias, $serviciosValidador) {
+   $error = '';
+
+   $id = $_POST['id'];
+
+   $nombre = trim($_POST['nombre']);
+   if ($serviciosValidador->validaRequerido($nombre) == false) {
+      $error .= 'El campo Nombre es obligatorio
+      ';
+   }
+
+   $refconceptos = $_POST['refconceptos'];
+   $precio1 = $_POST['precio1'];
+   $precio2 = $_POST['precio2'];
+   $precio3 = $_POST['precio3'];
+   $precio4 = $_POST['precio4'];
+   $iva = $_POST['iva'];
+
+   $vigenciadesde = str_replace('_','',trim($_POST['vigenciadesde']));
+   if ($serviciosValidador->validar_fecha_espanol($vigenciadesde) == false) {
+      $error .= 'Vig. Desde Fecha Invalida
+      ';
+   }
+
+   $vigenciahasta = str_replace('_','',trim($_POST['vigenciahasta']));
+   if ($serviciosValidador->validar_fecha_espanol($vigenciahasta) == false) {
+      $error .= 'Vig. Hasta Fecha Invalida
+      ';
+   }
+
+   if ($error == '') {
+      $res = $serviciosReferencias->modificarListasprecios($id,$nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta);
+
+      if ($res == true) {
+         echo '';
+      } else {
+         echo 'Huvo un error al modificar datos';
+      }
+   } else {
+      echo $error;
+   }
+
 }
 
 function eliminarListasprecios($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarListasprecios($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarListasprecios($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerListasprecios($serviciosReferencias) {

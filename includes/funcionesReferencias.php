@@ -629,21 +629,51 @@ return $res;
 }
 
 
+function traerListaspreciosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where l.nombre like '%".$busqueda."%' and con.concepto like '%".$busqueda."%' and l.precio1 like '%".$busqueda."%' and l.precio2 like '%".$busqueda."%' and l.precio3 like '%".$busqueda."%' and l.precio4 like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	l.idlistaprecio,
+	l.nombre,
+	con.concepto,
+	l.precio1,
+	l.precio2,
+	l.precio3,
+	l.precio4,
+	l.iva,
+	l.vigenciadesde,
+	l.vigenciahasta
+	from dblistasprecios l
+	inner join dbconceptos con ON con.idconcepto = l.refconceptos
+	".$where."
+	order by l.nombre";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 function traerListasprecios() {
 $sql = "select
 l.idlistaprecio,
 l.nombre,
-l.refconceptos,
+con.concepto,
 l.precio1,
 l.precio2,
 l.precio3,
 l.precio4,
 l.iva,
 l.vigenciadesde,
-l.vigenciahasta
+l.vigenciahasta,
+l.refconceptos
 from dblistasprecios l
 inner join dbconceptos con ON con.idconcepto = l.refconceptos
-order by 1";
+order by l.nombre";
 $res = $this->query($sql,0);
 return $res;
 }

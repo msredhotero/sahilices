@@ -187,6 +187,17 @@ switch ($tabla) {
 		$termina = 3;
 
 		break;
+	case 'listasprecios':
+		$resAjax = $serviciosReferencias->traerListaspreciosajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerListasprecios();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 9;
+
+		break;
 
 	default:
 		// code...

@@ -47,7 +47,8 @@ class BaseHTML {
                          9=>'<script src="'.$altura.'plugins/jquery-validation/jquery.validate.js"></script>',
                          10=>'<script src="'.$altura.'plugins/jquery-steps/jquery.steps.js"></script>',
                          11=>'<script src="'.$altura.'plugins/sweetalert/sweetalert.min.js"></script>',
-                         12=>'<script src="'.$altura.'js/pages/forms/form-validation.js"></script>');
+                         12=>'<script src="'.$altura.'js/pages/forms/form-validation.js"></script>',
+                         13=>'<script src="'.$altura.'js/jquery.number.js"></script>');
 
         $cad = '';
 
@@ -184,7 +185,7 @@ class BaseHTML {
                             <div class="btn-group user-helper-dropdown">
                                 <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                                 <ul class="dropdown-menu pull-right">
-                                    
+
                                     <li><a href="'.$altura.'logout.php"><i class="material-icons">input</i>Salir</a></li>
                                 </ul>
                             </div>

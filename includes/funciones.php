@@ -433,7 +433,7 @@ class Servicios {
 								<div class="input-group">
                            <span class="input-group-addon">$</span>
                            <div class="form-line">
-                              <input type="text" class="form-control date" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="0" required>
+                              <input type="text" class="form-control" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="" '.$lblObligatorio.'>
                            </div>
                            <span class="input-group-addon">.00</span>
                         </div>
@@ -450,7 +450,7 @@ class Servicios {
 								<div class="input-group">
                            <span class="input-group-addon">$</span>
                            <div class="form-line">
-                              <input type="text" class="form-control date" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="0" '.$lblObligatorio.'>
+                              <input type="text" class="form-control" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="" '.$lblObligatorio.'>
                            </div>
                            <span class="input-group-addon">.00</span>
                         </div>
@@ -1165,7 +1165,7 @@ class Servicios {
 							<div class="input-group">
                         <span class="input-group-addon">$</span>
                         <div class="form-line">
-                           <input type="text" class="form-control date" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="'.mysql_result($resMod,0,$row[0]).'" '.$lblObligatorio.'>
+                           <input type="text" class="form-control" id="'.strtolower($row[0]).'" name="'.strtolower($row[0]).'" value="'.mysql_result($resMod,0,$row[0]).'" '.$lblObligatorio.'>
                         </div>
                         <span class="input-group-addon">.00</span>
                      </div>
@@ -1237,12 +1237,16 @@ class Servicios {
 
 									$form	=	$form.'
 
-									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 margTop">
-										<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-										<div class="input-group col-md-6">
-											<input class="form-control date" type="text" value="'.mysql_result($resMod,0,$row[0]).'" name="'.$campo.'" id="'.$campo.'" '.$lblObligatorio.'/>
-										</div>
-
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										 <b>'.$label.'</b>
+										 <div class="input-group">
+											  <span class="input-group-addon">
+													<i class="material-icons">date_range</i>
+											  </span>
+											  <div class="form-line">
+													<input type="text" class="form-control date" value="'.mysql_result($resMod,0,$row[0]).'" placeholder="Ej: 2019-01-01" id="'.$campo.'" name="'.$campo.'" '.$lblObligatorio.'>
+											  </div>
+										 </div>
 									</div>
 
 									';
