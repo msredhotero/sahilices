@@ -155,6 +155,27 @@ switch ($tabla) {
 		$termina = 1;
 
 		break;
+	case 'sectores':
+		$resAjax = $serviciosReferencias->traerSectoresajaxPorCliente($length, $start, $busqueda, $referencia1);
+		$res = $serviciosReferencias->traerSectores();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 2;
+		break;
+	case 'contactos':
+		$resAjax = $serviciosReferencias->traerContactosajaxPorCliente($length, $start, $busqueda, $referencia1);
+		$res = $serviciosReferencias->traerContactos();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 7;
+
+		break;
 
 	default:
 		// code...

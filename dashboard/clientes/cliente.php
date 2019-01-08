@@ -72,6 +72,10 @@ $idTabla = 'idcliente';
 $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+$existePlantas = $serviciosReferencias->existe('select idplanta from dbplantas where refclientes = '.$id);
+
+$existeSectores = $serviciosReferencias->existe('select p.idplanta from dbplantas p inner join dbsectores s on p.idplanta = s.refplantas where p.refclientes = '.$id);
+
 ?>
 
 <!DOCTYPE html>
@@ -262,7 +266,8 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 										<div class="row">
 											<div class="col-lg-12 col-md-12">
 												<div class="button-demo">
-													<button type="button" class="btn bg-light-green waves-effect btnNuevoSector">
+
+													<button <?php if ($existePlantas == 0) { echo 'disabled="disabled"'; }?> type="button" class="btn bg-light-green waves-effect btnNuevoSector" data-toggle="modal" data-target="#lgmNuevo">
 														<i class="material-icons">add</i>
 														<span>NUEVO</span>
 													</button>
@@ -282,9 +287,26 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 		                              </div>
 		                              <div id="collapseOne_18" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_18">
 		                                 <div class="panel-body">
-		                                     <div class="row lstSectores">
-
-		                                     </div>
+		                                    <div class="row lstSectores">
+															<div class="row" style="padding: 5px 20px;">
+																<table id="exampleSector" class="display table " style="width:100%">
+																	<thead>
+																		<tr>
+																			<th>Planta</th>
+																			<th>Sector</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</thead>
+																	<tfoot>
+																		<tr>
+																			<th>Planta</th>
+																			<th>Sector</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</tfoot>
+																</table>
+															</div>
+		                                    </div>
 		                                 </div>
 		                              </div>
 		                           </div>
@@ -296,7 +318,7 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 										<div class="row">
 											<div class="col-lg-12 col-md-12">
 												<div class="button-demo">
-													<button type="button" class="btn bg-light-green waves-effect btnNuevoContacto" target="#lgmNuevo">
+													<button <?php if ($existeSectores == 0) { echo 'disabled="disabled"'; }?> type="button" class="btn bg-light-green waves-effect btnNuevoContacto" data-toggle="modal" data-target="#lgmNuevo">
 														<i class="material-icons">add</i>
 														<span>NUEVO</span>
 													</button>
@@ -317,7 +339,34 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 		                              <div id="collapseOne_19" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_19">
 		                                 <div class="panel-body">
 														<div class="row lstContactos">
-
+															<div class="row" style="padding: 5px 20px;">
+																<table id="exampleContacto" class="display table " style="width:100%">
+																	<thead>
+																		<tr>
+																			<th>Planta</th>
+																			<th>Sector</th>
+																			<th>Apellido</th>
+																			<th>Nombre</th>
+																			<th>Nro Documento</th>
+																			<th>Email</th>
+																			<th>Tel.</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</thead>
+																	<tfoot>
+																		<tr>
+																			<th>Planta</th>
+																			<th>Sector</th>
+																			<th>Apellido</th>
+																			<th>Nombre</th>
+																			<th>Nro Documento</th>
+																			<th>Email</th>
+																			<th>Tel.</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</tfoot>
+																</table>
+															</div>
 														</div>
 		                                 </div>
 		                              </div>
@@ -432,10 +481,70 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 <script>
 	$(document).ready(function(){
 
-		var table = $('#examplePlanta').DataTable({
+		var tablePlanta = $('#examplePlanta').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
 			"sAjaxSource": "../../json/jstablasajax.php?tabla=plantas&referencia1=<?php echo $id; ?>",
+			"language": {
+				"emptyTable":     "No hay datos cargados",
+				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
+				"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
+				"infoFiltered":   "(filtrados del total de _MAX_ filas)",
+				"infoPostFix":    "",
+				"thousands":      ",",
+				"lengthMenu":     "Mostrar _MENU_ filas",
+				"loadingRecords": "Cargando...",
+				"processing":     "Procesando...",
+				"search":         "Buscar:",
+				"zeroRecords":    "No se encontraron resultados",
+				"paginate": {
+					"first":      "Primero",
+					"last":       "Ultimo",
+					"next":       "Siguiente",
+					"previous":   "Anterior"
+				},
+				"aria": {
+					"sortAscending":  ": activate to sort column ascending",
+					"sortDescending": ": activate to sort column descending"
+				}
+			}
+		});
+
+
+		var tableSector = $('#exampleSector').DataTable({
+			"bProcessing": true,
+			"bServerSide": true,
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=sectores&referencia1=<?php echo $id; ?>",
+			"language": {
+				"emptyTable":     "No hay datos cargados",
+				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
+				"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
+				"infoFiltered":   "(filtrados del total de _MAX_ filas)",
+				"infoPostFix":    "",
+				"thousands":      ",",
+				"lengthMenu":     "Mostrar _MENU_ filas",
+				"loadingRecords": "Cargando...",
+				"processing":     "Procesando...",
+				"search":         "Buscar:",
+				"zeroRecords":    "No se encontraron resultados",
+				"paginate": {
+					"first":      "Primero",
+					"last":       "Ultimo",
+					"next":       "Siguiente",
+					"previous":   "Anterior"
+				},
+				"aria": {
+					"sortAscending":  ": activate to sort column ascending",
+					"sortDescending": ": activate to sort column descending"
+				}
+			}
+		});
+
+
+		var tableContacto = $('#exampleContacto').DataTable({
+			"bProcessing": true,
+			"bServerSide": true,
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=contactos&referencia1=<?php echo $id; ?>",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -561,7 +670,9 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 								showConfirmButton: false
 						});
 						$('#lgmEliminar').modal('toggle');
-						table.ajax.reload();
+						tablePlanta.ajax.reload();
+						tableSector.ajax.reload();
+						tableContacto.ajax.reload();
 					} else {
 						swal({
 								title: "Respuesta",
@@ -588,23 +699,25 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 
 		}
 
+
+		$('.eliminar').click(function() {
+			frmAjaxEliminar($('#ideliminar').val(), $('.accionEliminar').val());
+		});
+
+
 		$("#examplePlanta").on("click",'.btnEliminar', function(){
 			idTable =  $(this).attr("id");
 			$('.accionEliminar').val('eliminarPlantas');
 			$('#ideliminar').val(idTable);
 			$('#lgmEliminar').modal();
-		});//fin del boton eliminar
+		});//fin del boton eliminar planta
 
 		$("#examplePlanta").on("click",'.btnModificar', function(){
 			idTable =  $(this).attr("id");
 			$('.accionModificar').val('modificarPlantas');
 			frmAjaxModificar(idTable, 'dbplantas', <?php echo $id; ?>);
 			$('#lgmModificar').modal();
-		});//fin del boton modificar
-
-		$('.eliminar').click(function() {
-			frmAjaxEliminar($('#ideliminar').val(), $('.accionEliminar').val());
-		});
+		});//fin del boton modificar planta
 
 		$('.btnNuevoPlanta').click(function(){
 			var tabla =  'dbplantas';
@@ -616,18 +729,51 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 		});//fin del boton nuevo planata
 
 
+		$("#exampleSector").on("click",'.btnEliminar', function(){
+			idTable =  $(this).attr("id");
+			$('.accionEliminar').val('eliminarSectores');
+			$('#ideliminar').val(idTable);
+			$('#lgmEliminar').modal();
+		});//fin del boton eliminar sector
+
+		$("#exampleSector").on("click",'.btnModificar', function(){
+			idTable =  $(this).attr("id");
+			$('.accionModificar').val('modificarSectores');
+			frmAjaxModificar(idTable, 'dbsectores', <?php echo $id; ?>);
+			$('#lgmModificar').modal();
+		});//fin del boton modificar sector
+
 		$('.btnNuevoSector').click(function(){
 			var tabla =  'dbsectores';
 			var id = <?php echo $id; ?>;
-			frmAjaxNuevo(id, tabla);
 			$('.tituloNuevo').html('SECTOR');
+			$('#accion').html('insertarSectores');
+			frmAjaxNuevo(id, tabla);
+
 		});//fin del boton nuevo sector
+
+
+		$("#exampleContacto").on("click",'.btnEliminar', function(){
+			idTable =  $(this).attr("id");
+			$('.accionEliminar').val('eliminarContactos');
+			$('#ideliminar').val(idTable);
+			$('#lgmEliminar').modal();
+		});//fin del boton eliminar contacto
+
+		$("#exampleContacto").on("click",'.btnModificar', function(){
+			idTable =  $(this).attr("id");
+			$('.accionModificar').val('modificarContactos');
+			frmAjaxModificar(idTable, 'dbcontactos', <?php echo $id; ?>);
+			$('#lgmModificar').modal();
+		});//fin del boton modificar contacto
 
 		$('.btnNuevoContacto').click(function(){
 			var tabla =  'dbcontactos';
 			var id = <?php echo $id; ?>;
-			frmAjaxNuevo(id, tabla);
 			$('.tituloNuevo').html('CONTACTO');
+			$('#accion').html('insertarContactos');
+			frmAjaxNuevo(id, tabla);
+
 		});//fin del boton nuevo contacto
 
 
@@ -667,7 +813,9 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 
 						$('#lgmNuevo').modal('hide');
 						$('#unidadnegocio').val('');
-						table.ajax.reload();
+						tablePlanta.ajax.reload();
+						tableSector.ajax.reload();
+						tableContacto.ajax.reload();
 					} else {
 						swal({
 								title: "Respuesta",
@@ -722,7 +870,9 @@ $frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lbl
 						});
 
 						$('#lgmModificar').modal('hide');
-						table.ajax.reload();
+						tablePlanta.ajax.reload();
+						tableSector.ajax.reload();
+						tableContacto.ajax.reload();
 					} else {
 						swal({
 								title: "Respuesta",

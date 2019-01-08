@@ -452,14 +452,42 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
          $modificar = "modificarPlantas";
          $idTabla = "idplanta";
 
-         $lblCambio	 	= array('razonsocial');
-         $lblreemplazo	= array('Razon Social');
+         $lblCambio	 	= array('refclientes');
+         $lblreemplazo	= array('Cliente');
 
          $resVar1 = $serviciosReferencias->traerClientesPorId($_POST['referencia1']);
          $cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'', $_POST['referencia1']);
 
          $refdescripcion = array(0=>$cadRef1);
          $refCampo 	=  array('refclientes');
+         break;
+      case 'dbsectores':
+         $resultado = $serviciosReferencias->traerSectoresPorId($id);
+         $modificar = "modificarSectores";
+         $idTabla = "idsector";
+
+         $lblCambio	 	= array('refplantas');
+         $lblreemplazo	= array('Planta');
+
+         $resVar2 = $serviciosReferencias->traerPlantasPorCliente($_POST['referencia1']);
+         $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(2),'', mysql_result($resultado,0,'refplantas'));
+
+         $refdescripcion = array(0=> $cadRef2);
+         $refCampo 	=  array('refplantas');
+         break;
+      case 'dbcontactos':
+         $resultado = $serviciosReferencias->traerContactosPorId($id);
+         $modificar = "modificarContactos";
+         $idTabla = "idcontacto";
+
+         $lblCambio	 	= array('refsectores');
+         $lblreemplazo	= array('Sector');
+
+         $resVar2 = $serviciosReferencias->traerSectoresPorCliente($_POST['referencia1']);
+         $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(3,2),' - ', mysql_result($resultado,0,'refsectores'));
+
+         $refdescripcion = array(0=> $cadRef2);
+         $refCampo 	=  array('refsectores');
          break;
 
       default:
@@ -512,8 +540,8 @@ function frmAjaxNuevo($serviciosFunciones, $serviciosReferencias) {
          $lblCambio	 	= array("refsectores");
          $lblreemplazo	= array("Sector");
 
-         $resVar1 = $serviciosReferencias->traerPlantasPorCliente($id);
-         $cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(2),'');
+         $resVar1 = $serviciosReferencias->traerSectoresPorCliente($id);
+         $cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(3,2),' - ');
 
          $refdescripcion = array(0=>$cadRef1);
          $refCampo 	=  array('refsectores');
@@ -748,9 +776,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarContactos($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarContactos($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarContactos($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerContactos($serviciosReferencias) {
@@ -1014,9 +1048,15 @@ echo 'Huvo un error al modificar datos';
 }
 
 function eliminarSectores($serviciosReferencias) {
-$id = $_POST['id'];
-$res = $serviciosReferencias->eliminarSectores($id);
-echo $res;
+   $id = $_POST['id'];
+
+   $res = $serviciosReferencias->eliminarSectores($id);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function traerSectores($serviciosReferencias) {

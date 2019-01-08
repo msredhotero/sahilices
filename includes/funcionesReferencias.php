@@ -415,6 +415,56 @@ return $res;
 }
 
 
+function traerContactosPorCliente($idcliente) {
+$sql = "select
+c.idcontacto,
+c.refsectores,
+c.apellido,
+c.nombre,
+c.nrodocumento,
+c.email,
+c.telefono
+from dbcontactos c
+inner join dbsectores sec ON sec.idsector = c.refsectores
+inner join dbplantas pl ON pl.idplanta = sec.refplantas
+where pl.refclientes = ".$idcliente."
+order by c.apellido, c.nombre";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerContactosajaxPorCliente($length, $start, $busqueda, $idcliente) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "and pl.planta like '%".$busqueda."%' or sec.sector like '%".$busqueda."%' or c.apellido like '%".$busqueda."%' or c.nombre like '%".$busqueda."%' or c.nrodocumento like '%".$busqueda."%' or c.email like '%".$busqueda."%' or c.telefono like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	c.idcontacto,
+	pl.planta,
+	sec.sector,
+	c.apellido,
+	c.nombre,
+	c.nrodocumento,
+	c.email,
+	c.telefono,
+	c.refsectores
+	from dbcontactos c
+	inner join dbsectores sec ON sec.idsector = c.refsectores
+	inner join dbplantas pl ON pl.idplanta = sec.refplantas
+	where pl.refclientes = ".$idcliente." ".$where."
+	order by c.apellido, c.nombre";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerContactosPorId($id) {
 $sql = "select idcontacto,refsectores,apellido,nombre,nrodocumento,email,telefono from dbcontactos where idcontacto =".$id;
 $res = $this->query($sql,0);
@@ -715,14 +765,40 @@ function traerSectoresPorCliente($idcliente) {
 $sql = "select
 s.idsector,
 s.refplantas,
-s.sector
+s.sector,
+pla.planta
 from dbsectores s
 inner join dbplantas pla ON pla.idplanta = s.refplantas
 inner join dbclientes cl ON cl.idcliente = pla.refclientes
 where cl.idcliente = ".$idcliente."
-order by s.sector";
+order by pla.planta,s.sector";
 $res = $this->query($sql,0);
 return $res;
+}
+
+
+function traerSectoresajaxPorCliente($length, $start, $busqueda, $idcliente) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = "and s.sector like '%".$busqueda."%' or s.planta like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+	s.idsector,
+	pla.planta,
+	s.sector,
+	s.refplantas
+	from dbsectores s
+	inner join dbplantas pla ON pla.idplanta = s.refplantas
+	inner join dbclientes cl ON cl.idcliente = pla.refclientes
+	where cl.idcliente = ".$idcliente." ".$where."
+	order by s.sector";
+
+	$res = $this->query($sql,0);
+	return $res;
 }
 
 
