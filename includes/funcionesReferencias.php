@@ -9,6 +9,119 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+
+
+	/* PARA Oportunidades */
+
+	function insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos) {
+		$sql = "insert into dboportunidades(idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,cotiza,refcotizaciones,refsemaforos)
+		values ('','".$empresa."','".$contacto."','".$telefono."','".$email."','".$comentarios."',".$reftipostrabajos.",".$refmotivosoportunidades.",'".$observaciones."',".$refusuarios.",".$refestados.",".$cotiza.",".$refcotizaciones.",".$refsemaforos.")";
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos) {
+		$sql = "update dboportunidades
+		set
+		empresa = '".$empresa."',contacto = '".$contacto."',telefono = '".$telefono."',email = '".$email."',comentarios = '".$comentarios."',reftipostrabajos = ".$reftipostrabajos.",refmotivosoportunidades = ".$refmotivosoportunidades.",observaciones = '".$observaciones."',refusuarios = ".$refusuarios.",refestados = ".$refestados.",cotiza = ".$cotiza.",refcotizaciones = ".$refcotizaciones.",refsemaforos = ".$refsemaforos."
+		where idoportunidad =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function eliminarOportunidades($id) {
+		$sql = "delete from dboportunidades where idoportunidad =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerOportunidadesajax($length, $start, $busqueda) {
+
+		$where = '';
+
+		$busqueda = str_replace("'","",$busqueda);
+		if ($busqueda != '') {
+			$where = "where o.empresa like '%".$busqueda."%' or o.contacto like '%".$busqueda."%' or o.telefono like '%".$busqueda."%' or o.email like '%".$busqueda."%' or tip.tipotrabajo like '%".$busqueda."%' or mot.motivo like '%".$busqueda."%' or est.estado like '%".$busqueda."%'";
+		}
+
+		$sql = "select
+			o.idoportunidad,
+			o.empresa,
+			o.contacto,
+			o.telefono,
+			o.email,
+			tip.tipotrabajo,
+			mot.motivo,
+			o.comentarios,
+			est.estado,
+			sem.color as semaforo,
+			est.color,
+			o.reftipostrabajos,
+			o.refmotivosoportunidades,
+			o.observaciones,
+			o.refusuarios,
+			o.refestados,
+			o.cotiza,
+			o.refcotizaciones,
+			o.refsemaforos,
+			o.fechacreacion
+		from dboportunidades o
+		inner join tbtipostrabajos tip ON tip.idtipotrabajo = o.reftipostrabajos
+		inner join tbmotivosoportunidades mot ON mot.idmotivooportunidad = o.refmotivosoportunidades
+		inner join tbestados est ON est.idestado = o.refestados
+		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
+		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
+		".$where."
+		order by o.fechacreacion desc";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerOportunidades() {
+		$sql = "select
+			o.idoportunidad,
+			o.empresa,
+			o.contacto,
+			o.telefono,
+			o.email,
+			tip.tipotrabajo,
+			mot.motivo,
+			o.comentarios,
+			sem.color as semaforo,
+			est.estado,
+			est.color,
+			o.reftipostrabajos,
+			o.refmotivosoportunidades,
+			o.observaciones,
+			o.refusuarios,
+			o.refestados,
+			o.cotiza,
+			o.refcotizaciones,
+			o.refsemaforos,
+			o.fechacreacion
+		from dboportunidades o
+		inner join tbtipostrabajos tip ON tip.idtipotrabajo = o.reftipostrabajos
+		inner join tbmotivosoportunidades mot ON mot.idmotivooportunidad = o.refmotivosoportunidades
+		inner join tbestados est ON est.idestado = o.refestados
+		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
+		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
+		order by o.fechacreacion desc";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerOportunidadesPorId($id) {
+		$sql = "select idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,cotiza,refcotizaciones,refsemaforos,fechacreacion from dboportunidades where idoportunidad =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+/* Fin */
+/* Fin de la Tabla: dboportunidades*/
+
 	function GUID()
 	{
 		if (function_exists('com_create_guid') === true)

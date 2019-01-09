@@ -198,6 +198,17 @@ switch ($tabla) {
 		$termina = 9;
 
 		break;
+	case 'oportunidades':
+		$resAjax = $serviciosReferencias->traerOportunidadesajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerOportunidades();
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 9;
+
+		break;
 
 	default:
 		// code...

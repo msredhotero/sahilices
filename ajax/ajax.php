@@ -40,6 +40,22 @@ switch ($accion) {
 		registrar($serviciosUsuarios);
 		break;
 
+   case 'insertarOportunidades':
+      insertarOportunidades($serviciosReferencias);
+      break;
+   case 'modificarOportunidades':
+      modificarOportunidades($serviciosReferencias);
+      break;
+   case 'eliminarOportunidades':
+      eliminarOportunidades($serviciosReferencias);
+      break;
+   case 'traerOportunidades':
+      traerOportunidades($serviciosReferencias);
+      break;
+   case 'traerOportunidadesPorId':
+      traerOportunidadesPorId($serviciosReferencias);
+      break;
+
 
    case 'insertarClientes':
       insertarClientes($serviciosReferencias, $serviciosValidador);
@@ -315,6 +331,94 @@ switch ($accion) {
 
 }
 /* Fin */
+
+
+function insertarOportunidades($serviciosReferencias) {
+   $empresa = $_POST['empresa'];
+   $contacto = $_POST['contacto'];
+   $telefono = $_POST['telefono'];
+   $email = $_POST['email'];
+   $comentarios = $_POST['comentarios'];
+   $reftipostrabajos = $_POST['reftipostrabajos'];
+   $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
+   $observaciones = $_POST['observaciones'];
+   $refusuarios = $_POST['refusuarios'];
+   $refestados = $_POST['refestados'];
+
+   if (isset($_POST['cotiza'])) {
+      $cotiza	= 1;
+   } else {
+      $cotiza = 0;
+   }
+
+   $refcotizaciones = 0;
+   $refsemaforos = $_POST['refsemaforos'];
+
+   $res = $serviciosReferencias->insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos);
+
+   if ((integer)$res > 0) {
+      echo '';
+   } else {
+      echo 'Huvo un error al insertar datos ';
+   }
+}
+
+
+function modificarOportunidades($serviciosReferencias) {
+   $id = $_POST['id'];
+   $empresa = $_POST['empresa'];
+   $contacto = $_POST['contacto'];
+   $telefono = $_POST['telefono'];
+   $email = $_POST['email'];
+   $comentarios = $_POST['comentarios'];
+   $reftipostrabajos = $_POST['reftipostrabajos'];
+   $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
+   $observaciones = $_POST['observaciones'];
+   $refusuarios = $_POST['refusuarios'];
+   $refestados = $_POST['refestados'];
+
+   if (isset($_POST['cotiza'])) {
+      $cotiza	= 1;
+   } else {
+      $cotiza = 0;
+   }
+
+   $refcotizaciones = $_POST['refcotizaciones'];
+   $refsemaforos = $_POST['refsemaforos'];
+
+   $res = $serviciosReferencias->modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
+}
+
+
+function eliminarOportunidades($serviciosReferencias) {
+   $id = $_POST['id'];
+   $res = $serviciosReferencias->eliminarOportunidades($id);
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
+}
+
+function traerOportunidades($serviciosReferencias) {
+   $res = $serviciosReferencias->traerOportunidades();
+   $ar = array();
+
+   while ($row = mysql_fetch_array($res)) {
+      array_push($ar, $row);
+   }
+
+   $resV['datos'] = $ar;
+
+   header('Content-type: application/json');
+   echo json_encode($resV);
+}
 
 
 function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {

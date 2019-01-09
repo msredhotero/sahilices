@@ -372,7 +372,17 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 		$label  = '';
-		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","idusuario","refestados");
+
+		switch ($tabla) {
+			case 'dboportunidades':
+				$ocultar = array("refcotizaciones","fechacreacion","refsemaforos","refusuarios","cotiza");
+				break;
+
+			default:
+				$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","idusuario","refestados");
+				break;
+		}
+
 
 		$geoposicionamiento = array("latitud","longitud");
 
