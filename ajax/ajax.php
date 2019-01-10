@@ -326,11 +326,31 @@ switch ($accion) {
       frmAjaxNuevo($serviciosFunciones, $serviciosReferencias);
    break;
 
+   case 'verificarSemaforos':
+      verificarSemaforos($serviciosReferencias);
+   break;
+
 
 /* Fin */
 
 }
 /* Fin */
+
+function verificarSemaforos($serviciosReferencias) {
+   $res = $serviciosReferencias->traerOportunidadesActivas();
+
+   $bandera = 0;
+   while ($row = mysql_fetch_array($res)) {
+      $semaforo = $serviciosReferencias->devolverSemaforosPorDias($row['mora']);
+      if ($semaforo != $row['refsemaforos']) {
+         //envio email a quien corresponda y genero notificacion al usuario Responsables
+         $serviciosReferencias->modificarSemaforoOportunidad($row[0],$semaforo);
+         $bandera = 1;
+      }
+   }
+
+   echo $bandera;
+}
 
 
 function insertarOportunidades($serviciosReferencias) {

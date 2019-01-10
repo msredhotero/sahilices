@@ -123,6 +123,41 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 	<style>
 		.alert > i{ vertical-align: middle !important; }
+		.btn-circle-chico {
+			border: none;
+			outline: none !important;
+			overflow: hidden;
+			width: 10px;
+			height: 10px;
+			-webkit-border-radius: 50%;
+			-moz-border-radius: 50%;
+			-ms-border-radius: 50%;
+			border-radius: 50%;
+		}
+		.btn-chico {
+			display: inline-block;
+			padding: 6px 6px;
+			margin-bottom: 0;
+			font-size: 14px;
+			font-weight: normal;
+			line-height: 1.42857143;
+			text-align: center;
+			white-space: nowrap;
+			vertical-align: middle;
+			-ms-touch-action: manipulation;
+			touch-action: manipulation;
+			cursor: pointer;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			background-image: none;
+			border: 1px solid transparent;
+			border-radius: 4px;
+		}
+		.alignRight { text-align: right; }
+		.alignCenter { text-align: center;; }
+		.alignLeft { text-align: left;; }
 	</style>
 
 
@@ -221,7 +256,14 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 												<th>Motivo Oport.</th>
 												<th>Comentario</th>
 												<th>Estado</th>
-												<th>Semaforo</th>
+												<th>
+													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
+                                			</button>
+													<button type="button" class="btn-chico bg-orange btn-circle btn-circle-chico waves-effect waves-circle waves-float">
+                                			</button>
+													<button type="button" class="btn-chico bg-red btn-circle btn-circle-chico waves-effect waves-circle waves-float">
+                                			</button>
+												</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
@@ -235,7 +277,14 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 												<th>Motivo Oport.</th>
 												<th>Comentario</th>
 												<th>Estado</th>
-												<th>Semaforo</th>
+												<th>
+													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
+                                			</button>
+													<button type="button" class="btn-chico bg-orange btn-circle btn-circle-chico waves-effect waves-circle waves-float">
+                                			</button>
+													<button type="button" class="btn-chico bg-red btn-circle btn-circle-chico waves-effect waves-circle waves-float">
+                                			</button>
+												</th>
 												<th>Acciones</th>
 											</tr>
 										</tfoot>
@@ -369,17 +418,34 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 					"sortAscending":  ": activate to sort column ascending",
 					"sortDescending": ": activate to sort column descending"
 				}
-			},
+			}
+			/*,
 			"rowCallback": function( row, data, index ) {
 				$('td', row).css('background-color', data[8]);
-			},
+			}*/
+			,
 			"columnDefs": [
             {
-                "targets": [ 8 ],
-                "visible": false
+               "targets": [ 8 ],
+					"className": "text-center",
+      			"width": "10%"
             }
 			]
 		});
+
+		$('.maximizar').click(function() {
+			if ($('.icomarcos').text() == 'web') {
+				$('#marcos').show();
+				$('.content').css('marginLeft', '315px');
+				$('.icomarcos').html('aspect_ratio');
+			} else {
+				$('#marcos').hide();
+				$('.content').css('marginLeft', '15px');
+				$('.icomarcos').html('web');
+			}
+
+		});
+
 
 		$("#sign_in").submit(function(e){
 			e.preventDefault();
@@ -436,6 +502,42 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 		}
 
+		setInterval(function() {
+			verificarSemaforo();
+		},4000);
+		
+
+		function verificarSemaforo() {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {accion: 'verificarSemaforos'},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '1') {
+						table.ajax.reload();
+					}
+				},
+				//si ha ocurrido un error
+				error: function(){
+					swal({
+							title: "Respuesta",
+							text: 'Actualice la pagina',
+							type: "error",
+							timer: 2000,
+							showConfirmButton: false
+					});
+
+				}
+			});
+		}
 
 		function frmAjaxEliminar(id) {
 			$.ajax({

@@ -30,6 +30,25 @@ class ServiciosReferencias {
 		return $res;
 	}
 
+	function modificarEstadoOportunidad($idoportunidad, $idestado) {
+		$sql = "update dboportunidades
+					set refestados = ".$idestado."
+					where idoportunidad = ".$idoportunidad;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function modificarSemaforoOportunidad($idoportunidad, $idsemaforo) {
+		$sql = "update dboportunidades
+					set refsemaforos = ".$idsemaforo."
+					where idoportunidad = ".$idoportunidad;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
 
 	function eliminarOportunidades($id) {
 		$sql = "delete from dboportunidades where idoportunidad =".$id;
@@ -89,8 +108,8 @@ class ServiciosReferencias {
 			tip.tipotrabajo,
 			mot.motivo,
 			o.comentarios,
-			sem.color as semaforo,
 			est.estado,
+			sem.color as semaforo,
 			est.color,
 			o.reftipostrabajos,
 			o.refmotivosoportunidades,
@@ -107,6 +126,41 @@ class ServiciosReferencias {
 		inner join tbestados est ON est.idestado = o.refestados
 		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
 		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
+		order by o.fechacreacion desc";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerOportunidadesActivas() {
+		$sql = "select
+			o.idoportunidad,
+			o.empresa,
+			o.contacto,
+			o.telefono,
+			o.email,
+			tip.tipotrabajo,
+			mot.motivo,
+			o.comentarios,
+			est.estado,
+			sem.color as semaforo,
+			est.color,
+			o.reftipostrabajos,
+			o.refmotivosoportunidades,
+			o.observaciones,
+			o.refusuarios,
+			o.refestados,
+			o.cotiza,
+			o.refcotizaciones,
+			o.refsemaforos,
+			o.fechacreacion,
+			DATEDIFF(now(), o.fechacreacion) mora
+		from dboportunidades o
+		inner join tbtipostrabajos tip ON tip.idtipotrabajo = o.reftipostrabajos
+		inner join tbmotivosoportunidades mot ON mot.idmotivooportunidad = o.refmotivosoportunidades
+		inner join tbestados est ON est.idestado = o.refestados
+		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
+		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
+		where o.refcotizaciones = 0
 		order by o.fechacreacion desc";
 		$res = $this->query($sql,0);
 		return $res;
@@ -1262,6 +1316,20 @@ from tbsemaforos s
 order by 1";
 $res = $this->query($sql,0);
 return $res;
+}
+
+
+function devolverSemaforosPorDias($dias) {
+	$sql = "select
+	s.idsemaforo,
+	s.color,
+	s.desde,
+	s.hasta,
+	s.medida
+	from tbsemaforos s
+	where ".$dias." between s.desde and s.hasta";
+	$res = $this->query($sql,0);
+	return mysql_result($res,0,0);
 }
 
 
