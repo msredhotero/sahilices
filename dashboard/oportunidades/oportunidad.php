@@ -29,6 +29,8 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../oportunid
 
 $fecha = date('Y-m-d');
 
+$id = $_GET['id'];
+
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Oportunidades",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
@@ -51,6 +53,7 @@ $modificar = "modificarOportunidades";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
+$resultado = $serviciosReferencias->traerOportunidadesPorId($id);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dboportunidades";
@@ -59,10 +62,10 @@ $lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios',
 $lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Semaforo','Fecha Creacion');
 
 
-$resVar1 = $serviciosReferencias->traerTipostrabajos();
+$resVar1 = $serviciosReferencias->traerTipostrabajosPorId(mysql_result($resultado,0,'reftipostrabajos'));
 $cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
-$resVar2 = $serviciosReferencias->traerMotivosoportunidades();
+$resVar2 = $serviciosReferencias->traerMotivosoportunidadesPorId(mysql_result($resultado,0,'refmotivosoportunidades'));
 $cadRef2 	= $serviciosFunciones->devolverSelectBox($resVar2,array(1),'');
 
 $resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
@@ -71,13 +74,15 @@ $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
 $resVar4 = $serviciosReferencias->traerEstadosPorId(1);
 $cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
 
-$resVar5 = $serviciosReferencias->traerSemaforosPorId(1);
-$cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(1),'');
+$resVar5 = $serviciosReferencias->traerSemaforosPorIdDias(mysql_result($resultado,0,'refsemaforos'));
+$cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(2,3),' a ');
 
 $refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5);
 $refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos');
 
-$frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$idTabla = 'idoportunidad';
+
+$frm 	= $serviciosFunciones->camposTablaVer($id, $idTabla,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 ?>
@@ -232,63 +237,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 							<form class="form" id="formCountry">
 
 								<div class="row">
-									<div class="col-lg-12 col-md-12">
-										<div class="button-demo">
-											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
-												<i class="material-icons">add</i>
-												<span>NUEVO</span>
-											</button>
-
-										</div>
-									</div>
-								</div>
-
-								<div class="row" style="padding: 5px 20px;">
-
-									<table id="example" class="display table " style="width:100%">
-										<thead>
-											<tr>
-												<th>Empresa</th>
-												<th>Contacto</th>
-												<th>Tel.</th>
-												<th>Email</th>
-												<th>Tipo Trab.</th>
-												<th>Motivo Oport.</th>
-												<th>Comentario</th>
-												<th>Estado</th>
-												<th>
-													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-orange btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-red btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-												</th>
-												<th>Acciones</th>
-											</tr>
-										</thead>
-										<tfoot>
-											<tr>
-												<th>Empresa</th>
-												<th>Contacto</th>
-												<th>Tel.</th>
-												<th>Email</th>
-												<th>Tipo Trab.</th>
-												<th>Motivo Oport.</th>
-												<th>Comentario</th>
-												<th>Estado</th>
-												<th>
-													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-orange btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-red btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-												</th>
-												<th>Acciones</th>
-											</tr>
-										</tfoot>
-									</table>
+									<?php echo $frm; ?>
 								</div>
 							</form>
 							</div>

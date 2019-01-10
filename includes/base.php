@@ -65,7 +65,7 @@ class BaseHTML {
 
     function cargarNotificaciones($datos = null, $altura = '') {
 
-        $cad = '<ul class="menu">';
+        $cad = '<ul class="menu lstNotificaciones">';
 
         while ($row = mysql_fetch_array($datos)) {
             $cad .= '<li>
@@ -89,29 +89,29 @@ class BaseHTML {
     }
 
 
-    function cargarTareas($datos = null, $altura = '') {
+   function cargarTareas($datos = null, $altura = '') {
 
-        $cad = '<ul class="menu tasks">';
+      $cad = '<ul class="menu tasks">';
 
-        while ($row = mysql_fetch_array($datos)) {
-            $cad .= '<li>
-                        <a href="javascript:void(0);">
-                            <h4>
-                            '.$row['titulo'].'
-                                <small>'.$row['pocentaje'].'%</small>
-                            </h4>
-                            <div class="progress">
-                                <div class="progress-bar '.$row['color'].'" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: '.$row['porcentaje'].'%">
-                                </div>
-                            </div>
-                        </a>
-                    </li>';
-        }
+      while ($row = mysql_fetch_array($datos)) {
+         $cad .= '<li>
+            <a href="javascript:void(0);">
+               <h4>
+                  '.$row['titulo'].'
+                  <small>'.$row['pocentaje'].'%</small>
+               </h4>
+               <div class="progress">
+                  <div class="progress-bar '.$row['color'].'" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: '.$row['porcentaje'].'%">
+                  </div>
+               </div>
+            </a>
+         </li>';
+      }
 
-        $cad .= '</ul>';
+      $cad .= '</ul>';
 
-        echo $cad;
-    }
+      echo $cad;
+   }
 
     function cargarNAV($breadCumbs, $notificaciones='', $tareas='', $altura = '', $lstTareas='') {
         $cad = '<nav class="navbar">
@@ -130,12 +130,14 @@ class BaseHTML {
                                 <li class="dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                                         <i class="material-icons">notifications</i>
-                                        <span class="label-count">0</span>
+                                        <span class="label-count notificaciones-cantidad">0</span>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li class="header">Notificaciones</li>
                                         <li class="body">
+                                           <ul class="menu notificaciones">
 
+                                           </ul>
                                         </li>
                                         <li class="footer">
                                             <a href="javascript:void(0);">Ver Todas</a>

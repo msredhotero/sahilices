@@ -93,7 +93,8 @@ class ServiciosReferencias {
 		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
 		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
 		".$where."
-		order by o.fechacreacion desc";
+		order by o.fechacreacion desc
+		limit ".$start.",".$length;
 		$res = $this->query($sql,0);
 		return $res;
 	}
@@ -380,7 +381,8 @@ function traerClientesajax($length, $start, $busqueda) {
 	c.telefono
 	from dbclientes c
 	".$where."
-	order by c.razonsocial";
+	order by c.razonsocial
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -456,7 +458,8 @@ function traerConceptosajax($length, $start, $busqueda) {
 	(case when c.activo = 1 then 'Si' else 'No' end) as activo
 	from dbconceptos c
 	".$where."
-	order by c.concepto";
+	order by c.concepto
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -545,7 +548,8 @@ function traerConceptosviaticosajax($length, $start, $busqueda) {
 	from dbconceptosviaticos c
 	inner join dbconceptos con ON con.idconcepto = c.refconceptos
 	".$where."
-	order by con.concepto";
+	order by con.concepto
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -650,7 +654,8 @@ function traerContactosajaxPorCliente($length, $start, $busqueda, $idcliente) {
 	inner join dbsectores sec ON sec.idsector = c.refsectores
 	inner join dbplantas pl ON pl.idplanta = sec.refplantas
 	where pl.refclientes = ".$idcliente." ".$where."
-	order by c.apellido, c.nombre";
+	order by c.apellido, c.nombre
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -734,7 +739,8 @@ function traerEmpleadosajax($length, $start, $busqueda) {
 	(case when e.activo = 1 then 'Si' else 'No' end) as activo
 	from dbempleados e
 	".$where."
-	order by e.apellido, e.nombre";
+	order by e.apellido, e.nombre
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -819,7 +825,8 @@ function traerListaspreciosajax($length, $start, $busqueda) {
 	from dblistasprecios l
 	inner join dbconceptos con ON con.idconcepto = l.refconceptos
 	".$where."
-	order by l.nombre";
+	order by l.nombre
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -925,7 +932,8 @@ function traerPlantasajaxPorCliente($length, $start, $busqueda, $idcliente) {
 	from dbplantas p
 	inner join dbclientes cli ON cli.idcliente = p.refclientes
 	where p.refclientes = ".$idcliente." ".$where."
-	order by p.planta";
+	order by p.planta
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1017,7 +1025,8 @@ function traerSectoresajaxPorCliente($length, $start, $busqueda, $idcliente) {
 	inner join dbplantas pla ON pla.idplanta = s.refplantas
 	inner join dbclientes cl ON cl.idcliente = pla.refclientes
 	where cl.idcliente = ".$idcliente." ".$where."
-	order by s.sector";
+	order by s.sector
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1178,7 +1187,8 @@ function traerMotivosoportunidadesajax($length, $start, $busqueda) {
 	(case when m.activo = 1 then 'Si' else 'No' end) activo
 	from tbmotivosoportunidades m
 	".$where."
-	order by m.motivo";
+	order by m.motivo
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1250,7 +1260,8 @@ function traerRecursosnecesariosajax($length, $start, $busqueda) {
 	r.letra
 	from tbrecursosnecesarios r
 	".$where."
-	order by r.recursonecesario";
+	order by r.recursonecesario
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1339,6 +1350,12 @@ $res = $this->query($sql,0);
 return $res;
 }
 
+function traerSemaforosPorIdDias($id) {
+$sql = "select idsemaforo,color,desde, concat(hasta,' dias') as hasta,medida from tbsemaforos where idsemaforo =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
 /* Fin */
 /* /* Fin de la Tabla: tbsemaforos*/
 
@@ -1386,7 +1403,8 @@ function traerTipoclientesajax($length, $start, $busqueda) {
 	t.tipocliente
 	from tbtipoclientes t
 	".$where."
-	order by t.tipocliente";
+	order by t.tipocliente
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1455,7 +1473,8 @@ function traerTipoconceptosajax($length, $start, $busqueda) {
 	t.tipoconcepto
 	from tbtipoconceptos t
 	".$where."
-	order by t.tipoconcepto";
+	order by t.tipoconcepto
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1525,7 +1544,8 @@ function traerTipomonedasajax($length, $start, $busqueda) {
 	t.abreviatura
 	from tbtipomonedas t
 	".$where."
-	order by t.abreviatura";
+	order by t.abreviatura
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1594,7 +1614,8 @@ function traerTipostrabajosajax($length, $start, $busqueda) {
 	(case when t.activo = 1 then 'Si' else 'No' end) activo
 	from tbtipostrabajos t
 	".$where."
-	order by t.tipotrabajo";
+	order by t.tipotrabajo
+	limit ".$start.",".$length;
 
 	$res = $this->query($sql,0);
 	return $res;
@@ -1675,7 +1696,8 @@ return $res;
 		(case when u.activo = 1 then 'Si' else 'No' end) activo
 		from tbunidadesnegocios u
 		".$where."
-		order by u.unidadnegocio";
+		order by u.unidadnegocio
+		limit ".$start.",".$length;
 
 		$res = $this->query($sql,0);
 		return $res;

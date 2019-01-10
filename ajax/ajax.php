@@ -327,7 +327,10 @@ switch ($accion) {
    break;
 
    case 'verificarSemaforos':
-      verificarSemaforos($serviciosReferencias);
+      verificarSemaforos($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios);
+   break;
+   case 'traerNotificacionesPorRol':
+      traerNotificacionesPorRol($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios);
    break;
 
 
@@ -336,16 +339,88 @@ switch ($accion) {
 }
 /* Fin */
 
-function verificarSemaforos($serviciosReferencias) {
+function traerNotificacionesPorRol($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios) {
+   session_start();
+
+   $usuario = $_SESSION['nombre_sahilices'];
+   $idrol = $_SESSION['idroll_sahilices'];
+   $idusuario = $_SESSION['usuaid_sahilices'];
+   $email = $_SESSION['email_sahilices'];
+
+   $altura = $_POST['altura'];
+
+	$res = $serviciosNotificaciones->traerNotificacionesPorUsuarios($email);
+
+	$cad = '';
+
+	$cantidad = 0;
+	while ($row = mysql_fetch_array($res)) {
+		$cantidad += 1;
+
+      $cad .= '<li>
+                     <a href="'.$altura.$row['url'].$row['id1'].'">
+                     <div class="icon-circle bg-'.$row['estilo'].'">
+                        <i class="material-icons">'.$row['icono'].'</i>
+                     </div>
+                     <div class="menu-info">
+                        <h4>'.$row['mensaje'].'</h4>
+                           <p>
+                              <i class="material-icons">access_time</i> '.$row['fecha'].'
+                           </p>
+                     </div>
+                  </a>
+               </li>';
+	}
+	$cad .= '';
+
+
+	//echo array('respuesta' => $cad, 'cantidad' => $cantidad);
+	header('Content-type: application/json');
+	echo json_encode(array('respuesta' => $cad, 'cantidad' => $cantidad));
+}
+
+function verificarSemaforos($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios) {
    $res = $serviciosReferencias->traerOportunidadesActivas();
 
-   $bandera = 0;
+   $mensaje = 'Oportunidad en tiempo';
+	$idpagina = '1';
+	$autor = 'Sistema';
+	$destinatario = '';
+	$id1 = 0;
+	$id2 = 0;
+	$id3 = 0;
+	$icono = 'alarm';
+	$estilo = '';
+	$fecha = date('Y-m-d H:i:s');
+	$url = 'oportunidades/oportunidad.php?id=';
+
+   $bandera = '0';
    while ($row = mysql_fetch_array($res)) {
       $semaforo = $serviciosReferencias->devolverSemaforosPorDias($row['mora']);
       if ($semaforo != $row['refsemaforos']) {
+         $bandera = '1';
          //envio email a quien corresponda y genero notificacion al usuario Responsables
-         $serviciosReferencias->modificarSemaforoOportunidad($row[0],$semaforo);
-         $bandera = 1;
+         $id1 = $row[0];
+         $usuario = $serviciosUsuarios->traerUsuarioId($row['refusuarios']);
+         $destinatario = mysql_result($usuario,0,'email');
+         $emailUsuario = mysql_result($usuario,0,'email');
+         switch ($semaforo) {
+            case 2:
+               $estilo = 'orange';
+               break;
+            case 3:
+               $estilo = 'red';
+               break;
+            default:
+               $estilo = 'green';
+               break;
+         }
+         $resInsertarNotificacion = $serviciosNotificaciones->insertarNotificaciones($mensaje,$idpagina,$autor,$destinatario,$id1,$id2,$id3,$icono,$estilo,$fecha,$url);
+         // fin
+
+         $resModificarOportunidad = $serviciosReferencias->modificarSemaforoOportunidad($row[0],$semaforo);
+
+
       }
    }
 
