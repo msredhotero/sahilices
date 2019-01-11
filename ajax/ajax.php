@@ -443,12 +443,6 @@ function insertarOportunidades($serviciosReferencias) {
    $refusuarios = $_POST['refusuarios'];
    $refestados = $_POST['refestados'];
 
-   if (isset($_POST['cotiza'])) {
-      $cotiza	= 1;
-   } else {
-      $cotiza = 0;
-   }
-
    $refcotizaciones = 0;
    $refsemaforos = $_POST['refsemaforos'];
 
@@ -474,12 +468,6 @@ function modificarOportunidades($serviciosReferencias) {
    $observaciones = $_POST['observaciones'];
    $refusuarios = $_POST['refusuarios'];
    $refestados = $_POST['refestados'];
-
-   if (isset($_POST['cotiza'])) {
-      $cotiza	= 1;
-   } else {
-      $cotiza = 0;
-   }
 
    $refcotizaciones = $_POST['refcotizaciones'];
    $refsemaforos = $_POST['refsemaforos'];
