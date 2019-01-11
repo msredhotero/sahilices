@@ -102,7 +102,7 @@ $insertar = "";
                     </div>
                 </div>
             </div>
-            <p>Please wait...</p>
+            <p>Cargando...</p>
         </div>
     </div>
     <!-- #END# Page Loader -->
