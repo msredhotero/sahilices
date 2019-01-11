@@ -206,7 +206,7 @@ switch ($tabla) {
 		$icon = array('create','delete');
 		$indiceID = 0;
 		$empieza = 1;
-		$termina = 9;
+		$termina = 12;
 
 		break;
 

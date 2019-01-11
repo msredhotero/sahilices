@@ -13,18 +13,18 @@ class ServiciosReferencias {
 
 	/* PARA Oportunidades */
 
-	function insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos) {
-		$sql = "insert into dboportunidades(idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,cotiza,refcotizaciones,refsemaforos)
-		values ('','".$empresa."','".$contacto."','".$telefono."','".$email."','".$comentarios."',".$reftipostrabajos.",".$refmotivosoportunidades.",'".$observaciones."',".$refusuarios.",".$refestados.",".$cotiza.",".$refcotizaciones.",".$refsemaforos.")";
+	function insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refestadocotizacion,$refcotizaciones,$refsemaforos) {
+		$sql = "insert into dboportunidades(idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,refestadocotizacion,refcotizaciones,refsemaforos)
+		values ('','".$empresa."','".$contacto."','".$telefono."','".$email."','".$comentarios."',".$reftipostrabajos.",".$refmotivosoportunidades.",'".$observaciones."',".$refusuarios.",".$refestados.",".$refestadocotizacion.",".$refcotizaciones.",".$refsemaforos.")";
 		$res = $this->query($sql,1);
 		return $res;
 	}
 
 
-	function modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos) {
+	function modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refestadocotizacion,$refcotizaciones,$refsemaforos) {
 		$sql = "update dboportunidades
 		set
-		empresa = '".$empresa."',contacto = '".$contacto."',telefono = '".$telefono."',email = '".$email."',comentarios = '".$comentarios."',reftipostrabajos = ".$reftipostrabajos.",refmotivosoportunidades = ".$refmotivosoportunidades.",observaciones = '".$observaciones."',refusuarios = ".$refusuarios.",refestados = ".$refestados.",cotiza = ".$cotiza.",refcotizaciones = ".$refcotizaciones.",refsemaforos = ".$refsemaforos."
+		empresa = '".$empresa."',contacto = '".$contacto."',telefono = '".$telefono."',email = '".$email."',comentarios = '".$comentarios."',reftipostrabajos = ".$reftipostrabajos.",refmotivosoportunidades = ".$refmotivosoportunidades.",observaciones = '".$observaciones."',refusuarios = ".$refusuarios.",refestados = ".$refestados.",refestadocotizacion = ".$refestadocotizacion.",refcotizaciones = ".$refcotizaciones.",refsemaforos = ".$refsemaforos."
 		where idoportunidad =".$id;
 		$res = $this->query($sql,0);
 		return $res;
@@ -75,6 +75,9 @@ class ServiciosReferencias {
 			mot.motivo,
 			o.comentarios,
 			est.estado,
+			ec.estadocotizacion,
+			usu.nombrecompleto,
+			o.fechacreacion,
 			sem.color as semaforo,
 			est.color,
 			o.reftipostrabajos,
@@ -82,14 +85,14 @@ class ServiciosReferencias {
 			o.observaciones,
 			o.refusuarios,
 			o.refestados,
-			o.cotiza,
+			o.refestadocotizacion,
 			o.refcotizaciones,
-			o.refsemaforos,
-			o.fechacreacion
+			o.refsemaforos
 		from dboportunidades o
 		inner join tbtipostrabajos tip ON tip.idtipotrabajo = o.reftipostrabajos
 		inner join tbmotivosoportunidades mot ON mot.idmotivooportunidad = o.refmotivosoportunidades
 		inner join tbestados est ON est.idestado = o.refestados
+		inner join tbestadocotizacion ec ON ec.idestadocotizacion = o.refestadocotizacion
 		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
 		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
 		".$where."
@@ -110,6 +113,7 @@ class ServiciosReferencias {
 			mot.motivo,
 			o.comentarios,
 			est.estado,
+			ec.estadocotizacion,
 			sem.color as semaforo,
 			est.color,
 			o.reftipostrabajos,
@@ -117,7 +121,7 @@ class ServiciosReferencias {
 			o.observaciones,
 			o.refusuarios,
 			o.refestados,
-			o.cotiza,
+			o.refestadocotizacion,
 			o.refcotizaciones,
 			o.refsemaforos,
 			o.fechacreacion
@@ -125,6 +129,7 @@ class ServiciosReferencias {
 		inner join tbtipostrabajos tip ON tip.idtipotrabajo = o.reftipostrabajos
 		inner join tbmotivosoportunidades mot ON mot.idmotivooportunidad = o.refmotivosoportunidades
 		inner join tbestados est ON est.idestado = o.refestados
+		inner join tbestadocotizacion ec ON ec.idestadocotizacion = o.refestadocotizacion
 		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
 		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
 		order by o.fechacreacion desc";
@@ -143,6 +148,7 @@ class ServiciosReferencias {
 			mot.motivo,
 			o.comentarios,
 			est.estado,
+			ec.estadocotizacion,
 			sem.color as semaforo,
 			est.color,
 			o.reftipostrabajos,
@@ -150,7 +156,7 @@ class ServiciosReferencias {
 			o.observaciones,
 			o.refusuarios,
 			o.refestados,
-			o.cotiza,
+			o.refestadocotizacion,
 			o.refcotizaciones,
 			o.refsemaforos,
 			o.fechacreacion,
@@ -160,6 +166,7 @@ class ServiciosReferencias {
 		inner join tbmotivosoportunidades mot ON mot.idmotivooportunidad = o.refmotivosoportunidades
 		inner join tbestados est ON est.idestado = o.refestados
 		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
+		inner join tbestadocotizacion ec ON ec.idestadocotizacion = o.refestadocotizacion
 		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
 		where o.refcotizaciones = 0
 		order by o.fechacreacion desc";
@@ -169,7 +176,7 @@ class ServiciosReferencias {
 
 
 	function traerOportunidadesPorId($id) {
-		$sql = "select idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,cotiza,refcotizaciones,refsemaforos,fechacreacion from dboportunidades where idoportunidad =".$id;
+		$sql = "select idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,refestadocotizacion,refcotizaciones,refsemaforos,fechacreacion from dboportunidades where idoportunidad =".$id;
 		$res = $this->query($sql,0);
 		return $res;
 	}
@@ -1431,6 +1438,53 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: tbtipoclientes*/
 
+
+/* PARA Estadocotizacion */
+
+function insertarEstadocotizacion($estadocotizacion) {
+$sql = "insert into tbestadocotizacion(idestadocotizacion,estadocotizacion)
+values ('','".($estadocotizacion)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarEstadocotizacion($id,$estadocotizacion) {
+$sql = "update tbestadocotizacion
+set
+estadocotizacion = '".($estadocotizacion)."'
+where idestadocotizacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarEstadocotizacion($id) {
+$sql = "delete from tbestadocotizacion where idestadocotizacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerEstadocotizacion() {
+$sql = "select
+e.idestadocotizacion,
+e.estadocotizacion
+from tbestadocotizacion e
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerEstadocotizacionPorId($id) {
+$sql = "select idestadocotizacion,estadocotizacion from tbestadocotizacion where idestadocotizacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: tbestadocotizacion*/
 
 /* PARA Tipoconceptos */
 

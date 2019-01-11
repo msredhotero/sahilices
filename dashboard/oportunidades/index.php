@@ -55,8 +55,8 @@ $modificar = "modificarOportunidades";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dboportunidades";
 
-$lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refcotizaciones','refsemaforos','fechacreacion');
-$lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Semaforo','Fecha Creacion');
+$lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refcotizaciones','refsemaforos','fechacreacion','refestadocotizacion');
+$lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Demora','Fecha Creacion','Est.Cot.');
 
 
 $resVar1 = $serviciosReferencias->traerTipostrabajos();
@@ -74,8 +74,11 @@ $cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
 $resVar5 = $serviciosReferencias->traerSemaforosPorId(1);
 $cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(1),'');
 
-$refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5);
-$refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos');
+$resVar6 = $serviciosReferencias->traerEstadoCotizacionPorId(1);
+$cadRef6 	= $serviciosFunciones->devolverSelectBox($resVar6,array(1),'');
+
+$refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5,5=>$cadRef6);
+$refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos','refestadocotizacion');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -158,6 +161,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		.alignRight { text-align: right; }
 		.alignCenter { text-align: center;; }
 		.alignLeft { text-align: left;; }
+		.amarcos a { color: #fff; font-weight: bold; text-decoration: none; cursor: pointer;}
 	</style>
 
 
@@ -203,7 +207,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 <!-- #Top Bar -->
 <?php echo $baseHTML->cargarSECTION($_SESSION['usua_sahilices'], $_SESSION['nombre_sahilices'], $resMenu,'../../'); ?>
 
-<section class="content" style="margin-top:-15px;">
+<section class="content" style="margin-top:-75px;">
 
 	<div class="container-fluid">
 		<div class="row clearfix">
@@ -244,7 +248,9 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 								</div>
 
 								<div class="row" style="padding: 5px 20px;">
-
+									<div class="alert alert-info amarcos">
+										Ocultar Columnas: <a class="toggle-vis" data-column="0">Empresa</a> - <a class="toggle-vis" data-column="1">Contacto</a> - <a class="toggle-vis" data-column="2">Tel.</a> - <a class="toggle-vis" data-column="3">Email</a> - <a class="toggle-vis" data-column="4">Tipo Trab.</a> - <a class="toggle-vis" data-column="5">Motivo Oport.</a> - <a class="toggle-vis" data-column="6">Comentario</a> - <a class="toggle-vis" data-column="7">Estado</a> - <a class="toggle-vis" data-column="8">Est. Cotz.</a> - <a class="toggle-vis" data-column="9">Usuario</a> - <a class="toggle-vis" data-column="10">Fecha</a>
+									</div>
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
@@ -256,6 +262,9 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 												<th>Motivo Oport.</th>
 												<th>Comentario</th>
 												<th>Estado</th>
+												<th>Est. Cotz.</th>
+												<th>Usuario</th>
+												<th>Fecha</th>
 												<th>
 													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
                                 			</button>
@@ -277,6 +286,9 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 												<th>Motivo Oport.</th>
 												<th>Comentario</th>
 												<th>Estado</th>
+												<th>Est. Cotz.</th>
+												<th>Usuario</th>
+												<th>Fecha</th>
 												<th>
 													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
                                 			</button>
@@ -432,6 +444,16 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
             }
 			]
 		});
+
+		$('a.toggle-vis').on( 'click', function (e) {
+	        e.preventDefault();
+
+	        // Get the column API object
+	        var column = table.column( $(this).attr('data-column') );
+
+	        // Toggle the visibility
+	        column.visible( ! column.visible() );
+	    } );
 
 		$('.maximizar').click(function() {
 			if ($('.icomarcos').text() == 'web') {

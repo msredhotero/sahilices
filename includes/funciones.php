@@ -375,7 +375,7 @@ class Servicios {
 
 		switch ($tabla) {
 			case 'dboportunidades':
-				$ocultar = array("refcotizaciones","fechacreacion","refsemaforos","refusuarios","cotiza");
+				$ocultar = array("refcotizaciones","fechacreacion","refsemaforos","refusuarios","refestadocotizacion");
 				break;
 
 			default:
@@ -583,12 +583,7 @@ class Servicios {
 											</div>
 
 										</div>
-										<script type="text/javascript">
-										$(document).ready(function(){
 
-											$("#'.$campo.'").mask("99:99",{placeholder:"hh:mm"});
-										});
-										</script>
 										';
 
 									} else {

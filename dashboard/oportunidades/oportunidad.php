@@ -58,8 +58,8 @@ $resultado = $serviciosReferencias->traerOportunidadesPorId($id);
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dboportunidades";
 
-$lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refcotizaciones','refsemaforos','fechacreacion');
-$lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Semaforo','Fecha Creacion');
+$lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refcotizaciones','refsemaforos','fechacreacion','refestadocotizacion');
+$lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Demora','Fecha Creacion','Est.Cotz.');
 
 
 $resVar1 = $serviciosReferencias->traerTipostrabajosPorId(mysql_result($resultado,0,'reftipostrabajos'));
@@ -71,14 +71,17 @@ $cadRef2 	= $serviciosFunciones->devolverSelectBox($resVar2,array(1),'');
 $resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
 
-$resVar4 = $serviciosReferencias->traerEstadosPorId(1);
+$resVar4 = $serviciosReferencias->traerEstadosPorId(mysql_result($resultado,0,'refestados'));
 $cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
 
 $resVar5 = $serviciosReferencias->traerSemaforosPorIdDias(mysql_result($resultado,0,'refsemaforos'));
 $cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(2,3),' a ');
 
-$refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5);
-$refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos');
+$resVar6 = $serviciosReferencias->traerEstadoCotizacionPorId(mysql_result($resultado,0,'refestadocotizacion'));
+$cadRef6 	= $serviciosFunciones->devolverSelectBox($resVar6,array(1),'');
+
+$refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5,5=>$cadRef6);
+$refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos','refestadocotizacion');
 
 $idTabla = 'idoportunidad';
 

@@ -355,10 +355,13 @@ function traerNotificacionesPorRol($serviciosReferencias, $serviciosNotificacion
 
 	$cantidad = 0;
 	while ($row = mysql_fetch_array($res)) {
-		$cantidad += 1;
+      if ($row['leido'] == 'No') {
+         $cantidad += 1;
+      }
+
 
       $cad .= '<li>
-                     <a href="'.$altura.$row['url'].$row['id1'].'">
+                     <a href="'.$altura.'notificaciones/router.php?id='.$row[0].'" class=" waves-effect waves-block">
                      <div class="icon-circle bg-'.$row['estilo'].'">
                         <i class="material-icons">'.$row['icono'].'</i>
                      </div>
@@ -382,7 +385,7 @@ function traerNotificacionesPorRol($serviciosReferencias, $serviciosNotificacion
 function verificarSemaforos($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios) {
    $res = $serviciosReferencias->traerOportunidadesActivas();
 
-   $mensaje = 'Oportunidad en tiempo';
+   $mensaje = 'Demora de Oportunidad';
 	$idpagina = '1';
 	$autor = 'Sistema';
 	$destinatario = '';

@@ -9,57 +9,13 @@
         }
     });
 
-    initRealTimeChart();
+    /*initRealTimeChart();*/
     initDonutChart();
     initSparkline();
 });
 
 var realtime = 'on';
-function initRealTimeChart() {
-    //Real time ==========================================================================================
-    var plot = $.plot('#real_time_chart', [getRandomData()], {
-        series: {
-            shadowSize: 0,
-            color: 'rgb(0, 188, 212)'
-        },
-        grid: {
-            borderColor: '#f3f3f3',
-            borderWidth: 1,
-            tickColor: '#f3f3f3'
-        },
-        lines: {
-            fill: true
-        },
-        yaxis: {
-            min: 0,
-            max: 100
-        },
-        xaxis: {
-            min: 0,
-            max: 100
-        }
-    });
 
-    function updateRealTime() {
-        plot.setData([getRandomData()]);
-        plot.draw();
-
-        var timeout;
-        if (realtime === 'on') {
-            timeout = setTimeout(updateRealTime, 320);
-        } else {
-            clearTimeout(timeout);
-        }
-    }
-
-    updateRealTime();
-
-    $('#realtime').on('change', function () {
-        realtime = this.checked ? 'on' : 'off';
-        updateRealTime();
-    });
-    //====================================================================================================
-}
 
 function initSparkline() {
     $(".sparkline").each(function () {
@@ -72,20 +28,20 @@ function initDonutChart() {
     Morris.Donut({
         element: 'donut_chart',
         data: [{
-            label: 'Chrome',
+            label: 'FACTURADO',
             value: 37
         }, {
-            label: 'Firefox',
+            label: 'ADJUDICADO',
             value: 30
         }, {
-            label: 'Safari',
+            label: 'NO ADJUDICADO',
             value: 18
         }, {
-            label: 'Opera',
+            label: 'ANULADO',
             value: 12
         },
         {
-            label: 'Other',
+            label: 'OTRO',
             value: 3
         }],
         colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
