@@ -158,7 +158,7 @@ $insertar = "";
 									<i class="material-icons">watch_later</i>
 							  </div>
 							  <div class="content">
-									<div class="text">DEMORA</div>
+									<div class="text">DEMORA OPORTUNIDADES</div>
 									<div class="number count-to" data-from="0" data-to="3" data-speed="1000" data-fresh-interval="20"></div>
 							  </div>
 						 </div>
@@ -176,15 +176,15 @@ $insertar = "";
 									<ul class="dashboard-stat-list">
 										 <li>
 											  HOY
-											  <span class="pull-right"><b>1 200</b> <small>USERS</small></span>
+											  <span class="pull-right"><b>1 200</b> <small>CARGADAS</small></span>
 										 </li>
 										 <li>
 											  AYER
-											  <span class="pull-right"><b>3 872</b> <small>USERS</small></span>
+											  <span class="pull-right"><b>3 872</b> <small>CARGADAS</small></span>
 										 </li>
 										 <li>
 											  LA SEMANA PASADA
-											  <span class="pull-right"><b>26 582</b> <small>USERS</small></span>
+											  <span class="pull-right"><b>26 582</b> <small>CARGADAS</small></span>
 										 </li>
 									</ul>
 							  </div>
@@ -285,10 +285,10 @@ $insertar = "";
 											  <thead>
 													<tr>
 														 <th>#</th>
-														 <th>Task</th>
-														 <th>Status</th>
-														 <th>Manager</th>
-														 <th>Progress</th>
+														 <th>Cliente</th>
+														 <th>Estado</th>
+														 <th>Responsable</th>
+														 <th>Progreso</th>
 													</tr>
 											  </thead>
 											  <tbody>
