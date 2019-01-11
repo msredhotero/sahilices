@@ -445,8 +445,9 @@ function insertarOportunidades($serviciosReferencias) {
 
    $refcotizaciones = 0;
    $refsemaforos = $_POST['refsemaforos'];
+   $refestadocotizacion = $_POST['refestadocotizacion'];
 
-   $res = $serviciosReferencias->insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos);
+   $res = $serviciosReferencias->insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refcotizaciones,$refsemaforos,$refestadocotizacion);
 
    if ((integer)$res > 0) {
       echo '';
@@ -471,8 +472,9 @@ function modificarOportunidades($serviciosReferencias) {
 
    $refcotizaciones = $_POST['refcotizaciones'];
    $refsemaforos = $_POST['refsemaforos'];
+   $refestadocotizacion = $_POST['refestadocotizacion'];
 
-   $res = $serviciosReferencias->modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$cotiza,$refcotizaciones,$refsemaforos);
+   $res = $serviciosReferencias->modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refcotizaciones,$refsemaforos,$refestadocotizacion);
 
    if ($res == true) {
       echo '';

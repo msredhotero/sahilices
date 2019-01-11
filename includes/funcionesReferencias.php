@@ -13,7 +13,7 @@ class ServiciosReferencias {
 
 	/* PARA Oportunidades */
 
-	function insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refestadocotizacion,$refcotizaciones,$refsemaforos) {
+	function insertarOportunidades($empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refcotizaciones,$refsemaforos,$refestadocotizacion) {
 		$sql = "insert into dboportunidades(idoportunidad,empresa,contacto,telefono,email,comentarios,reftipostrabajos,refmotivosoportunidades,observaciones,refusuarios,refestados,refestadocotizacion,refcotizaciones,refsemaforos)
 		values ('','".$empresa."','".$contacto."','".$telefono."','".$email."','".$comentarios."',".$reftipostrabajos.",".$refmotivosoportunidades.",'".$observaciones."',".$refusuarios.",".$refestados.",".$refestadocotizacion.",".$refcotizaciones.",".$refsemaforos.")";
 		$res = $this->query($sql,1);
@@ -21,7 +21,7 @@ class ServiciosReferencias {
 	}
 
 
-	function modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refestadocotizacion,$refcotizaciones,$refsemaforos) {
+	function modificarOportunidades($id,$empresa,$contacto,$telefono,$email,$comentarios,$reftipostrabajos,$refmotivosoportunidades,$observaciones,$refusuarios,$refestados,$refcotizaciones,$refsemaforos,$refestadocotizacion) {
 		$sql = "update dboportunidades
 		set
 		empresa = '".$empresa."',contacto = '".$contacto."',telefono = '".$telefono."',email = '".$email."',comentarios = '".$comentarios."',reftipostrabajos = ".$reftipostrabajos.",refmotivosoportunidades = ".$refmotivosoportunidades.",observaciones = '".$observaciones."',refusuarios = ".$refusuarios.",refestados = ".$refestados.",refestadocotizacion = ".$refestadocotizacion.",refcotizaciones = ".$refcotizaciones.",refsemaforos = ".$refsemaforos."
