@@ -320,7 +320,7 @@ switch ($accion) {
    break;
 
    case 'frmAjaxModificar':
-      frmAjaxModificar($serviciosFunciones, $serviciosReferencias);
+      frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $serviciosUsuarios);
    break;
    case 'frmAjaxNuevo':
       frmAjaxNuevo($serviciosFunciones, $serviciosReferencias);
@@ -509,9 +509,11 @@ function traerOportunidades($serviciosReferencias) {
 }
 
 
-function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
+function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $serviciosUsuarios) {
    $tabla = $_POST['tabla'];
    $id = $_POST['id'];
+
+   session_start();
 
    switch ($tabla) {
       case 'tbunidadesnegocios':
@@ -710,6 +712,38 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias) {
 
          $refdescripcion = array(0=> $cadRef2);
          $refCampo 	=  array('refconceptos');
+         break;
+      case 'dboportunidades':
+         $resultado = $serviciosReferencias->traerOportunidadesPorId($id);
+         $modificar = "modificarOportunidades";
+         $idTabla = "idoportunidad";
+
+
+         $lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refcotizaciones','refsemaforos','fechacreacion','refestadocotizacion');
+         $lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Demora','Fecha Creacion','Est.Cot.');
+
+
+         $resVar1 = $serviciosReferencias->traerTipostrabajos();
+         $cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'', mysql_result($resultado,0,'reftipostrabajos'));
+
+         $resVar2 = $serviciosReferencias->traerMotivosoportunidades();
+         $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),'',mysql_result($resultado,0,'reftipostrabajos'));
+
+         $resVar3 = $serviciosUsuarios->traerUsuarioId($_SESSION['usuaid_sahilices']);
+         $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
+
+         $resVar4 = $serviciosReferencias->traerEstadosInId(1,2);
+         $cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'',mysql_result($resultado,0,'refestados'));
+
+         $resVar5 = $serviciosReferencias->traerSemaforosPorId(mysql_result($resultado,0,'refsemaforos'));
+         $cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(2,3),' a ');
+
+         $resVar6 = $serviciosReferencias->traerEstadoCotizacionPorId(mysql_result($resultado,0,'refestadocotizacion'));
+         $cadRef6 	= $serviciosFunciones->devolverSelectBox($resVar6,array(1),'');
+
+         $refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5,5=>$cadRef6);
+         $refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos','refestadocotizacion');
+
          break;
 
       default:

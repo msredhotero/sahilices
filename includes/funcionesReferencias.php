@@ -473,16 +473,17 @@ function traerConceptosajax($length, $start, $busqueda) {
 }
 
 function traerConceptos() {
-$sql = "select
-c.idconcepto,
-c.concepto,
-c.abreviatura,
-c.leyenda,
-(case when c.activo = 1 then 'Si' else 'No' end) as activo
-from dbconceptos c
-order by 1";
-$res = $this->query($sql,0);
-return $res;
+	$sql = "select
+	c.idconcepto,
+	c.concepto,
+	c.abreviatura,
+	c.leyenda,
+	(case when c.activo = 1 then 'Si' else 'No' end) as activo
+	from dbconceptos c
+	order by 1";
+
+	$res = $this->query($sql,0);
+	return $res;
 }
 
 
@@ -1095,6 +1096,12 @@ return $res;
 
 function traerEstadosPorId($id) {
 $sql = "select idestado,estado,color,icono,orden,valor,refformularios from tbestados where idestado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerEstadosInId($in) {
+$sql = "select idestado,estado,color,icono,orden,valor,refformularios from tbestados where idestado in (".$in.")";
 $res = $this->query($sql,0);
 return $res;
 }
