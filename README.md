@@ -25,9 +25,9 @@ Carpeta "json":
 Carpeta "reportes":
 Archivos .php donde se van a ejecutar los reportes con la libreria fpdf
 
-============================================================================================================
+=======================
 word que envio el cliente esta en la carpeta "sql" se llama memoria_descriptiva_oportunidades-y-cotizaciones
-============================================================================================================
+=======================
 
 
 BASE DE DATOS
