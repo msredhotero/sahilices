@@ -34,29 +34,55 @@ BASE DE DATOS
 =======================
 
 dbclientes
+
 dbconceptos
+
 dbconceptosviaticos
+
 dbcontactos
+
 dbempleados
+
 dblistasprecios
+
 dbnotificaciones
+
 dboportunidades
+
 dbplantas
+
 dbsectores
+
 dbusuarios              // tabla de usuario, esta basica tambien.
+
 dbusuariosperfiles
+
 predio_menu             // esta tabla genera el menu y el acceso por tipo perfil, el campo "permiso (string)", esta muy basico habria que mejorarlo.
+
 tbcargos
+
 tbconfiguracion         // solo para el nombre del sistema.
+
 tbestadocotizacion
+
 tbestados
+
 tbformularios
+
 tbmotivosoportunidades
+
 tbrecursosnecesarios
-tbroles
+
+tbroles                 // donde estan los roles de usuarios
+
 tbsemaforos
+
 tbtipoclientes
+
 tbtipoconceptos
+
 tbtipomonedas
+
 tbtipostrabajos
+
 tbunidadesnegocios
