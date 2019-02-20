@@ -33,6 +33,8 @@ word que envio el cliente esta en la carpeta "sql" se llama memoria_descriptiva_
 BASE DE DATOS
 =======================
 
+La ultima base esta en la carpeta "sql" y tiene fecha 2019-02-20
+
 dbclientes
 
 dbconceptos
