@@ -9,7 +9,12 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
-
+	function traerCantidadOportunidadesSemaforo($refsemaforos) {
+		$sql = "SELECT count(*) FROM dboportunidades
+					where refsemaforos = ".$refsemaforos;
+		$res = $this->query($sql);
+		return $res;
+	}
 
 	/* PARA Oportunidades */
 
@@ -1305,6 +1310,20 @@ m.idmotivooportunidad,
 m.motivo,
 (case when m.activo = 1 then 'Si' else 'No' end) activo
 from tbmotivosoportunidades m
+order by m.motivo";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+
+function traerMotivosoportunidadesActivos() {
+$sql = "select
+m.idmotivooportunidad,
+m.motivo,
+(case when m.activo = 1 then 'Si' else 'No' end) activo
+from tbmotivosoportunidades m
+where m.activo = 1
 order by m.motivo";
 $res = $this->query($sql,0);
 return $res;

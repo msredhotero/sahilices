@@ -54,7 +54,10 @@ $tablasAr	= array('clientes' => 'dbclientes',
 'tipostrabajos' => 'tbtipostrabajos',
 'unidadesnegocios' => 'tbunidadesnegocios',
 'oportunidades' => 'dboportunidades',
-'estadocotizacion' => 'tbestadocotizacion');
+'estadocotizacion' => 'tbestadocotizacion',
+'cotizaciones' => 'dbcotizaciones',
+'cotizaciondetalles' => 'dbcotizaciondetalles',
+'cotizacionmovimientos' => 'dbcotizacionmovimientos');
 
 
 function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
@@ -78,7 +81,10 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 'tipostrabajos' => 'tbtipostrabajos',
 'unidadesnegocios' => 'tbunidadesnegocios',
 'oportunidades' => 'dboportunidades',
-'estadocotizacion' => 'tbestadocotizacion');
+'estadocotizacion' => 'tbestadocotizacion',
+'cotizaciones' => 'dbcotizaciones',
+'cotizaciondetalles' => 'dbcotizaciondetalles',
+'cotizacionmovimientos' => 'dbcotizacionmovimientos');
 
 	$tablasArAux	= array('clientes' => 1,
 'conceptos' => 1,
@@ -99,7 +105,10 @@ function recursiveTablas($ar, $tabla, $aliasTablaMadre) {
 'tipostrabajos' => 1,
 'unidadesnegocios' => 1,
 'oportunidades' => 6,
-'estadocotizacion'=>1);
+'estadocotizacion'=>1,
+'cotizaciones' => 6,
+'cotizaciondetalles' => 3,
+'cotizacionmovimientos' => 3);
 
 	$inner= '';
 	$sql	=	"show columns from ".$tabla;
