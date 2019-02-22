@@ -47,7 +47,7 @@ $eliminar = "eliminarUsuarios";
 
 $insertar = "insertarUsuarios";
 
-$modificar = "modificarUsuari";
+$modificar = "modificarUsuarios";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
