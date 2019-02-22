@@ -782,6 +782,95 @@ return $res;
 /* Fin */
 /* /* Fin de la Tabla: dbempleados*/
 
+/* PARA Usuarios */
+
+function insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo) {
+
+$sql = "insert into dbusuarios(idusuario,usuario,password,refroles,email,nombrecompleto,refcontactos,activo)
+values ('','".($usuario)."','".($password)."','".($refroles)."','".($email)."','".($nombrecompleto)."','".($refcontactos)."','".($activo)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo) {
+	
+$sql = "update dbusuarios
+set
+usuario = '".($usuario)."',password = '".($password)."',refroles = '".($refroles)."',email = '".($email)."',nombrecompleto = '".($nombrecompleto)."',refcontactos = '".($refcontactos)."',activo = '".$activo."'
+where idusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarUsuarios($id) {
+
+$sql = "delete from dbusuarios where idusuario =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerUsuariosajax($length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("@","",$busqueda);
+	if ($busqueda != '') {
+		$where = "where u.usuario like '%".$busqueda."%' or u.email like '%".$busqueda."%' or u.nombrecompleto like '%".$busqueda."%' or (case when u.activo = 1 then 'Si' else 'No' end) = '".$busqueda."'";
+	}
+
+	$sql = "select
+	u.idusuario,
+	u.usuario,
+	u.password,
+	(case
+		when u.refroles = 1 then 'Administrador' 
+		when u.refroles = 2 then 'Jefe' 
+		when u.refroles = 3 then 'Usuario' 
+	 end) as refroles,
+	
+	u.email,
+	u.nombrecompleto,
+	u.refcontactos,
+	(case when u.activo = 1 then 'Si' else 'No' end) as activo
+	from dbusuarios u
+	".$where."
+	order by u.usuario
+	limit ".$start.",".$length;
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+function traerUsuarios() {
+	$sql = "select
+	u.idusuario,
+	u.usuario,
+	u.password,
+	u.refroles,
+	u.email,
+	u.nombrecompleto,
+	u.refcontactos,
+	(case when u.activo = 1 then 'Si' else 'No' end) as activo
+	from dbusuarios u
+	order by 1";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+/*
+function traerUsuarioPorId($id) {
+$sql = "select idconcepto,concepto,abreviatura,leyenda,activo from dbconceptos where idconcepto =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+*/
+
+/* Fin */
+/* /* Fin de la Tabla: dbusuarios*/
 
 /* PARA Listasprecios */
 

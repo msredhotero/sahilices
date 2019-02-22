@@ -12,12 +12,15 @@ class Servicios {
 
 		$cad		= '';
 		while ($rowTT = mysql_fetch_array($datos)) {
+
 			$contenido	= '';
 			foreach ($ar as $i) {
+				//var_dump($rowTT[$i].$delimitador);
 				$contenido .= $rowTT[$i].$delimitador;
 			}
 			$cad .= '<option value="'.$rowTT[0].'">'.utf8_encode(substr($contenido,0,strlen($contenido)-strlen($delimitador))).'</option>';
 		}
+
 		return $cad;
 	}
 
@@ -407,6 +410,12 @@ class Servicios {
 
 			while ($row = mysql_fetch_array($res)) {
 				$label = $row[0];
+				//var_dump($row);
+				if($label =='refroles'){
+					
+
+					//var_dump($row);
+				}
 				$i = 0;
 
 				if ($row[2]=='NO') {
@@ -1097,6 +1106,18 @@ class Servicios {
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
 				break;
+			case 'dbusuarios':
+				$sqlMod = "select idusuario,
+										usuario,
+										password,
+										refroles,
+										email,
+										nombrecompleto,
+										refcontactos,
+										(case when activo = 1 then 'Si' else 'No' end) as activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
 
 			default:
 				$sqlMod = "select * from ".$tabla." where ".$lblid." = ".$id;
@@ -1330,9 +1351,10 @@ class Servicios {
 											';
 
 											} else {
+												
 												$label = ucwords($label);
 												$campo = strtolower($row[0]);
-
+												
 												$form	=	$form.'
 												<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 margTop" style="display:'.$lblOculta.'">
 													<label class="form-label">'.$label.'</label>
@@ -1809,6 +1831,18 @@ class Servicios {
 										concepto,
 										abreviatura,
 										leyenda,
+										(case when activo = 1 then 'Si' else 'No' end) as activo
+									from ".$tabla." where ".$lblid." = ".$id;
+				$resMod = $this->query($sqlMod,0);
+				break;
+			case 'dbusuarios':
+				$sqlMod = "select idusuario,
+										usuario,
+										password,
+										refroles,
+										email,
+										nombrecompleto,
+										refcontactos,
 										(case when activo = 1 then 'Si' else 'No' end) as activo
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);

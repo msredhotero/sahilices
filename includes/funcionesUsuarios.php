@@ -23,7 +23,7 @@ function GUID()
 function login($usuario,$pass) {
 
 	$sqlusu = "select * from dbusuarios where email = '".$usuario."'";
-
+	
 	$error = '';
 
 	if (trim($usuario) != '' and trim($pass) != '') {
@@ -45,6 +45,7 @@ function login($usuario,$pass) {
 		if (mysql_num_rows($resppass) > 0) {
 			$error = '';
 			} else {
+
 				$error = 'Usuario o Password incorrecto';
 			}
 
@@ -171,7 +172,7 @@ if (trim($usuario) != '' and trim($pass) != '') {
 
 
 function traerRoles() {
-	$sql = "select * from tbroles";
+	$sql = "select * from tbroles where idrol > 1";
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -181,7 +182,7 @@ function traerRoles() {
 }
 
 function traerRolesSimple() {
-	$sql = "select * from tbroles where idrol <> 1";
+	$sql = "select * from tbroles where idrol > 2";
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -202,7 +203,7 @@ function traerUsuario($email) {
 }
 
 function traerUsuarios() {
-	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, u.refroles
+	$sql = "select u.idusuario,u.usuario, u.password, r.descripcion, u.email , u.nombrecompleto, u.refroles, u.,refcontactos
 			from dbusuarios u
 			inner join tbroles r on u.refroles = r.idrol
 			order by nombrecompleto";
@@ -242,7 +243,7 @@ function traerTodosUsuarios() {
 }
 
 function traerUsuarioId($id) {
-	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password from dbusuarios where idusuario = ".$id;
+	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password,refcontactos from dbusuarios where idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -288,21 +289,23 @@ function enviarEmail($destinatario,$asunto,$cuerpo) {
 }
 
 
-function insertarUsuario($usuario,$password,$refroles,$email,$nombrecompleto) {
+function insertarUsuario($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos ) {
 	$sql = "INSERT INTO dbusuarios
 				(idusuario,
 				usuario,
 				password,
 				refroles,
 				email,
-				nombrecompleto)
+				nombrecompleto,
+				refcontactos )
 			VALUES
 				('',
 				'".($usuario)."',
 				'".($password)."',
 				".$refroles.",
 				'".($email)."',
-				'".($nombrecompleto)."')";
+				'".($nombrecompleto)."',
+				'".($refcontactos)."',)";
 	if ($this->existeUsuario($email) == true) {
 		return "Ya existe el usuario";
 	}
@@ -316,14 +319,16 @@ function insertarUsuario($usuario,$password,$refroles,$email,$nombrecompleto) {
 }
 
 
-function modificarUsuario($id,$usuario,$password,$refroles,$email,$nombrecompleto) {
+function modificarUsuario($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos) {
+	//aca no viene el modificar usuario
 	$sql = "UPDATE dbusuarios
 			SET
 				usuario = '".utf8_decode($usuario)."',
 				password = '".utf8_decode($password)."',
 				email = '".utf8_decode($email)."',
 				refroles = ".$refroles.",
-				nombrecompleto = '".utf8_decode($nombrecompleto)."'
+				nombrecompleto = '".utf8_decode($nombrecompleto)."',
+				refcontactos = '".$refcontactos."'
 			WHERE idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {
@@ -358,6 +363,7 @@ function query($sql,$accion) {
 		if ($accion && $result) {
 			$result = mysql_insert_id();
 		}
+		//var_dump($result);
 		if(!$result){
 			$error=1;
 		}

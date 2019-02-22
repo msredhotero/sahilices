@@ -18,6 +18,7 @@ $serviciosValidador        = new serviciosValidador();
 
 $accion = $_POST['accion'];
 
+
 $resV['error'] = '';
 $resV['mensaje'] = '';
 
@@ -34,7 +35,10 @@ switch ($accion) {
         insertarUsuario($serviciosUsuarios);
         break;
 	case 'modificarUsuario':
-        modificarUsuario($serviciosUsuarios);
+        modificarUsuarios($serviciosReferencias);
+        break;
+   case 'eliminarUsuarios':
+        eliminarUsuarios($serviciosReferencias);
         break;
 	case 'registrar':
 		registrar($serviciosUsuarios);
@@ -323,7 +327,7 @@ switch ($accion) {
       frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $serviciosUsuarios);
    break;
    case 'frmAjaxNuevo':
-      frmAjaxNuevo($serviciosFunciones, $serviciosReferencias);
+      frmAjaxNuevo($serviciosFunciones, $serviciosReferencias, $serviciosUsuarios);
    break;
 
    case 'verificarSemaforos':
@@ -629,6 +633,27 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $servicios
 
          $refdescripcion = array();
          $refCampo 	=  array();
+         break;
+
+      case 'dbusuarios':
+         $resultado = $serviciosUsuarios->traerUsuarioId($id);
+         $modificar = "modificarUsuario";
+         $idTabla = "idusuario";
+
+         $lblCambio     = array();
+         $lblreemplazo  = array();
+
+         $cadRef  = '';
+         if($_SESSION['idroll_sahilices']=='1'){
+            $resVar1 = $serviciosUsuarios->traerRoles();
+         }else{
+            $resVar1 = $serviciosUsuarios->traerRolesSimple();
+         }
+         $cadRef1    = $serviciosFunciones->devolverSelectBox($resVar1,array(1),'',mysql_result($resultado,0,'refroles'));
+
+         $refdescripcion = array(0=> $cadRef1);
+         $refCampo   =  array('refroles');
+        
          break;
       case 'dbconceptosviaticos':
          $resultado = $serviciosReferencias->traerConceptosviaticosPorId($id);
@@ -1408,11 +1433,12 @@ $res = $serviciosReferencias->insertarUsuarios($usuario,$password,$refroles,$ema
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
 function modificarUsuarios($serviciosReferencias) {
+
 $id = $_POST['id'];
 $usuario = $_POST['usuario'];
 $password = $_POST['password'];
@@ -1420,6 +1446,8 @@ $refroles = $_POST['refroles'];
 $email = $_POST['email'];
 $nombrecompleto = $_POST['nombrecompleto'];
 $refcontactos = $_POST['refcontactos'];
+
+
 if (isset($_POST['activo'])) {
 $activo	= 1;
 } else {
@@ -2157,8 +2185,9 @@ function insertarUsuario($serviciosUsuarios) {
 	$refroll			=	$_POST['refroles'];
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
+   $refcontactos     =  $_POST['refcontactos '];
 
-	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombre);
+	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombre,$refcontactos);
 	if ((integer)$res > 0) {
 		echo '';
 	} else {
@@ -2174,8 +2203,9 @@ function modificarUsuario($serviciosUsuarios) {
 	$refroll			=	$_POST['refroles'];
 	$email				=	$_POST['email'];
 	$nombre				=	$_POST['nombrecompleto'];
+   $refcontactos     =  $_POST['refcontactos '];
 
-	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre);
+	echo $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombre,$refcontactos);
 }
 
 
