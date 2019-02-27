@@ -380,6 +380,9 @@ class Servicios {
 			case 'dboportunidades':
 				$ocultar = array("refcotizaciones","fechacreacion","refsemaforos","refusuarios","refestadocotizacion");
 				break;
+			case 'dbcotizaciones':
+				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios");
+				break;
 
 			default:
 				$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","idusuario","refestados");
@@ -412,7 +415,7 @@ class Servicios {
 				$label = $row[0];
 				//var_dump($row);
 				if($label =='refroles'){
-					
+
 
 					//var_dump($row);
 				}
@@ -561,7 +564,7 @@ class Servicios {
 
 									/*if (($row[0] == "fechabaja2") || ($row[0] == "fechaalta2")){*/
 										$form	=	$form.'
-										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
                                   <b>'.$label.'</b>
                                   <div class="input-group">
                                       <span class="input-group-addon">
@@ -1351,10 +1354,10 @@ class Servicios {
 											';
 
 											} else {
-												
+
 												$label = ucwords($label);
 												$campo = strtolower($row[0]);
-												
+
 												$form	=	$form.'
 												<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 margTop" style="display:'.$lblOculta.'">
 													<label class="form-label">'.$label.'</label>

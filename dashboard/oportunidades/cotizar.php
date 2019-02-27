@@ -29,6 +29,8 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../oportunid
 
 $fecha = date('Y-m-d');
 
+$id = $_GET['id'];
+
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Oportunidades",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
@@ -41,7 +43,7 @@ $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
 $singular = "Oportunidad";
 
-$plural = "Oportunidades";
+$plural = "Oportunidades - Cotizar";
 
 $eliminar = "eliminarOportunidades";
 
@@ -51,36 +53,42 @@ $modificar = "modificarOportunidades";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
+$resultado = $serviciosReferencias->traerOportunidadesPorId($id);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dboportunidades";
+$tabla 			= "dbcotizaciones";
 
-$lblCambio	 	= array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refcotizaciones','refsemaforos','fechacreacion','refestadocotizacion');
-$lblreemplazo	= array('Tipo de Trabajo','Motivo de Oportunidad','Usuario','Estado','Id Cotizacion','Demora','Fecha Creacion','Est.Cot.');
+$lblCambio	 	= array('refclientes','refmotivosoportunidades','refcontactos','refestados','reftipostrabajos','refusuarios');
+$lblreemplazo	= array('Cliente','Motivo de Oportunidad','Contacto','Estado','Tipo de Trabajo','Usuario');
 
 
 $resVar1 = $serviciosReferencias->traerTipostrabajos();
-$cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
+$cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'',mysql_result($resultado,0,'reftipostrabajos'));
 
 $resVar2 = $serviciosReferencias->traerMotivosoportunidades();
-$cadRef2 	= $serviciosFunciones->devolverSelectBox($resVar2,array(1),'');
+$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),'',mysql_result($resultado,0,'refmotivosoportunidades'));
 
 $resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
 
-$resVar4 = $serviciosReferencias->traerEstadosPorId(1);
+$resVar4 = $serviciosReferencias->traerEstadosPorFormulario(1);
 $cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
 
-$resVar5 = $serviciosReferencias->traerSemaforosPorId(1);
-$cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(1),'');
+$resVar5 = $serviciosReferencias->traerClientes();
+$cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(1),' ');
 
-$resVar6 = $serviciosReferencias->traerEstadoCotizacionPorId(1);
-$cadRef6 	= $serviciosFunciones->devolverSelectBox($resVar6,array(1),'');
+$resVar6 = $serviciosReferencias->traerContactos();
+$cadRef6 	= $serviciosFunciones->devolverSelectBox($resVar6,array(2,3,4,5,6),' ');
 
-$refdescripcion = array(0=>$cadRef1,1=>$cadRef2,2=>$cadRef3,3=>$cadRef4,4=>$cadRef5,5=>$cadRef6);
-$refCampo 	=  array('reftipostrabajos','refmotivosoportunidades','refusuarios','refestados','refsemaforos','refestadocotizacion');
+$refdescripcion = array(0=>$cadRef5,
+								1=>$cadRef2,
+								2=>$cadRef6,
+								3=>$cadRef4,
+								4=>$cadRef1,
+								5=>$cadRef3);
+$refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refestados','reftipostrabajos','refusuarios');
 
-$frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 ?>
@@ -161,7 +169,6 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		.alignRight { text-align: right; }
 		.alignCenter { text-align: center;; }
 		.alignLeft { text-align: left;; }
-		.amarcos a { color: #fff; font-weight: bold; text-decoration: none; cursor: pointer;}
 	</style>
 
 
@@ -207,7 +214,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 <!-- #Top Bar -->
 <?php echo $baseHTML->cargarSECTION($_SESSION['usua_sahilices'], $_SESSION['nombre_sahilices'], $resMenu,'../../'); ?>
 
-<section class="content" style="margin-top:-75px;">
+<section class="content" style="margin-top:-15px;">
 
 	<div class="container-fluid">
 		<div class="row clearfix">
@@ -240,67 +247,21 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 										<div class="button-demo">
 											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
 												<i class="material-icons">add</i>
-												<span>NUEVO</span>
+												<span>NUEVO CLIENTE</span>
 											</button>
 
 										</div>
 									</div>
+									<div class="col-lg-12 col-md-12">
+										<div class="alert alertEstadoCliente">
+											<h4 class="lblEstado"></h4>
+											<p class="lblComentario"></p>
+										</div>
+									</div>
 								</div>
 
-								<div class="row" style="padding: 5px 20px;">
-									<div class="alert alert-info amarcos">
-										Ocultar Columnas: <a class="toggle-vis" data-column="0">Empresa</a> - <a class="toggle-vis" data-column="1">Contacto</a> - <a class="toggle-vis" data-column="2">Tel.</a> - <a class="toggle-vis" data-column="3">Email</a> - <a class="toggle-vis" data-column="4">Tipo Trab.</a> - <a class="toggle-vis" data-column="5">Motivo Oport.</a> - <a class="toggle-vis" data-column="6">Comentario</a> - <a class="toggle-vis" data-column="7">Estado</a> - <a class="toggle-vis" data-column="8">Est. Cotz.</a> - <a class="toggle-vis" data-column="9">Usuario</a> - <a class="toggle-vis" data-column="10">Fecha</a>
-									</div>
-									<table id="example" class="display table " style="width:100%">
-										<thead>
-											<tr>
-												<th>Empresa</th>
-												<th>Contacto</th>
-												<th>Tel.</th>
-												<th>Email</th>
-												<th>Tipo Trab.</th>
-												<th>Motivo Oport.</th>
-												<th>Comentario</th>
-												<th>Estado</th>
-												<th>Est. Cotz.</th>
-												<th>Usuario</th>
-												<th>Fecha</th>
-												<th>
-													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-orange btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-red btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-												</th>
-												<th>Acciones</th>
-											</tr>
-										</thead>
-										<tfoot>
-											<tr>
-												<th>Empresa</th>
-												<th>Contacto</th>
-												<th>Tel.</th>
-												<th>Email</th>
-												<th>Tipo Trab.</th>
-												<th>Motivo Oport.</th>
-												<th>Comentario</th>
-												<th>Estado</th>
-												<th>Est. Cotz.</th>
-												<th>Usuario</th>
-												<th>Fecha</th>
-												<th>
-													<button type="button" class="btn-chico bg-green btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-orange btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-													<button type="button" class="btn-chico bg-red btn-circle btn-circle-chico waves-effect waves-circle waves-float">
-                                			</button>
-												</th>
-												<th>Acciones</th>
-											</tr>
-										</tfoot>
-									</table>
+								<div class="row">
+									<?php echo $frm; ?>
 								</div>
 							</form>
 							</div>
@@ -404,56 +365,6 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 <script>
 	$(document).ready(function(){
-		var table = $('#example').DataTable({
-			"bProcessing": true,
-			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=oportunidades",
-			"language": {
-				"emptyTable":     "No hay datos cargados",
-				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
-				"infoEmpty":      "Mostrar 0 hasta 0 del total de 0 filas",
-				"infoFiltered":   "(filtrados del total de _MAX_ filas)",
-				"infoPostFix":    "",
-				"thousands":      ",",
-				"lengthMenu":     "Mostrar _MENU_ filas",
-				"loadingRecords": "Cargando...",
-				"processing":     "Procesando...",
-				"search":         "Buscar:",
-				"zeroRecords":    "No se encontraron resultados",
-				"paginate": {
-					"first":      "Primero",
-					"last":       "Ultimo",
-					"next":       "Siguiente",
-					"previous":   "Anterior"
-				},
-				"aria": {
-					"sortAscending":  ": activate to sort column ascending",
-					"sortDescending": ": activate to sort column descending"
-				}
-			}
-			/*,
-			"rowCallback": function( row, data, index ) {
-				$('td', row).css('background-color', data[8]);
-			}*/
-			,
-			"columnDefs": [
-            {
-               "targets": [ 8 ],
-					"className": "text-center",
-      			"width": "10%"
-            }
-			]
-		});
-
-		$('a.toggle-vis').on( 'click', function (e) {
-	        e.preventDefault();
-
-	        // Get the column API object
-	        var column = table.column( $(this).attr('data-column') );
-
-	        // Toggle the visibility
-	        column.visible( ! column.visible() );
-	    } );
 
 		$('.maximizar').click(function() {
 			if ($('.icomarcos').text() == 'web') {
@@ -484,6 +395,43 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		var $demoMaskedInput = $('.demo-masked-input');
 
 		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
+
+
+		function devolverEstadoCliente(id) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {accion: 'devolverEstadoCliente',idcliente: id},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$('.lblEstado').html('');
+					$('.lblComentario').html('');
+					$('.alertEstadoCliente').removeClass('bg-red');
+					$('.alertEstadoCliente').removeClass('bg-green');
+					$('.alertEstadoCliente').removeClass('bg-orange');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+					$('.lblEstado').html('Estado: ' + data.Estado);
+					$('.lblComentario').html('Estado: ' + data.Comentario);
+					$('.alertEstadoCliente').addClass( 'bg-'+data.Color);
+
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+		}
+
+		devolverEstadoCliente($('#refclientes').val());
+
+		$('#refclientes').change(function() {
+			devolverEstadoCliente($(this).val());
+		});
 
 		function frmAjaxModificar(id, $demoMaskedInput) {
 			$.ajax({
@@ -625,12 +573,6 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 			idTable =  $(this).attr("id");
 			frmAjaxModificar(idTable);
 			$('#lgmModificar').modal();
-		});//fin del boton modificar
-
-		$("#example").on("click",'.btnCotizar', function(){
-			idTable =  $(this).attr("id");
-			url = "cotizar.php?id=" + idTable;
-			$(location).attr('href',url);
 		});//fin del boton modificar
 
 		$('.nuevo').click(function(){

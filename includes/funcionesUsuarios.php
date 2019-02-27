@@ -23,7 +23,7 @@ function GUID()
 function login($usuario,$pass) {
 
 	$sqlusu = "select * from dbusuarios where email = '".$usuario."'";
-	
+
 	$error = '';
 
 	if (trim($usuario) != '' and trim($pass) != '') {
@@ -172,7 +172,7 @@ if (trim($usuario) != '' and trim($pass) != '') {
 
 
 function traerRoles() {
-	$sql = "select * from tbroles where idrol > 1";
+	$sql = "select * from tbroles";
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -182,7 +182,7 @@ function traerRoles() {
 }
 
 function traerRolesSimple() {
-	$sql = "select * from tbroles where idrol > 2";
+	$sql = "select * from tbroles where idrol > 1";
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -243,7 +243,7 @@ function traerTodosUsuarios() {
 }
 
 function traerUsuarioId($id) {
-	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password,refcontactos from dbusuarios where idusuario = ".$id;
+	$sql = "select idusuario,usuario,refroles,nombrecompleto,email,password,refcontactos, refunidadesnegocios from dbusuarios where idusuario = ".$id;
 	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';

@@ -9,6 +9,236 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+
+/* PARA Clienteestados */
+
+function insertarClienteestados($refclientes,$refestados,$comentarios) {
+$sql = "insert into dbclienteestados(idclienteestado,refclientes,refestados,comentarios)
+values ('',".$refclientes.",".$refestados.",'".($comentarios)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarClienteestados($id,$refclientes,$refestados,$comentarios) {
+$sql = "update dbclienteestados
+set
+refclientes = ".$refclientes.",refestados = ".$refestados.",comentarios = '".($comentarios)."'
+where idclienteestado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarClienteestados($id) {
+$sql = "delete from dbclienteestados where idclienteestado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerClienteestados() {
+$sql = "select
+c.idclienteestado,
+c.refclientes,
+c.refestados,
+c.comentarios
+from dbclienteestados c
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerClienteestadosPorId($id) {
+$sql = "select idclienteestado,refclientes,refestados,comentarios from dbclienteestados where idclienteestado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbclienteestados*/
+
+
+	/* PARA Cotizaciondetalles */
+
+	function insertarCotizaciondetalles($refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja) {
+		$sql = "insert into dbcotizaciondetalles(idcotizaciondetalle,refcotizaciones,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja)
+		values ('',".$refcotizaciones.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$cargavieja.")";
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function modificarCotizaciondetalles($id,$refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja) {
+
+		$sql = "update dbcotizaciondetalles
+		set
+		refcotizaciones = ".$refcotizaciones.",refconceptos = ".$refconceptos.",cantidad = ".$cantidad.",preciounitario = ".$preciounitario.",porcentajebonificado = ".$porcentajebonificado.",reftipomonedas = ".$reftipomonedas.",rango = ".$rango.",aplicatotal = ".$aplicatotal.",cargavieja = ".$cargavieja."
+		where idcotizaciondetalle =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function eliminarCotizaciondetalles($id) {
+		$sql = "delete from dbcotizaciondetalles where idcotizaciondetalle =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizaciondetalles() {
+		$sql = "select
+		c.idcotizaciondetalle,
+		c.refcotizaciones,
+		c.refconceptos,
+		c.cantidad,
+		c.preciounitario,
+		c.porcentajebonificado,
+		c.reftipomonedas,
+		c.rango,
+		c.aplicatotal,
+		c.cargavieja
+		from dbcotizaciondetalles c
+		order by 1";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizaciondetallesPorId($id) {
+		$sql = "select idcotizaciondetalle,refcotizaciones,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja from dbcotizaciondetalles where idcotizaciondetalle =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	/* Fin */
+	/* /* Fin de la Tabla: dbcotizaciondetalles*/
+
+
+	/* PARA Cotizaciones */
+
+	function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi) {
+		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi)
+		values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."')";
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi) {
+		$sql = "update dbcotizaciones
+		set
+		refclientes = ".$refclientes.",refestados = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."'
+		where idcotizacion =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function eliminarCotizaciones($id) {
+		$sql = "delete from dbcotizaciones where idcotizacion =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizaciones() {
+		$sql = "select
+		c.idcotizacion,
+		c.refclientes,
+		c.refestados,
+		c.refcontactos,
+		c.refmotivosoportunidades,
+		c.reftipostrabajos,
+		c.refusuarios,
+		c.observaciones,
+		c.fechacrea,
+		c.fechamodi,
+		c.usuariomodi
+		from dbcotizaciones c
+		order by 1";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizacionesPorId($id) {
+		$sql = "select idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi from dbcotizaciones where idcotizacion =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	/* Fin */
+	/* /* Fin de la Tabla: dbcotizaciones*/
+
+
+	/* PARA Cotizacionmovimientos */
+
+	function insertarCotizacionmovimientos($refcotizaciondetalles,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$fechacrea,$usuariocrea) {
+		$sql = "insert into dbcotizacionmovimientos(idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea)
+		values ('',".$refcotizaciondetalles.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$fechacrea.",'".($usuariocrea)."')";
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function modificarCotizacionmovimientos($id,$refcotizaciondetalles,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$fechacrea,$usuariocrea) {
+		$sql = "update dbcotizacionmovimientos
+		set
+		refcotizaciondetalles = ".$refcotizaciondetalles.",refconceptos = ".$refconceptos.",cantidad = ".$cantidad.",preciounitario = ".$preciounitario.",porcentajebonificado = ".$porcentajebonificado.",reftipomonedas = ".$reftipomonedas.",rango = ".$rango.",aplicatotal = ".$aplicatotal.",fechacrea = ".$fechacrea.",usuariocrea = '".($usuariocrea)."'
+		where idcotizacionmovimiento =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function eliminarCotizacionmovimientos($id) {
+		$sql = "delete from dbcotizacionmovimientos where idcotizacionmovimiento =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizacionmovimientos() {
+		$sql = "select
+		c.idcotizacionmovimiento,
+		c.refcotizaciondetalles,
+		c.refconceptos,
+		c.cantidad,
+		c.preciounitario,
+		c.porcentajebonificado,
+		c.reftipomonedas,
+		c.rango,
+		c.aplicatotal,
+		c.fechacrea,
+		c.usuariocrea
+		from dbcotizacionmovimientos c
+		order by 1";
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizacionmovimientosPorId($id) {
+		$sql = "select idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea from dbcotizacionmovimientos where idcotizacionmovimiento =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	/* Fin */
+	/* /* Fin de la Tabla: dbcotizacionmovimientos*/
+
 	function traerCantidadOportunidadesSemaforo($refsemaforos) {
 		$sql = "SELECT count(*) FROM dboportunidades
 					where refsemaforos = ".$refsemaforos;
@@ -350,11 +580,27 @@ class ServiciosReferencias {
 
 /* PARA Clientes */
 
+function devolverEstadoCliente($idcliente) {
+	$sql = "SELECT
+			    est.estado, ce.comentarios, est.color
+			FROM
+			    dbclienteestados ce
+			        INNER JOIN
+			    tbestados est ON est.idestado = ce.refestados
+			WHERE
+			    ce.refclientes =  ".$idcliente;
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 function insertarClientes($razonsocial,$cuit,$direccion,$email,$telefono) {
-$sql = "insert into dbclientes(idcliente,razonsocial,cuit,direccion,email,telefono)
-values ('','".($razonsocial)."','".($cuit)."','".($direccion)."','".($email)."','".($telefono)."')";
-$res = $this->query($sql,1);
-return $res;
+	$sql = "insert into dbclientes(idcliente,razonsocial,cuit,direccion,email,telefono)
+	values ('','".$razonsocial."','".$cuit."','".$direccion."','".$email."','".$telefono."')";
+	$res = $this->query($sql,1);
+
+	$this->insertarClienteestados($res,2,'Cliente Nuevo');
+
+	return $res;
 }
 
 
@@ -613,6 +859,8 @@ c.refsectores,
 c.apellido,
 c.nombre,
 c.nrodocumento,
+pl.planta,
+sec.sector,
 c.email,
 c.telefono
 from dbcontactos c
@@ -799,7 +1047,7 @@ return $res;
 
 
 function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo) {
-	
+
 $sql = "update dbusuarios
 set
 usuario = '".($usuario)."',password = '".($password)."',refroles = '".($refroles)."',email = '".($email)."',nombrecompleto = '".($nombrecompleto)."',refcontactos = '".($refcontactos)."',activo = '".$activo."'
@@ -830,17 +1078,16 @@ function traerUsuariosajax($length, $start, $busqueda) {
 	u.idusuario,
 	u.usuario,
 	u.password,
-	(case
-		when u.refroles = 1 then 'Administrador' 
-		when u.refroles = 2 then 'Jefe' 
-		when u.refroles = 3 then 'Usuario' 
-	 end) as refroles,
-	
+	r.descripcion as refroles,
 	u.email,
 	u.nombrecompleto,
-	u.refcontactos,
-	(case when u.activo = 1 then 'Si' else 'No' end) as activo
+	concat(cc.apellido, ' ', cc.nombre) as contacto,
+	(case when u.activo = 1 then 'Si' else 'No' end) as activo,
+	u.refcontactos
 	from dbusuarios u
+	left join dbcontactos cc on cc.idcontacto = u.refcontactos
+	left join tbunidadesnegocios n on n.idunidadnegocio = u.refunidadesnegocios
+	inner join tbroles r on r.idrol = u.refroles
 	".$where."
 	order by u.usuario
 	limit ".$start.",".$length;
@@ -1196,6 +1443,12 @@ return $res;
 
 function traerEstadosInId($in) {
 $sql = "select idestado,estado,color,icono,orden,valor,refformularios from tbestados where idestado in (".$in.")";
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerEstadosPorFormulario($in) {
+$sql = "select idestado,estado,color,icono,orden,valor,refformularios from tbestados where refformularios in (".$in.")";
 $res = $this->query($sql,0);
 return $res;
 }

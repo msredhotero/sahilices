@@ -201,9 +201,9 @@ switch ($tabla) {
 	case 'oportunidades':
 		$resAjax = $serviciosReferencias->traerOportunidadesajax($length, $start, $busqueda);
 		$res = $serviciosReferencias->traerOportunidades();
-		$label = array('btnModificar','btnEliminar');
-		$class = array('bg-amber','bg-red');
-		$icon = array('create','delete');
+		$label = array('btnModificar','btnEliminar','btnCotizar');
+		$class = array('bg-amber','bg-red','bg-indigo');
+		$icon = array('create','delete','add_shopping_cart');
 		$indiceID = 0;
 		$empieza = 1;
 		$termina = 12;
@@ -219,7 +219,7 @@ switch ($tabla) {
 		$indiceID = 0;
 		$empieza = 1;
 		$termina = 7;
-		
+
 		break;
 	default:
 		// code...

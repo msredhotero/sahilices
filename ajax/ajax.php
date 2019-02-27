@@ -337,11 +337,30 @@ switch ($accion) {
       traerNotificacionesPorRol($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios);
    break;
 
+   case 'devolverEstadoCliente':
+      devolverEstadoCliente($serviciosReferencias);
+   break;
+
 
 /* Fin */
 
 }
 /* Fin */
+
+function devolverEstadoCliente($serviciosReferencias) {
+   $id = $_POST['idcliente'];
+
+   $res = $serviciosReferencias->devolverEstadoCliente($id);
+
+   if (mysql_num_rows($res) > 0) {
+      $ar = array('Estado' => mysql_result($res,0,0), 'Comentario' => mysql_result($res,0,1), 'Color' => mysql_result($res,0,2));
+   } else {
+      $ar = array('Estado' => '', 'Comentario' => 'No posee comentarios', 'Color' => 'blue');
+   }
+
+   header('Content-type: application/json');
+	echo json_encode($ar);
+}
 
 function traerNotificacionesPorRol($serviciosReferencias, $serviciosNotificaciones, $serviciosUsuarios) {
    session_start();
@@ -640,20 +659,31 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $servicios
          $modificar = "modificarUsuario";
          $idTabla = "idusuario";
 
-         $lblCambio     = array();
-         $lblreemplazo  = array();
+         $lblCambio	 	= array('refroles','refunidadesnegocios','refcontactos');
+         $lblreemplazo	= array('Perfil','Unidad de Negocio','Contacto');
 
-         $cadRef  = '';
-         if($_SESSION['idroll_sahilices']=='1'){
-            $resVar1 = $serviciosUsuarios->traerRoles();
+         //obtengo los roles dependiendo el rol que este logueado
+         if($_SESSION['idroll_sahilices']==1){
+         	$refRoles = $serviciosUsuarios->traerRoles();
+         	$cadRef 	= $serviciosFunciones->devolverSelectBox($refRoles,array(1),'');
          }else{
-            $resVar1 = $serviciosUsuarios->traerRolesSimple();
+         	$refRoles = $serviciosUsuarios->traerRolesSimple();
+         	$cadRef 	= $serviciosFunciones->devolverSelectBox($refRoles,array(1),'');
          }
-         $cadRef1    = $serviciosFunciones->devolverSelectBox($resVar1,array(1),'',mysql_result($resultado,0,'refroles'));
 
-         $refdescripcion = array(0=> $cadRef1);
-         $refCampo   =  array('refroles');
-        
+         //traigo las unidades de negocios , cuando inserto un gerente la unidad de negocio es 0
+         $refUN = $serviciosReferencias->traerUnidadesnegocios();
+         $cadRefUN = "<option value='0'>-- Sin unidad de negocio --</option>";
+         $cadRefUN .= $serviciosFunciones->devolverSelectBox($refUN,array(1),'');
+
+         //traigo los contactos, puedo ingresar un contacto 0 (sin contacto)
+         $refC = $serviciosReferencias->traerContactos();
+         $cadRefC = "<option value='0'>-- Sin contacto --</option>";
+         $cadRefC .= $serviciosFunciones->devolverSelectBox($refC,array(2,3,4,5,6),' ');
+
+         $refdescripcion = array(0=>$cadRef,1=>$cadRefUN,2=>$cadRefC);
+         $refCampo 	=  array('refroles','refunidadesnegocios','refcontactos');
+
          break;
       case 'dbconceptosviaticos':
          $resultado = $serviciosReferencias->traerConceptosviaticosPorId($id);

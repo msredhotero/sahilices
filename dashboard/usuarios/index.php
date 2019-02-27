@@ -16,7 +16,7 @@ include ('../../includes/funcionesReferencias.php');
 include ('../../includes/base.php');
 
 $serviciosFunciones 	= new Servicios();
-$serviciosUsuario 		= new ServiciosUsuarios();
+$serviciosUsuarios 		= new ServiciosUsuarios();
 $serviciosHTML 			= new ServiciosHTML();
 $serviciosReferencias 	= new ServiciosReferencias();
 $baseHTML = new BaseHTML();
@@ -55,17 +55,30 @@ $modificar = "modificarUsuarios";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbusuarios";
 
-$lblCambio	 	= array();
-$lblreemplazo	= array();
+$lblCambio	 	= array('refroles','refunidadesnegocios','refcontactos');
+$lblreemplazo	= array('Perfil','Unidad de Negocio','Contacto');
 
+//obtengo los roles dependiendo el rol que este logueado
 if($_SESSION['idroll_sahilices']==1){
-$cadRef 	= '<option value="1">Administrador</option><option value="2">Jefe</option><option value="3">Usuario</option>';
+	$refRoles = $serviciosUsuarios->traerRoles();
+	$cadRef 	= $serviciosFunciones->devolverSelectBox($refRoles,array(1),'');
 }else{
-	$cadRef 	= '<option value="2">Jefe</option><option value="3">Usuario</option>';
+	$refRoles = $serviciosUsuarios->traerRolesSimple();
+	$cadRef 	= $serviciosFunciones->devolverSelectBox($refRoles,array(1),'');
 }
 
-$refdescripcion = array(0=>$cadRef);
-$refCampo 	=  array('refroles');
+//traigo las unidades de negocios , cuando inserto un gerente la unidad de negocio es 0
+$refUN = $serviciosReferencias->traerUnidadesnegocios();
+$cadRefUN = "<option value='0'>-- Sin unidad de negocio --</option>";
+$cadRefUN .= $serviciosFunciones->devolverSelectBox($refUN,array(1),'');
+
+//traigo los contactos, puedo ingresar un contacto 0 (sin contacto)
+$refC = $serviciosReferencias->traerContactos();
+$cadRefC = "<option value='0'>-- Sin contacto --</option>";
+$cadRefC .= $serviciosFunciones->devolverSelectBox($refC,array(2,3,4,5,6),' ');
+
+$refdescripcion = array(0=>$cadRef,1=>$cadRefUN,2=>$cadRefC);
+$refCampo 	=  array('refroles','refunidadesnegocios','refcontactos');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -216,7 +229,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 										</thead>
 										<tfoot>
 											<tr>
-												
+
 												<th>Usuario</th>
 												<th>Contraseña</th>
 												<th>Perfil</th>
@@ -291,7 +304,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		           </div>
 		       </div>
 		   </div>
-			
+
 		</form>
 
 
@@ -316,7 +329,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 		           </div>
 		       </div>
 		   </div>
-			
+
 		</form>
 
 
@@ -534,7 +547,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 			//información del formulario
 			var formData = new FormData($(".formulario")[1]);
 			var message = "";
-			
+
 			//hacemos la petición ajax
 			$.ajax({
 				url: '../../ajax/ajax.php',
