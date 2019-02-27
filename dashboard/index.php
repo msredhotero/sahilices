@@ -131,12 +131,12 @@ $insertar = "";
 			  <!-- Widgets -->
 			  <div class="row clearfix">
 					<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-						 <div class="info-box bg-green hover-expand-effect">
+						 <div class="info-box bg-orange hover-expand-effect">
 							  <div class="icon">
 									<i class="material-icons">ring_volume</i>
 							  </div>
 							  <div class="content">
-									<div class="text">NUEVAS OPORTUNIDADES</div>
+									<div class="text">DEMORA OPORTUNIDADES</div>
 									<div class="number count-to" data-from="0" data-to="150" data-speed="15" data-fresh-interval="20"></div>
 							  </div>
 						 </div>
