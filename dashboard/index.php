@@ -158,7 +158,7 @@ $insertar = "";
 									<i class="material-icons">watch_later</i>
 							  </div>
 							  <div class="content">
-									<div class="text">DEMORA OPORTUNIDADES</div>
+									<div class="text">SIN ATENDER OPORTUNIDADES</div>
 									<div class="number count-to" data-from="0" data-to="3" data-speed="1000" data-fresh-interval="20"></div>
 							  </div>
 						 </div>
