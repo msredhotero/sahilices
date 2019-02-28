@@ -91,6 +91,9 @@ $refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refe
 $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
+$resVarTM = $serviciosReferencias->traerTipomonedas();
+$cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
+
 ?>
 
 <!DOCTYPE html>
@@ -112,14 +115,6 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 	<link href="../../plugins/waitme/waitMe.css" rel="stylesheet" />
 	<link href="../../plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
 
-	<!-- VUE JS -->
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-	<!-- axios -->
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-	<script src="https://unpkg.com/vue-swal"></script>
-
 	<!-- Bootstrap Material Datetime Picker Css -->
 	<link href="../../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 
@@ -131,6 +126,9 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.bootstrap.css">
 	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css">
 	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.css">
+
+	<link rel="stylesheet" href="../../css/easy-autocomplete.min.css">
+	<link rel="stylesheet" href="../../css/easy-autocomplete.themes.min.css">
 
 	<style>
 		.alert > i{ vertical-align: middle !important; }
@@ -167,8 +165,9 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 			border-radius: 4px;
 		}
 		.alignRight { text-align: right; }
-		.alignCenter { text-align: center;; }
-		.alignLeft { text-align: left;; }
+		.alignCenter { text-align: center; }
+		.alignLeft { text-align: left; }
+		.easy-autocomplete-container { z-index: 99999999}
 	</style>
 
 
@@ -214,7 +213,7 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 <!-- #Top Bar -->
 <?php echo $baseHTML->cargarSECTION($_SESSION['usua_sahilices'], $_SESSION['nombre_sahilices'], $resMenu,'../../'); ?>
 
-<section class="content" style="margin-top:-15px;">
+<section class="content" style="margin-top:-45px;">
 
 	<div class="container-fluid">
 		<div class="row clearfix">
@@ -263,6 +262,100 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 								<div class="row">
 									<?php echo $frm; ?>
 								</div>
+								<hr>
+								<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<h4>Detalle de la Cotizacion</h4>
+									</div>
+								</div>
+								<!-- buscador -->
+								<div class="row">
+
+
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<div class="form-group">
+											<label>Buscar Item</label>
+											<div class="form-line">
+												<!--<input type="text" id="btnBuscar" name="lstItems" class="form-control" placeholder="Ingrese los datos de la busqueda"  />-->
+												<div style="position: relative; height: 80px;">
+													<input id="round" class="countrie" style="width: 100%; z-index:99999"/>
+												</div>
+												<div id="selction-ajax"></div>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<div class="form-group">
+											<label>Cantidad:</label>
+											<div class="form-line">
+												<input type="text" id="cantidad" name="cantidad" class="form-control" value="1"  />
+											</div>
+										</div>
+									</div>
+
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<div class="form-group">
+											<label>Moneda</label>
+											<div class="form-line">
+												<select class="form-control show-tick" name="reftipomonedas" id="reftipomonedas">
+													<?php echo $cadRefTM; ?>
+												</select>
+											</div>
+										</div>
+									</div>
+
+								</div>
+								<!-- fin buscador -->
+								<!-- bonificaciones y otros -->
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<div class="form-group">
+											<label>Bonificación</label>
+											<div class="input-group">
+												<span class="input-group-addon">$</span>
+												<div class="form-line">
+													<input type="text" id="bonificacion" name="bonificacion" class="form-control" placeholder="Bonificacion" value="0"  />
+												</div>
+												<span class="input-group-addon">.00</span>
+											</div>
+										</div>
+									</div>
+
+								</div>
+								<!-- fin bonificaciones y otros -->
+								<!-- carro de compra -->
+								<div class="row table-responsive">
+									<table id="example" class="display table " style="width:100%">
+										<thead>
+											<tr>
+												<th>Item</th>
+												<th>Concepto</th>
+												<th>Leyenda</th>
+												<th>Cant.</th>
+												<th>Precio Unit.</th>
+												<th>Moneda</th>
+												<th>% Bonif.</th>
+												<th>SubTotal</th>
+												<th>Acciones</th>
+											</tr>
+										</thead>
+										<tfoot>
+											<tr>
+												<th>Item</th>
+												<th>Concepto</th>
+												<th>Leyenda</th>
+												<th>Cant.</th>
+												<th>Precio Unit.</th>
+												<th>Moneda</th>
+												<th>% Bonif.</th>
+												<th>SubTotal</th>
+												<th>Acciones</th>
+											</tr>
+										</tfoot>
+									</table>
+								</div>
+								<!-- fin carro de compra -->
 							</form>
 							</div>
 						</div>
@@ -350,6 +443,7 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 <!-- Wait Me Plugin Js -->
 <script src="../../plugins/waitme/waitMe.js"></script>
 
+<script src="../../js/jquery.easy-autocomplete.min.js"></script>
 <!-- Custom Js -->
 <script src="../../js/pages/cards/colored.js"></script>
 
@@ -363,8 +457,53 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 <script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
 
 
+
 <script>
 	$(document).ready(function(){
+
+		var options = {
+
+		  url: function(phrase) {
+			return "../../json/traerItems.php";
+		  },
+
+		  getValue: function(element) {
+			return element.name;
+		  },
+
+		  ajaxSettings: {
+			dataType: "json",
+			method: "POST",
+			data: {
+			  dataType: "json"
+			}
+		  },
+
+		  preparePostData: function(data) {
+			$('#selction-ajax').html('');
+			data.phrase = $("#round").val();
+			return data;
+		  },
+
+		  list: {
+				onClickEvent: function() {
+					var value = $("#round").getSelectedItemData().id;
+
+
+					$('#selction-ajax').html('<button type="button" id="' + value + '" class="btn bg-green waves-effect agregarJugador"> \
+													<i class="material-icons">add</i> \
+													<span>CARGAR</span>');
+				},
+
+				match: {
+					enabled: true
+				}
+		  },
+		  /*theme: "round",*/
+		  requestDelay: 100
+		};
+
+		$("#round").easyAutocomplete(options);
 
 		$('.maximizar').click(function() {
 			if ($('.icomarcos').text() == 'web') {
@@ -391,10 +530,32 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 		$('#precio3').number( true, 2, '.', '' );
 		$('#precio4').number( true, 2, '.', '' );
 		$('#iva').number( true, 2, '.', '' );
+		$('#bonificacion').number( true, 2, '.', '' );
+		$('#cantidad').number( true, 0, '', '' );
+
+		$('#cantidad').change(function() {
+			if ($(this).val() == '0') {
+				$(this).val(1);
+			}
+		});
+
+		$('#cantidad').focusout(function() {
+			if ($(this).val() == '') {
+				$(this).val(1);
+			}
+		});
+
+		$('#bonificacion').focusout(function() {
+			if ($(this).val() == '') {
+				$(this).val(1);
+			}
+		});
 
 		var $demoMaskedInput = $('.demo-masked-input');
 
 		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
+
+
 
 
 		function devolverEstadoCliente(id) {
