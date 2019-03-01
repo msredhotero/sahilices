@@ -1117,6 +1117,7 @@ class Servicios {
 										email,
 										nombrecompleto,
 										refcontactos,
+										refsector,
 										(case when activo = 1 then 'Si' else 'No' end) as activo
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
@@ -1160,6 +1161,7 @@ class Servicios {
 
 			while ($row = mysql_fetch_array($res)) {
 				$label = $row[0];
+				
 				$i = 0;
 
 				if ($row[2]=='NO') {
@@ -1354,7 +1356,7 @@ class Servicios {
 											';
 
 											} else {
-
+												
 												$label = ucwords($label);
 												$campo = strtolower($row[0]);
 

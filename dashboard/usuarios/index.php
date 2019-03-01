@@ -55,8 +55,8 @@ $modificar = "modificarUsuarios";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbusuarios";
 
-$lblCambio	 	= array('refroles','refunidadesnegocios','refcontactos');
-$lblreemplazo	= array('Perfil','Unidad de Negocio','Contacto');
+$lblCambio	 	= array('refroles','refunidadesnegocios','refcontactos','refsector');
+$lblreemplazo	= array('Perfil','Unidad de Negocio','Contacto','Sector');
 
 //obtengo los roles dependiendo el rol que este logueado
 if($_SESSION['idroll_sahilices']==1){
@@ -77,8 +77,13 @@ $refC = $serviciosReferencias->traerContactos();
 $cadRefC = "<option value='0'>-- Sin contacto --</option>";
 $cadRefC .= $serviciosFunciones->devolverSelectBox($refC,array(2,3,4,5,6),' ');
 
-$refdescripcion = array(0=>$cadRef,1=>$cadRefUN,2=>$cadRefC);
-$refCampo 	=  array('refroles','refunidadesnegocios','refcontactos');
+//traigo los sectores, puedo ingresar un sector 0 (sin sector)
+$refS = $serviciosReferencias->traerSectores();
+$cadRefS = "<option value='0'>-- Sin sector --</option>";
+$cadRefS .= $serviciosFunciones->devolverSelectBox($refS,array(2),' ');
+
+$refdescripcion = array(0=>$cadRef,1=>$cadRefUN,2=>$cadRefC,3=>$cadRefS);
+$refCampo 	=  array('refroles','refunidadesnegocios','refcontactos','refsector');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -222,7 +227,8 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 												<th>Perfil</th>
 												<th>Email</th>
 												<th>Nombre Completo</th>
-												<th>Contacto</th>
+												<th>Unidad de Negocio</th>
+												<th>Sector</th>
 												<th>Activo</th>
 												<th>Acciones</th>
 											</tr>
@@ -235,7 +241,8 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 												<th>Perfil</th>
 												<th>Email</th>
 												<th>Nombre Completo</th>
-												<th>Contacto</th>
+												<th>Unidad de Negocio</th>
+												<th>Sector</th>
 												<th>Activo</th>
 												<th>Acciones</th>
 											</tr>

@@ -211,6 +211,7 @@ switch ($tabla) {
 		break;
 	case 'usuarios':
 		$resAjax = $serviciosReferencias->traerUsuariosajax($length, $start, $busqueda);
+		
 		$res = $serviciosReferencias->traerUsuarios();
 
 		$label = array('btnModificar','btnEliminar');
@@ -218,7 +219,7 @@ switch ($tabla) {
 		$icon = array('create','delete');
 		$indiceID = 0;
 		$empieza = 1;
-		$termina = 7;
+		$termina = 8;
 
 		break;
 	default:

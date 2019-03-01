@@ -1082,10 +1082,13 @@ function traerUsuariosajax($length, $start, $busqueda) {
 	u.email,
 	u.nombrecompleto,
 	concat(cc.apellido, ' ', cc.nombre) as contacto,
-	(case when u.activo = 1 then 'Si' else 'No' end) as activo,
-	u.refcontactos
+	ss.sector as refsector,
+	
+	(case when u.activo = 1 then 'Si' else 'No' end) as activo
+	
 	from dbusuarios u
 	left join dbcontactos cc on cc.idcontacto = u.refcontactos
+	left join dbsectores ss on ss.idsector = u.refsector
 	left join tbunidadesnegocios n on n.idunidadnegocio = u.refunidadesnegocios
 	inner join tbroles r on r.idrol = u.refroles
 	".$where."
@@ -1105,6 +1108,7 @@ function traerUsuarios() {
 	u.email,
 	u.nombrecompleto,
 	u.refcontactos,
+	u.refsector,
 	(case when u.activo = 1 then 'Si' else 'No' end) as activo
 	from dbusuarios u
 	order by 1";
