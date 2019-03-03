@@ -1037,20 +1037,22 @@ return $res;
 
 /* PARA Usuarios */
 
-function insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo) {
+function insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo,$refunidadesnegocios,$refsector,$imgurl) {
 
-$sql = "insert into dbusuarios(idusuario,usuario,password,refroles,email,nombrecompleto,refcontactos,activo)
-values ('','".($usuario)."','".($password)."','".($refroles)."','".($email)."','".($nombrecompleto)."','".($refcontactos)."','".($activo)."')";
+$sql = "insert into dbusuarios(idusuario,usuario,password,refroles,email,nombrecompleto,refcontactos,activo,refunidadesnegocios,refsector,imgurl)
+values ('','".($usuario)."','".($password)."','".($refroles)."','".($email)."','".($nombrecompleto)."','".($refcontactos)."','".($activo)."','".($refunidadesnegocios)."','".($refsector)."','".($imgurl)."')";
 $res = $this->query($sql,1);
+
 return $res;
+
 }
 
 
-function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo) {
+function modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo,$refunidadesnegocios,$refsector,$imgurl) {
 
 $sql = "update dbusuarios
 set
-usuario = '".($usuario)."',password = '".($password)."',refroles = '".($refroles)."',email = '".($email)."',nombrecompleto = '".($nombrecompleto)."',refcontactos = '".($refcontactos)."',activo = '".$activo."'
+usuario = '".($usuario)."',password = '".($password)."',refroles = '".($refroles)."',email = '".($email)."',nombrecompleto = '".($nombrecompleto)."',refcontactos = '".($refcontactos)."',activo = '".$activo."',refunidadesnegocios = '".($refunidadesnegocios)."',refsector = '".($refsector)."',imgurl = '".($imgurl)."'
 where idusuario =".$id;
 $res = $this->query($sql,0);
 return $res;

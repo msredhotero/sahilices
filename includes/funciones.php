@@ -384,6 +384,7 @@ class Servicios {
 				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios");
 				break;
 
+
 			default:
 				$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","tipoimagen","utilidad","idusuario","refestados");
 				break;
@@ -413,12 +414,7 @@ class Servicios {
 
 			while ($row = mysql_fetch_array($res)) {
 				$label = $row[0];
-				//var_dump($row);
-				if($label =='refroles'){
-
-
-					//var_dump($row);
-				}
+				
 				$i = 0;
 
 				if ($row[2]=='NO') {
@@ -558,6 +554,7 @@ class Servicios {
 
 							} else {
 
+
 								if (strpos($row[1],"date") !== false) {
 									$label = ucwords($label);
 									$campo = strtolower($row[0]);
@@ -640,10 +637,11 @@ class Servicios {
 
 												} else {
 
-												if ($row[0]=='imagen') {
+												if ($row[0]=='imgurl') {
 													$label = ucwords($label);
 													$campo = strtolower($row[0]);
-
+													
+													
 
 													$form	=	$form.'
 
@@ -719,18 +717,21 @@ class Servicios {
 
 														';
 													}
-
 												}
-
 											}
+												
 										}
+
+										
 									}
+
 								}
 							}
+							
 						}
 
-
 					}
+
 				} else {
 
 					$camposEscondido = $camposEscondido.'<input type="hidden" id="accion" name="accion" value="'.$accion.'"/>';
@@ -1118,6 +1119,7 @@ class Servicios {
 										nombrecompleto,
 										refcontactos,
 										refsector,
+										imgurl,
 										(case when activo = 1 then 'Si' else 'No' end) as activo
 									from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
@@ -1127,6 +1129,7 @@ class Servicios {
 				$sqlMod = "select * from ".$tabla." where ".$lblid." = ".$id;
 				$resMod = $this->query($sqlMod,0);
 		}
+
 		/*if ($tabla == 'dbtorneos') {
 			$resMod = $this->TraerIdTorneos($id);
 		} else {
@@ -1356,6 +1359,52 @@ class Servicios {
 											';
 
 											} else {
+
+												if ($row[0]=='imgurl') {
+													$label = ucwords($label);
+													$campo = strtolower($row[0]);
+											
+
+													$form	=	$form.'
+
+													<div class="col-md-12 col-xs-12" style="margin-left:-5px; margin-right:0px;">
+														<h4>Agregar Imagen</h4>
+															<p style=" color: #999;">Imagenes / Archivos (tamaño maximo del archivo 2 MB)</p>
+															<div style="height:auto;
+																	width:100%;
+																	background-color:#FFF;
+																	-webkit-border-radius: 13px;
+																	-moz-border-radius: 13px;
+																	border-radius: 13px;
+																	margin-left:15px;
+																	padding-left:20px;">
+
+
+												<ul class="list-inline">
+															<li style="margin-top:14px;">
+															<div style=" height:210px; width:340px; border:2px dashed #CCC; text-align:center; overflow: auto;">
+																<div class="custom-input-file">
+																	<input type="file" name="'.$campo.'" id="imagen1">
+																	<img src="../../imagenes/clip20.jpg">
+																	<div class="files">...</div>
+																</div>
+
+																<img id="vistaPrevia1" name="vistaPrevia1" width="100" height="100"/>
+															</div>
+															<div style="height:14px;">
+
+															</div>
+
+															</li>
+
+
+															</ul>
+												</div>
+												</div>
+													';
+												}
+													
+														else {
 												
 												$label = ucwords($label);
 												$campo = strtolower($row[0]);
@@ -1373,6 +1422,7 @@ class Servicios {
 
 												';
 											}
+										}
 										}
 									}
 								}

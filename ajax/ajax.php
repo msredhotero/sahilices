@@ -35,7 +35,7 @@ switch ($accion) {
         insertarUsuario($serviciosUsuarios);
         break;
 	case 'modificarUsuario':
-        modificarUsuarios($serviciosReferencias);
+        modificarUsuarios($serviciosReferencias,$serviciosUsuarios);
         break;
    case 'eliminarUsuarios':
         eliminarUsuarios($serviciosReferencias);
@@ -182,7 +182,7 @@ switch ($accion) {
       traerSectoresPorId($serviciosReferencias);
    break;
    case 'insertarUsuarios':
-   insertarUsuarios($serviciosReferencias);
+   insertarUsuarios($serviciosReferencias,$serviciosUsuarios);
    break;
 
    case 'insertarEstados':
@@ -671,20 +671,17 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $servicios
          	$cadRef 	= $serviciosFunciones->devolverSelectBox($refRoles,array(1),'');
          }
 
-         //traigo las unidades de negocios , cuando inserto un gerente la unidad de negocio es 0
+         //traigo las unidades de negocios 
          $refUN = $serviciosReferencias->traerUnidadesnegocios();
-         $cadRefUN = "<option value='0'>-- Sin unidad de negocio --</option>";
-         $cadRefUN .= $serviciosFunciones->devolverSelectBox($refUN,array(1),'');
+         $cadRefUN    = $serviciosFunciones->devolverSelectBoxActivo($refUN,array(1),'', mysql_result($resultado,0,'refunidadesnegocios'));
 
-         //traigo los contactos, puedo ingresar un contacto 0 (sin contacto)
+         //traigo los contactos 
          $refC = $serviciosReferencias->traerContactos();
-         $cadRefC = "<option value='0'>-- Sin contacto --</option>";
-         $cadRefC .= $serviciosFunciones->devolverSelectBox($refC,array(2,3,4,5,6),' ');
+         $cadRefC    = $serviciosFunciones->devolverSelectBoxActivo($refC,array(2,3,4,5,6),'', mysql_result($resultado,0,'refcontactos'));
 
-         //traigo los sectores, puedo ingresar un sector 0 (sin sector)
+         //traigo los sectores
          $refS = $serviciosReferencias->traerSectores();
-         $cadRefS = "<option value='0'>-- Sin sector --</option>";
-         $cadRefS .= $serviciosFunciones->devolverSelectBox($refS,array(2),' ');
+         $cadRefS    = $serviciosFunciones->devolverSelectBoxActivo($refS,array(2),'', mysql_result($resultado,0,'refsector'));
 
          $refdescripcion = array(0=>$cadRef,1=>$cadRefUN,2=>$cadRefC,3=>$cadRefS);
          $refCampo 	=  array('refroles','refunidadesnegocios','refcontactos','refsector');
@@ -1452,27 +1449,90 @@ header('Content-type: application/json');
 echo json_encode($resV);
 }
 
-function insertarUsuarios($serviciosReferencias) {
+function insertarUsuarios($serviciosReferencias,$serviciosUsuarios) {
+
+$error = false;
+if(strlen($_POST['usuario']) <= 3){
+   echo 'Usuario, ';
+   $error= true;
+}else{
+   $usuario = $_POST['usuario'];
+}
+if(strlen($_POST['password']) <= 3){
+   echo 'Contraseña, ';
+   $error= true;
+}else{
+   $password = $_POST['password'];
+}
+if($_POST['refroles'] == 0){
+   echo 'Rol, ';
+   $error= true;
+}else{
+   $refroles = $_POST['refroles'];
+}
+if(strlen($_POST['email']) <= 3){
+   echo 'Email, ';
+   $error= true;
+}else{
+   $existeEmail=$serviciosUsuarios->traerUsuario($_POST['email']);
+   if($existeEmail){
+      echo "Email, ";
+      $error= true;
+   }else{
+      $email = $_POST['email'];
+   }
+   
+}
+if(strlen($_POST['nombrecompleto']) <= 3){
+   echo 'Apellido y Nombre, ';
+   $error= true;
+}else{
+   $nombrecompleto = $_POST['nombrecompleto'];
+}
+if($_POST['refunidadesnegocios'] <= 0){
+   echo 'Unidad de Negocio, ';
+   $error= true;
+}else{
+   $refunidadesnegocios = $_POST['refunidadesnegocios'];
+}
+if($_POST['refsector'] <= 0){
+   echo 'Sector, ';
+   $error= true;
+}else{
+   $refsector = $_POST['refsector'];
+}
+/*
 $usuario = $_POST['usuario'];
 $password = $_POST['password'];
 $refroles = $_POST['refroles'];
 $email = $_POST['email'];
 $nombrecompleto = $_POST['nombrecompleto'];
 $refcontactos = $_POST['refcontactos'];
+$refunidadesnegocios = $_POST['refunidadesnegocios'];
+$refsector = $_POST['refsector'];
+*/
+$imgurl = $_FILES['imgurl']['name'];
+
 if (isset($_POST['activo'])) {
-$activo	= 1;
+   $activo	= 1;
 } else {
-$activo = 0;
+   $activo = 0;
 }
-$res = $serviciosReferencias->insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Hubo un error al insertar datos';
+if($error){
+   echo 'Invalido/s';
+}else{
+   $res = $serviciosReferencias->insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo,$refunidadesnegocios,$refsector,$imgurl);
+   if ((integer)$res > 0) {
+      $uploaddir = '../images/users-photos/';
+      $uploadfile = $uploaddir . basename($_FILES['imgurl']['name']);
+      echo '';
+   } else {
+      echo 'Hubo un error al insertar datos';
+   }  
 }
 }
 
-function modificarUsuarios($serviciosReferencias) {
+function modificarUsuarios($serviciosReferencias,$serviciosUsuarios) {
 
 $id = $_POST['id'];
 $usuario = $_POST['usuario'];
@@ -1481,18 +1541,22 @@ $refroles = $_POST['refroles'];
 $email = $_POST['email'];
 $nombrecompleto = $_POST['nombrecompleto'];
 $refcontactos = $_POST['refcontactos'];
-
+$refunidadesnegocios = $_POST['refunidadesnegocios'];
+$refsector = $_POST['refsector'];
+$imgurl = $_FILES['imgurl']['name'];
 
 if (isset($_POST['activo'])) {
 $activo	= 1;
 } else {
 $activo = 0;
 }
-$res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo);
+$res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo,$refunidadesnegocios,$refsector,$imgurl);
 if ($res == true) {
-echo '';
+   $uploaddir = '../images/users-photos/';
+   $uploadfile = $uploaddir . basename($_FILES['imgurl']['name']);
+   echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+   echo 'Huvo un error al modificar datos';
 }
 }
 

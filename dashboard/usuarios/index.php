@@ -356,6 +356,9 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 
 <script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
 
+<!-- Dropzone js -->
+<script src="../../js/dropzone.js"></script>
+
 
 <script>
 	$(document).ready(function(){
