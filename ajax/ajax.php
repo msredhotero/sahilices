@@ -1525,6 +1525,7 @@ if($error){
    if ((integer)$res > 0) {
       $uploaddir = '../images/users-photos/';
       $uploadfile = $uploaddir . basename($_FILES['imgurl']['name']);
+      move_uploaded_file($_FILES['imgurl']['tmp_name'], $uploadfile);
       echo '';
    } else {
       echo 'Hubo un error al insertar datos';
@@ -1554,6 +1555,7 @@ $res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles
 if ($res == true) {
    $uploaddir = '../images/users-photos/';
    $uploadfile = $uploaddir . basename($_FILES['imgurl']['name']);
+   move_uploaded_file($_FILES['imgurl']['tmp_name'], $uploadfile);
    echo '';
 } else {
    echo 'Huvo un error al modificar datos';
