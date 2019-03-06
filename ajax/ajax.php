@@ -341,11 +341,64 @@ switch ($accion) {
       devolverEstadoCliente($serviciosReferencias);
    break;
 
+   case 'insertarTipotrabajoconceptos':
+      insertarTipotrabajoconceptos($serviciosReferencias);
+   break;
+   case 'modificarTipotrabajoconceptos':
+      modificarTipotrabajoconceptos($serviciosReferencias);
+   break;
+   case 'eliminarTipotrabajoconceptos':
+      eliminarTipotrabajoconceptos($serviciosReferencias);
+   break;
+
 
 /* Fin */
 
 }
 /* Fin */
+
+
+function insertarTipotrabajoconceptos($serviciosReferencias) {
+   $reftipostrabajos = $_POST['reftipostrabajos'];
+   $refconceptos = $_POST['refconceptos'];
+
+   if ($serviciosReferencias->existeDupla($reftipostrabajos,$refconceptos) == 1) {
+      echo 'Ya existe este Concepto';
+   } else {
+      $res = $serviciosReferencias->insertarTipotrabajoconceptos($reftipostrabajos,$refconceptos);
+
+      if ((integer)$res > 0) {
+         echo '';
+      } else {
+         echo 'Hubo un error al insertar datos';
+      }
+   }
+
+}
+
+function modificarTipotrabajoconceptos($serviciosReferencias) {
+   $id = $_POST['id'];
+   $reftipostrabajos = $_POST['reftipostrabajos'];
+   $refconceptos = $_POST['refconceptos'];
+
+   $res = $serviciosReferencias->modificarTipotrabajoconceptos($id,$reftipostrabajos,$refconceptos);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
+}
+
+function eliminarTipotrabajoconceptos($serviciosReferencias) {
+   $id = $_POST['id'];
+   $res = $serviciosReferencias->eliminarTipotrabajoconceptos($id);
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Hubo un error al modificar datos';
+   }
+}
 
 function devolverEstadoCliente($serviciosReferencias) {
    $id = $_POST['idcliente'];
@@ -475,7 +528,7 @@ function insertarOportunidades($serviciosReferencias) {
    if ((integer)$res > 0) {
       echo '';
    } else {
-      echo 'Huvo un error al insertar datos ';
+      echo 'Hubo un error al insertar datos ';
    }
 }
 
@@ -502,7 +555,7 @@ function modificarOportunidades($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -513,7 +566,7 @@ function eliminarOportunidades($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -900,7 +953,7 @@ function insertarClientes($serviciosReferencias, $serviciosValidador) {
       if ((integer)$res > 0) {
          echo '';
       } else {
-         echo 'Huvo un error al insertar datos';
+         echo 'Hubo un error al insertar datos';
       }
    }
 
@@ -930,7 +983,7 @@ function modificarClientes($serviciosReferencias, $serviciosValidador) {
       if ($res == true) {
          echo '';
       } else {
-         echo 'Huvo un error al modificar datos';
+         echo 'Hubo un error al modificar datos';
       }
    }
 
@@ -944,7 +997,7 @@ function eliminarClientes($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -977,7 +1030,7 @@ function insertarConceptos($serviciosReferencias) {
    if ((integer)$res > 0) {
       echo '';
    } else {
-      echo 'Huvo un error al insertar datos';
+      echo 'Hubo un error al insertar datos';
    }
 }
 
@@ -1000,7 +1053,7 @@ function modificarConceptos($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1012,7 +1065,7 @@ function eliminarConceptos($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1037,7 +1090,7 @@ function insertarConceptosviaticos($serviciosReferencias) {
    if ((integer)$res > 0) {
       echo '';
    } else {
-      echo 'Huvo un error al insertar datos';
+      echo 'Hubo un error al insertar datos';
    }
 }
 
@@ -1052,7 +1105,7 @@ function modificarConceptosviaticos($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1064,7 +1117,7 @@ function eliminarConceptosviaticos($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1090,7 +1143,7 @@ $res = $serviciosReferencias->insertarContactos($refsectores,$apellido,$nombre,$
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1106,7 +1159,7 @@ $res = $serviciosReferencias->modificarContactos($id,$refsectores,$apellido,$nom
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1118,7 +1171,7 @@ function eliminarContactos($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1176,7 +1229,7 @@ function insertarEmpleados($serviciosReferencias, $serviciosValidador) {
          if ((integer)$res > 0) {
             echo '';
          } else {
-            echo 'Huvo un error al insertar datos';
+            echo 'Hubo un error al insertar datos';
          }
       }
    }
@@ -1228,7 +1281,7 @@ function modificarEmpleados($serviciosReferencias, $serviciosValidador) {
          if ($res == true) {
             echo '';
          } else {
-            echo 'Huvo un error al modificar datos';
+            echo 'Hubo un error al modificar datos';
          }
       }
    }
@@ -1242,7 +1295,7 @@ function eliminarEmpleados($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1292,7 +1345,7 @@ function insertarListasprecios($serviciosReferencias, $serviciosValidador) {
       if ((integer)$res > 0) {
          echo '';
       } else {
-         echo 'Huvo un error al insertar datos';
+         echo 'Hubo un error al insertar datos';
       }
    } else {
       echo $error;
@@ -1336,7 +1389,7 @@ function modificarListasprecios($serviciosReferencias, $serviciosValidador) {
       if ($res == true) {
          echo '';
       } else {
-         echo 'Huvo un error al modificar datos';
+         echo 'Hubo un error al modificar datos';
       }
    } else {
       echo $error;
@@ -1352,7 +1405,7 @@ function eliminarListasprecios($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1374,7 +1427,7 @@ $res = $serviciosReferencias->insertarPlantas($refclientes,$planta);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1388,7 +1441,7 @@ function modificarPlantas($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1400,7 +1453,7 @@ function eliminarPlantas($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -1422,7 +1475,7 @@ $res = $serviciosReferencias->insertarSectores($refplantas,$sector);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1434,7 +1487,7 @@ $res = $serviciosReferencias->modificarSectores($id,$refplantas,$sector);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1446,19 +1499,22 @@ function eliminarSectores($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
 function traerSectores($serviciosReferencias) {
-$res = $serviciosReferencias->traerSectores();
-$ar = array();
-while ($row = mysql_fetch_array($res)) {
-array_push($ar, $row);
-}
-$resV['datos'] = $ar;
-header('Content-type: application/json');
-echo json_encode($resV);
+   $res = $serviciosReferencias->traerSectores();
+
+   $ar = array();
+
+   while ($row = mysql_fetch_array($res)) {
+      array_push($ar, $row);
+   }
+   $resV['datos'] = $ar;
+
+   header('Content-type: application/json');
+   echo json_encode($resV);
 }
 
 function insertarUsuarios($serviciosReferencias,$serviciosUsuarios) {
@@ -1535,7 +1591,7 @@ if($error){
 }else{
    $res = $serviciosReferencias->insertarUsuarios($usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo,$refunidadesnegocios,$refsector,$imgurl);
    if ((integer)$res > 0) {
-      $uploaddir = '../images/users-photos/';
+      $uploaddir = '../images/users-photos/'.$res.'/';
       $uploadfile = $uploaddir . basename($_FILES['imgurl']['name']);
       move_uploaded_file($_FILES['imgurl']['tmp_name'], $uploadfile);
       echo '';
@@ -1565,12 +1621,12 @@ $activo = 0;
 }
 $res = $serviciosReferencias->modificarUsuarios($id,$usuario,$password,$refroles,$email,$nombrecompleto,$refcontactos,$activo,$refunidadesnegocios,$refsector,$imgurl);
 if ($res == true) {
-   $uploaddir = '../images/users-photos/';
+   $uploaddir = '../images/users-photos/'.$id.'/';
    $uploadfile = $uploaddir . basename($_FILES['imgurl']['name']);
    move_uploaded_file($_FILES['imgurl']['tmp_name'], $uploadfile);
    echo '';
 } else {
-   echo 'Huvo un error al modificar datos';
+   echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1618,7 +1674,7 @@ $res = $serviciosReferencias->insertarPredio_menu($url,$icono,$nombre,$Orden,$ho
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1650,7 +1706,7 @@ $res = $serviciosReferencias->modificarPredio_menu($id,$url,$icono,$nombre,$Orde
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1682,7 +1738,7 @@ $res = $serviciosReferencias->insertarConfiguracion($razonsocial,$empresa,$siste
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1698,7 +1754,7 @@ $res = $serviciosReferencias->modificarConfiguracion($id,$razonsocial,$empresa,$
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1730,7 +1786,7 @@ $res = $serviciosReferencias->insertarEstados($estado,$color,$icono,$orden,$valo
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1746,7 +1802,7 @@ $res = $serviciosReferencias->modificarEstados($id,$estado,$color,$icono,$orden,
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1773,7 +1829,7 @@ $res = $serviciosReferencias->insertarFormularios($formulario);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1784,7 +1840,7 @@ $res = $serviciosReferencias->modificarFormularios($id,$formulario);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1816,7 +1872,7 @@ $res = $serviciosReferencias->insertarMotivosoportunidades($motivo,$activo);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1832,7 +1888,7 @@ $res = $serviciosReferencias->modificarMotivosoportunidades($id,$motivo,$activo)
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1844,7 +1900,7 @@ function eliminarMotivosoportunidades($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 
@@ -1866,7 +1922,7 @@ $res = $serviciosReferencias->insertarRecursosnecesarios($recursonecesario,$letr
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1878,7 +1934,7 @@ $res = $serviciosReferencias->modificarRecursosnecesarios($id,$recursonecesario,
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1890,7 +1946,7 @@ function eliminarRecursosnecesarios($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 
@@ -1916,7 +1972,7 @@ $res = $serviciosReferencias->insertarRoles($descripcion,$activo);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1932,7 +1988,7 @@ $res = $serviciosReferencias->modificarRoles($id,$descripcion,$activo);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -1962,7 +2018,7 @@ $res = $serviciosReferencias->insertarSemaforos($color,$desde,$hasta,$medida);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -1976,7 +2032,7 @@ $res = $serviciosReferencias->modificarSemaforos($id,$color,$desde,$hasta,$medid
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -2003,7 +2059,7 @@ $res = $serviciosReferencias->insertarTipoclientes($tipocliente);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -2014,7 +2070,7 @@ $res = $serviciosReferencias->modificarTipoclientes($id,$tipocliente);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -2026,7 +2082,7 @@ function eliminarTipoclientes($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 
@@ -2047,7 +2103,7 @@ $res = $serviciosReferencias->insertarTipoconceptos($tipoconcepto);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -2058,7 +2114,7 @@ $res = $serviciosReferencias->modificarTipoconceptos($id,$tipoconcepto);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -2070,7 +2126,7 @@ function eliminarTipoconceptos($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 
@@ -2092,7 +2148,7 @@ $res = $serviciosReferencias->insertarTipomonedas($tipomoneda,$abreviatura);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -2104,7 +2160,7 @@ $res = $serviciosReferencias->modificarTipomonedas($id,$tipomoneda,$abreviatura)
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -2116,7 +2172,7 @@ function eliminarTipomonedas($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 
@@ -2142,7 +2198,7 @@ $res = $serviciosReferencias->insertarTipostrabajos($tipotrabajo,$activo);
 if ((integer)$res > 0) {
 echo '';
 } else {
-echo 'Huvo un error al insertar datos';
+echo 'Hubo un error al insertar datos';
 }
 }
 
@@ -2158,7 +2214,7 @@ $res = $serviciosReferencias->modificarTipostrabajos($id,$tipotrabajo,$activo);
 if ($res == true) {
 echo '';
 } else {
-echo 'Huvo un error al modificar datos';
+echo 'Hubo un error al modificar datos';
 }
 }
 
@@ -2170,7 +2226,7 @@ function eliminarTipostrabajos($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 
@@ -2200,7 +2256,7 @@ function insertarUnidadesnegocios($serviciosReferencias) {
     if ((integer)$res > 0) {
       echo '';
     } else {
-      echo 'Huvo un error al insertar datos';
+      echo 'Hubo un error al insertar datos';
     }
   } else {
     echo 'El campo Unidad de negocios es obligatorio';
@@ -2224,7 +2280,7 @@ function modificarUnidadesnegocios($serviciosReferencias) {
     if ($res == true) {
       echo '';
     } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
     }
   } else {
     echo 'El campo Unidad de negocios es obligatorio';
@@ -2238,7 +2294,7 @@ function eliminarUnidadesnegocios($serviciosReferencias) {
   if ($res == true) {
     echo '';
   } else {
-    echo 'Huvo un error al modificar datos';
+    echo 'Hubo un error al modificar datos';
   }
 }
 

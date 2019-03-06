@@ -381,7 +381,7 @@ class Servicios {
 				$ocultar = array("refcotizaciones","fechacreacion","refsemaforos","refusuarios","refestadocotizacion");
 				break;
 			case 'dbcotizaciones':
-				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios");
+				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios",'refempresas');
 				break;
 
 
@@ -414,7 +414,7 @@ class Servicios {
 
 			while ($row = mysql_fetch_array($res)) {
 				$label = $row[0];
-				
+
 				$i = 0;
 
 				if ($row[2]=='NO') {
@@ -640,8 +640,8 @@ class Servicios {
 												if ($row[0]=='imgurl') {
 													$label = ucwords($label);
 													$campo = strtolower($row[0]);
-													
-													
+
+
 
 													$form	=	$form.'
 
@@ -719,15 +719,15 @@ class Servicios {
 													}
 												}
 											}
-												
+
 										}
 
-										
+
 									}
 
 								}
 							}
-							
+
 						}
 
 					}
@@ -1164,7 +1164,7 @@ class Servicios {
 
 			while ($row = mysql_fetch_array($res)) {
 				$label = $row[0];
-				
+
 				$i = 0;
 
 				if ($row[2]=='NO') {
@@ -1363,7 +1363,7 @@ class Servicios {
 												if ($row[0]=='imgurl') {
 													$label = ucwords($label);
 													$campo = strtolower($row[0]);
-											
+
 
 													$form	=	$form.'
 
@@ -1403,9 +1403,9 @@ class Servicios {
 												</div>
 													';
 												}
-													
+
 														else {
-												
+
 												$label = ucwords($label);
 												$campo = strtolower($row[0]);
 

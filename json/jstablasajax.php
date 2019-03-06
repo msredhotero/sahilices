@@ -34,6 +34,28 @@ function armarAcciones($id,$label='',$class,$icon) {
 }
 
 switch ($tabla) {
+	case 'cotizadoraux':
+		$resAjax = $serviciosReferencias->traerCotizaciondetallesauxPorOportunidadajax($referencia1,$length, $start, $busqueda);
+		$res = $serviciosReferencias->traerCotizaciondetallesauxPorOportunidad($referencia1);
+		$label = array('btnEliminar');
+		$class = array('bg-red');
+		$icon = array('delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 8;
+
+	break;
+	case 'tipotrabajoconceptos':
+		$resAjax = $serviciosReferencias->traerTipotrabajoconceptosPorTipoTrabajoajax($referencia1,$length, $start, $busqueda);
+		$res = $serviciosReferencias->traerTipotrabajoconceptosPorTipoTrabajo($referencia1);
+		$label = array('btnModificar','btnEliminar');
+		$class = array('bg-amber','bg-red');
+		$icon = array('create','delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 4;
+
+		break;
 	case 'unidadnegocio':
 		$resAjax = $serviciosReferencias->traerUnidadesnegociosajax($length, $start, $busqueda);
 		$res = $serviciosReferencias->traerUnidadesnegocios();
@@ -48,9 +70,9 @@ switch ($tabla) {
 	case 'tipostrabajos':
 		$resAjax = $serviciosReferencias->traerTipostrabajosajax($length, $start, $busqueda);
 		$res = $serviciosReferencias->traerTipostrabajos();
-		$label = array('btnModificar','btnEliminar');
-		$class = array('bg-amber','bg-red');
-		$icon = array('create','delete');
+		$label = array('btnModificar','btnEliminar','btnVer');
+		$class = array('bg-amber','bg-red','bg-blue');
+		$icon = array('create','delete','layers');
 		$indiceID = 0;
 		$empieza = 1;
 		$termina = 2;

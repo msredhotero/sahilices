@@ -10,6 +10,240 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosReferencias {
 
 
+/* PARA Cotizaciondetallesaux TABLA AUXILIAR PARA GUARDAR LOS ITEMS */
+
+function insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda) {
+$sql = "insert into dbcotizaciondetallesaux(idcotizaciondetalleaux,refoportunidad,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja,concepto,leyenda)
+values ('',".$refoportunidad.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$cargavieja.",'".($concepto)."','".($leyenda)."')";
+$res = $this->query($sql,1);
+return $res;
+}
+
+
+function modificarCotizaciondetallesaux($id,$refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda) {
+$sql = "update dbcotizaciondetallesaux
+set
+refoportunidad = ".$refoportunidad.",refconceptos = ".$refconceptos.",cantidad = ".$cantidad.",preciounitario = ".$preciounitario.",porcentajebonificado = ".$porcentajebonificado.",reftipomonedas = ".$reftipomonedas.",rango = ".$rango.",aplicatotal = ".$aplicatotal.",cargavieja = ".$cargavieja.",concepto = '".($concepto)."',leyenda = '".($leyenda)."'
+where idcotizaciondetalleaux =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function eliminarCotizaciondetallesaux($id) {
+$sql = "delete from dbcotizaciondetallesaux where idcotizaciondetalleaux =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function eliminarCotizaciondetallesauxPorOportunidad($idoportunidad) {
+$sql = "delete from dbcotizaciondetallesaux where refoportunidad =".$idoportunidad;
+$res = $this->query($sql,0);
+return $res;
+}
+
+
+function traerCotizaciondetallesaux() {
+$sql = "select
+c.idcotizaciondetalleaux,
+c.refoportunidad,
+c.refconceptos,
+c.cantidad,
+c.preciounitario,
+c.porcentajebonificado,
+c.reftipomonedas,
+c.rango,
+c.aplicatotal,
+c.cargavieja,
+c.concepto,
+c.leyenda
+from dbcotizaciondetallesaux c
+order by 1";
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerCotizaciondetallesauxPorOportunidad($idoportunidad) {
+	$sql = "select
+			@rownum:=@rownum+1 as 'item', t.*
+			from (select
+	c.idcotizaciondetalleaux,
+	co.concepto,
+	co.leyenda,
+	c.cantidad,
+	c.preciounitario,
+	tm.tipomoneda,
+	c.porcentajebonificado,
+	c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100) as subtotal,
+	c.reftipomonedas,
+	c.rango,
+	c.aplicatotal,
+	c.cargavieja,
+	c.refoportunidad,
+	c.refconceptos
+	from dbcotizaciondetallesaux c
+	inner join dbconceptos co on co.idconcepto = c.refconceptos
+	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
+	where c.refoportunidad = ".$idoportunidad."
+	) t,(SELECT @rownum:=0) r";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerCotizaciondetallesauxPorOportunidadajax($idoportunidad, $length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = " and co.concepto like '%".$busqueda."%' or co.leyenda like '%".$busqueda."%' or c.cantidad like '%".$busqueda."%'";
+	}
+
+
+	$sql = "select
+			@rownum:=@rownum+1 as 'item', t.*
+			from (select
+	c.idcotizaciondetalleaux,
+	co.concepto,
+	SUBSTRING(co.leyenda, 0, 40) as leyenda,
+	c.cantidad,
+	c.preciounitario,
+	tm.tipomoneda,
+	c.porcentajebonificado,
+	c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100) as subtotal,
+	c.reftipomonedas,
+	c.rango,
+	c.aplicatotal,
+	c.cargavieja,
+	c.refoportunidad,
+	c.refconceptos
+	from dbcotizaciondetallesaux c
+	inner join dbconceptos co on co.idconcepto = c.refconceptos
+	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
+	where c.refoportunidad = ".$idoportunidad.$where."
+	) t,(SELECT @rownum:=0) r
+	limit ".$start.",".$length;
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerCotizaciondetallesauxPorId($id) {
+$sql = "select idcotizaciondetalleaux,refoportunidad,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja,concepto,leyenda from dbcotizaciondetallesaux where idcotizaciondetalleaux =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbcotizaciondetallesaux*/
+
+	/* PARA Tipotrabajoconceptos */
+
+	function existeDupla($reftipostrabajos,$refconceptos) {
+		$sql = "select * from dbtipotrabajoconceptos where reftipostrabajos = ".$reftipostrabajos." and refconceptos = ".$refconceptos;
+		return $this->existe($sql);
+	}
+
+	function insertarTipotrabajoconceptos($reftipostrabajos,$refconceptos) {
+	$sql = "insert into dbtipotrabajoconceptos(idtipotrabajoconcepto,reftipostrabajos,refconceptos)
+	values ('',".$reftipostrabajos.",".$refconceptos.")";
+	$res = $this->query($sql,1);
+	return $res;
+	}
+
+
+	function modificarTipotrabajoconceptos($id,$reftipostrabajos,$refconceptos) {
+	$sql = "update dbtipotrabajoconceptos
+	set
+	reftipostrabajos = ".$reftipostrabajos.",refconceptos = ".$refconceptos."
+	where idtipotrabajoconcepto =".$id;
+	$res = $this->query($sql,0);
+	return $res;
+	}
+
+
+	function eliminarTipotrabajoconceptos($id) {
+	$sql = "delete from dbtipotrabajoconceptos where idtipotrabajoconcepto =".$id;
+	$res = $this->query($sql,0);
+	return $res;
+	}
+
+
+	function traerTipotrabajoconceptos() {
+	$sql = "select
+	t.idtipotrabajoconcepto,
+	t.reftipostrabajos,
+	t.refconceptos
+	from dbtipotrabajoconceptos t
+	inner join tbtipostrabajos tip ON tip.idtipotrabajo = t.reftipostrabajos
+	inner join dbconceptos con ON con.idconcepto = t.refconceptos
+	inner join tbtipoconceptos ti ON ti.idtipoconcepto = con.reftipoconceptos
+	order by 1";
+	$res = $this->query($sql,0);
+	return $res;
+	}
+
+
+	function traerTipotrabajoconceptosPorId($id) {
+	$sql = "select idtipotrabajoconcepto,reftipostrabajos,refconceptos from dbtipotrabajoconceptos where idtipotrabajoconcepto =".$id;
+	$res = $this->query($sql,0);
+	return $res;
+	}
+
+	function traerTipotrabajoconceptosPorTipoTrabajo($id) {
+		$sql = "select
+		t.idtipotrabajoconcepto,
+		tip.tipotrabajo,
+		con.concepto,
+		con.abreviatura,
+		con.leyenda,
+		t.reftipostrabajos,
+		t.refconceptos
+		from dbtipotrabajoconceptos t
+		inner join tbtipostrabajos tip ON tip.idtipotrabajo = t.reftipostrabajos
+		inner join dbconceptos con ON con.idconcepto = t.refconceptos
+		inner join tbtipoconceptos ti ON ti.idtipoconcepto = con.reftipoconceptos
+		where t.reftipostrabajos = ".$id."
+		order by 1";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerTipotrabajoconceptosPorTipoTrabajoajax($idtipotrabajo, $length, $start, $busqueda) {
+		$where = '';
+
+		$busqueda = str_replace("'","",$busqueda);
+		if ($busqueda != '') {
+			$where = " and con.concepto like '%".$busqueda."%' or con.abreviatura '%".$busqueda."%' or con.leyenda like '%".$busqueda."%'";
+		}
+
+		$sql = "select
+		t.idtipotrabajoconcepto,
+		tip.tipotrabajo,
+		con.concepto,
+		con.abreviatura,
+		con.leyenda,
+		t.reftipostrabajos,
+		t.refconceptos
+		from dbtipotrabajoconceptos t
+		inner join tbtipostrabajos tip ON tip.idtipotrabajo = t.reftipostrabajos
+		inner join dbconceptos con ON con.idconcepto = t.refconceptos
+		inner join tbtipoconceptos ti ON ti.idtipoconcepto = con.reftipoconceptos
+		where tip.idtipotrabajo =".$idtipotrabajo.$where."
+		order by con.leyenda
+		limit ".$start.",".$length;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	/* Fin */
+	/* /* Fin de la Tabla: dbtipotrabajoconceptos*/
+
+
 /* PARA Clienteestados */
 
 function insertarClienteestados($refclientes,$refestados,$comentarios) {
@@ -735,6 +969,23 @@ function traerConceptos() {
 	(case when c.activo = 1 then 'Si' else 'No' end) as activo
 	from dbconceptos c
 	inner join tbtipoconceptos tc on tc.idtipoconcepto = c.reftipoconceptos
+	order by 1";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+function traerConceptosPorTipo($idtipoconcepto) {
+	$sql = "select
+	c.idconcepto,
+	c.concepto,
+	c.abreviatura,
+	c.leyenda,
+	tc.tipoconcepto,
+	(case when c.activo = 1 then 'Si' else 'No' end) as activo
+	from dbconceptos c
+	inner join tbtipoconceptos tc on tc.idtipoconcepto = c.reftipoconceptos
+	where tc.idtipoconcepto = ".$idtipoconcepto."
 	order by 1";
 
 	$res = $this->query($sql,0);

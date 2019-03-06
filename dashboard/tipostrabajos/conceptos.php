@@ -24,7 +24,7 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../oportunidades/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../tipostrabajos/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
@@ -32,69 +32,50 @@ $fecha = date('Y-m-d');
 $id = $_GET['id'];
 
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Oportunidades",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Tipo de Trabajos",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
-
-$cadEmpresas = $serviciosFunciones->devolverSelectBox($configuracion,array(1),'');
 
 $tituloWeb = mysql_result($configuracion,0,'sistema');
 
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Oportunidad";
+$singular = "Concepto Asociado";
 
-$plural = "Oportunidades - Cotizar";
+$plural = "Conceptos Asociados";
 
-$eliminar = "eliminarOportunidades";
+$eliminar = "eliminarTipotrabajoconceptos";
 
-$insertar = "insertarOportunidades";
+$insertar = "insertarTipotrabajoconceptos";
 
-$modificar = "modificarOportunidades";
+$modificar = "modificarTipotrabajoconceptos";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
-$resultado = $serviciosReferencias->traerOportunidadesPorId($id);
+$resultado = $serviciosReferencias->traerTipostrabajosPorId($id);
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
-$tabla 			= "dbcotizaciones";
+$tabla 			= "dbtipotrabajoconceptos";
 
-$lblCambio	 	= array('refclientes','refmotivosoportunidades','refcontactos','refestados','reftipostrabajos','refusuarios');
-$lblreemplazo	= array('Cliente','Motivo de Oportunidad','Contacto','Estado','Tipo de Trabajo','Usuario');
+$lblCambio	 	= array('reftipostrabajos','refconceptos');
+$lblreemplazo	= array('Tipo de Trabajo','concepto');
 
 
-$resVar1 = $serviciosReferencias->traerTipostrabajos();
-$cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'',mysql_result($resultado,0,'reftipostrabajos'));
+$resVar1 = $serviciosReferencias->traerTipostrabajosPorId($id);
+$cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
-$resVar2 = $serviciosReferencias->traerMotivosoportunidades();
-$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),'',mysql_result($resultado,0,'refmotivosoportunidades'));
+$resVar2 = $serviciosReferencias->traerConceptosPorTipo(2);
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resVar2,array(3),'');
 
-$resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
-$cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
 
-$resVar4 = $serviciosReferencias->traerEstadosPorFormulario(1);
-$cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
+$refdescripcion = array(0=>$cadRef1,1=>$cadRef2);
+$refCampo 	=  array('reftipostrabajos','refconceptos');
 
-$resVar5 = $serviciosReferencias->traerClientes();
-$cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(1),' ');
+$idTabla = 'idoportunidad';
 
-$resVar6 = $serviciosReferencias->traerContactos();
-$cadRef6 	= $serviciosFunciones->devolverSelectBox($resVar6,array(2,3,4,5,6),' ');
-
-$refdescripcion = array(0=>$cadRef5,
-								1=>$cadRef2,
-								2=>$cadRef6,
-								3=>$cadRef4,
-								4=>$cadRef1,
-								5=>$cadRef3);
-$refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refestados','reftipostrabajos','refusuarios');
-
-$frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
-
-$resVarTM = $serviciosReferencias->traerTipomonedas();
-$cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
 ?>
 
@@ -129,47 +110,8 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/dataTables.jqueryui.min.css">
 	<link rel="stylesheet" href="../../DataTables/DataTables-1.10.18/css/jquery.dataTables.css">
 
-	<link rel="stylesheet" href="../../css/easy-autocomplete.min.css">
-	<link rel="stylesheet" href="../../css/easy-autocomplete.themes.min.css">
-
 	<style>
 		.alert > i{ vertical-align: middle !important; }
-		.btn-circle-chico {
-			border: none;
-			outline: none !important;
-			overflow: hidden;
-			width: 10px;
-			height: 10px;
-			-webkit-border-radius: 50%;
-			-moz-border-radius: 50%;
-			-ms-border-radius: 50%;
-			border-radius: 50%;
-		}
-		.btn-chico {
-			display: inline-block;
-			padding: 6px 6px;
-			margin-bottom: 0;
-			font-size: 14px;
-			font-weight: normal;
-			line-height: 1.42857143;
-			text-align: center;
-			white-space: nowrap;
-			vertical-align: middle;
-			-ms-touch-action: manipulation;
-			touch-action: manipulation;
-			cursor: pointer;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-			background-image: none;
-			border: 1px solid transparent;
-			border-radius: 4px;
-		}
-		.alignRight { text-align: right; }
-		.alignCenter { text-align: center; }
-		.alignLeft { text-align: left; }
-		.easy-autocomplete-container { z-index: 99999999}
 	</style>
 
 
@@ -215,7 +157,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 <!-- #Top Bar -->
 <?php echo $baseHTML->cargarSECTION($_SESSION['usua_sahilices'], $_SESSION['nombre_sahilices'], $resMenu,'../../'); ?>
 
-<section class="content" style="margin-top:-45px;">
+<section class="content" style="margin-top:-15px;">
 
 	<div class="container-fluid">
 		<div class="row clearfix">
@@ -248,129 +190,36 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 										<div class="button-demo">
 											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
 												<i class="material-icons">add</i>
-												<span>NUEVO CLIENTE</span>
+												<span>NUEVO</span>
 											</button>
 
 										</div>
 									</div>
-									<div class="col-lg-12 col-md-12">
-										<div class="alert alertEstadoCliente">
-											<h4 class="lblEstado"></h4>
-											<p class="lblComentario"></p>
-										</div>
-									</div>
 								</div>
 
-								<div class="row">
-									<div class="col-lg-12 col-md-12">
-										<div class="form-group">
-											<label>Empresa:</label>
-											<div class="form-line">
-												<select class="form-control show-tick" name="refempresas" id="refempresas">
-													<?php echo $cadEmpresas; ?>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
+								<div class="row" style="padding: 5px 20px;">
 
-								<div class="row">
-									<?php echo $frm; ?>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-										<h4>Detalle de la Cotizacion</h4>
-									</div>
-								</div>
-								<!-- buscador -->
-								<div class="row">
-
-
-									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-										<div class="form-group">
-											<label>Buscar Item</label>
-											<div class="form-line">
-												<!--<input type="text" id="btnBuscar" name="lstItems" class="form-control" placeholder="Ingrese los datos de la busqueda"  />-->
-												<div style="position: relative; height: 80px;">
-													<input id="round" class="countrie" style="width: 100%; z-index:99999"/>
-												</div>
-												<div id="selction-ajax"></div>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-										<div class="form-group">
-											<label>Cantidad:</label>
-											<div class="form-line">
-												<input type="text" id="cantidad" name="cantidad" class="form-control" value="1"  />
-											</div>
-										</div>
-									</div>
-
-									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-										<div class="form-group">
-											<label>Moneda</label>
-											<div class="form-line">
-												<select class="form-control show-tick" name="reftipomonedas" id="reftipomonedas">
-													<?php echo $cadRefTM; ?>
-												</select>
-											</div>
-										</div>
-									</div>
-
-								</div>
-								<!-- fin buscador -->
-								<!-- bonificaciones y otros -->
-								<div class="row">
-									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-										<div class="form-group">
-											<label>Bonificación</label>
-											<div class="input-group">
-												<span class="input-group-addon">$</span>
-												<div class="form-line">
-													<input type="text" id="bonificacion" name="bonificacion" class="form-control" placeholder="Bonificacion" value="0"  />
-												</div>
-												<span class="input-group-addon">.00</span>
-											</div>
-										</div>
-									</div>
-
-								</div>
-								<!-- fin bonificaciones y otros -->
-								<!-- carro de compra -->
-								<div class="row table-responsive">
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
-												<th>Item</th>
-												<th>Concepto</th>
+												<th>Tipo de Trabajo</th>
+												<th>Conceptos</th>
+												<th>Abrev.</th>
 												<th>Leyenda</th>
-												<th>Cant.</th>
-												<th>Precio Unit.</th>
-												<th>Moneda</th>
-												<th>% Bonif.</th>
-												<th>SubTotal</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tfoot>
 											<tr>
-												<th>Item</th>
-												<th>Concepto</th>
+												<th>Tipo de Trabajo</th>
+												<th>Conceptos</th>
+												<th>Abrev.</th>
 												<th>Leyenda</th>
-												<th>Cant.</th>
-												<th>Precio Unit.</th>
-												<th>Moneda</th>
-												<th>% Bonif.</th>
-												<th>SubTotal</th>
 												<th>Acciones</th>
 											</tr>
 										</tfoot>
 									</table>
 								</div>
-								<!-- fin carro de compra -->
 							</form>
 							</div>
 						</div>
@@ -390,11 +239,8 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 	               <div class="modal-header">
 	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
 	               </div>
-	               <div class="modal-body demo-masked-input">
-							<div class="row">
-							<?php echo $frmUnidadNegocios; ?>
-							</div>
-
+	               <div class="modal-body">
+	                  <?php echo $frmUnidadNegocios; ?>
 	               </div>
 	               <div class="modal-footer">
 	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
@@ -407,17 +253,15 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 	</form>
 
 	<!-- MODIFICAR -->
-		<form class="formulario formMod" role="form" id="sign_in">
+		<form class="formulario" role="form" id="sign_in">
 		   <div class="modal fade" id="lgmModificar" tabindex="-1" role="dialog">
 		       <div class="modal-dialog modal-lg" role="document">
 		           <div class="modal-content">
 		               <div class="modal-header">
 		                   <h4 class="modal-title" id="largeModalLabel">MODIFICAR <?php echo strtoupper($singular); ?></h4>
 		               </div>
-		               <div class="modal-body">
-								<div class="row frmAjaxModificar">
+		               <div class="modal-body frmAjaxModificar">
 
-								</div>
 		               </div>
 		               <div class="modal-footer">
 		                   <button type="button" class="btn btn-warning waves-effect modificar">MODIFICAR</button>
@@ -458,7 +302,6 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 <!-- Wait Me Plugin Js -->
 <script src="../../plugins/waitme/waitMe.js"></script>
 
-<script src="../../js/jquery.easy-autocomplete.min.js"></script>
 <!-- Custom Js -->
 <script src="../../js/pages/cards/colored.js"></script>
 
@@ -472,14 +315,12 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 <script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
 
 
-
 <script>
 	$(document).ready(function(){
-
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=cotizadoraux&referencia1=<?php echo $id; ?>",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=tipotrabajoconceptos&referencia1=<?php echo $id; ?>",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -505,140 +346,13 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 			}
 		});
 
-		var options = {
-
-		  url: function(phrase) {
-			return "../../json/traerItems.php";
-		  },
-
-		  getValue: function(element) {
-			return element.name;
-		  },
-
-		  ajaxSettings: {
-			dataType: "json",
-			method: "POST",
-			data: {
-			  dataType: "json"
-			}
-		  },
-
-		  preparePostData: function(data) {
-			$('#selction-ajax').html('');
-			data.phrase = $("#round").val();
-			return data;
-		  },
-
-		  list: {
-				onClickEvent: function() {
-					var value = $("#round").getSelectedItemData().id;
-
-
-					$('#selction-ajax').html('<button type="button" id="' + value + '" class="btn bg-green waves-effect agregarJugador"> \
-													<i class="material-icons">add</i> \
-													<span>CARGAR</span>');
-				},
-
-				match: {
-					enabled: true
-				}
-		  },
-		  /*theme: "round",*/
-		  requestDelay: 100
-		};
-
-		$("#round").easyAutocomplete(options);
-
-		$('.maximizar').click(function() {
-			if ($('.icomarcos').text() == 'web') {
-				$('#marcos').show();
-				$('.content').css('marginLeft', '315px');
-				$('.icomarcos').html('aspect_ratio');
-			} else {
-				$('#marcos').hide();
-				$('.content').css('marginLeft', '15px');
-				$('.icomarcos').html('web');
-			}
-
-		});
-
-
 		$("#sign_in").submit(function(e){
 			e.preventDefault();
 		});
 
 		$('#activo').prop('checked',true);
 
-		$('#precio1').number( true, 2, '.', '' );
-		$('#precio2').number( true, 2, '.', '' );
-		$('#precio3').number( true, 2, '.', '' );
-		$('#precio4').number( true, 2, '.', '' );
-		$('#iva').number( true, 2, '.', '' );
-		$('#bonificacion').number( true, 2, '.', '' );
-		$('#cantidad').number( true, 0, '', '' );
-
-		$('#cantidad').change(function() {
-			if ($(this).val() == '0') {
-				$(this).val(1);
-			}
-		});
-
-		$('#cantidad').focusout(function() {
-			if ($(this).val() == '') {
-				$(this).val(1);
-			}
-		});
-
-		$('#bonificacion').focusout(function() {
-			if ($(this).val() == '') {
-				$(this).val(1);
-			}
-		});
-
-		var $demoMaskedInput = $('.demo-masked-input');
-
-		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
-
-
-
-
-		function devolverEstadoCliente(id) {
-			$.ajax({
-				url: '../../ajax/ajax.php',
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: {accion: 'devolverEstadoCliente',idcliente: id},
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$('.lblEstado').html('');
-					$('.lblComentario').html('');
-					$('.alertEstadoCliente').removeClass('bg-red');
-					$('.alertEstadoCliente').removeClass('bg-green');
-					$('.alertEstadoCliente').removeClass('bg-orange');
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-					$('.lblEstado').html('Estado: ' + data.Estado);
-					$('.lblComentario').html('Estado: ' + data.Comentario);
-					$('.alertEstadoCliente').addClass( 'bg-'+data.Color);
-
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-					$("#load").html('');
-				}
-			});
-		}
-
-		devolverEstadoCliente($('#refclientes').val());
-
-		$('#refclientes').change(function() {
-			devolverEstadoCliente($(this).val());
-		});
-
-		function frmAjaxModificar(id, $demoMaskedInput) {
+		function frmAjaxModificar(id) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
 				type: 'POST',
@@ -654,14 +368,6 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
 					if (data != '') {
 						$('.frmAjaxModificar').html(data);
-						$('.formMod #precio1').number( true, 2, '.', '' );
-						$('.formMod #precio2').number( true, 2, '.', '' );
-						$('.formMod #precio3').number( true, 2, '.', '' );
-						$('.formMod #precio4').number( true, 2, '.', '' );
-						$('.formMod #iva').number( true, 2, '.', '' );
-						$('.formMod #vigenciadesde').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
-						$('.formMod #vigenciahasta').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
-
 					} else {
 						swal("Error!", data, "warning");
 
@@ -677,42 +383,6 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
 		}
 
-		setInterval(function() {
-			verificarSemaforo();
-		},5000);
-
-
-		function verificarSemaforo() {
-			$.ajax({
-				url: '../../ajax/ajax.php',
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: {accion: 'verificarSemaforos'},
-				//mientras enviamos el archivo
-				beforeSend: function(){
-
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-					if (data == '1') {
-						table.ajax.reload();
-					}
-				},
-				//si ha ocurrido un error
-				error: function(){
-					swal({
-							title: "Respuesta",
-							text: 'Actualice la pagina',
-							type: "error",
-							timer: 2000,
-							showConfirmButton: false
-					});
-
-				}
-			});
-		}
 
 		function frmAjaxEliminar(id) {
 			$.ajax({
@@ -779,6 +449,14 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 			frmAjaxModificar(idTable);
 			$('#lgmModificar').modal();
 		});//fin del boton modificar
+
+		$("#example").on("click",'.btnVer', function(){
+			idTable =  $(this).attr("id");
+			url = "conceptos.php?id=" + idTable;
+			$(location).attr('href',url);
+		});//fin del boton modificar
+
+
 
 		$('.nuevo').click(function(){
 
@@ -889,32 +567,6 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 				}
 			});
 		});
-
-
-		function traerNotificaciones() {
-			$.ajax({
-			dataType: "json",
-			data:  {
-				accion: 'traerNotificacionesPorRol',
-				altura: '../'
-			},
-			url:   '../../ajax/ajax.php',
-			type:  'post',
-			beforeSend: function () {
-				$('.notificaciones').html('');
-			},
-			success:  function (response) {
-				$('.notificaciones').html(response.respuesta);
-				$('.notificaciones-cantidad').html(response.cantidad);
-			}
-			});
-		}
-
-      traerNotificaciones();
-
-      setInterval(function() {
-          traerNotificaciones();
-      },5000);
 	});
 </script>
 
