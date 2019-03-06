@@ -642,16 +642,19 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $servicios
          $refCampo 	=  array('sexo');
          break;
       case 'dbconceptos':
+         $resultado = $serviciosReferencias->traerConceptosPorId($id);
+
          $modificar = "modificarConceptos";
          $idTabla = "idconcepto";
 
-         $lblCambio	 	= array();
-         $lblreemplazo	= array();
+         $lblCambio	 	= array("reftipoconceptos");
+         $lblreemplazo	= array('Tipo Conceptos');
 
-         $cadRef 	= '';
+         $resV = $serviciosReferencias->traerTipoconceptos();
+         $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resV,array(1),'', mysql_result($resultado,0,'reftipoconceptos'));
 
-         $refdescripcion = array();
-         $refCampo 	=  array();
+         $refdescripcion = array(0=>$cadRef);
+         $refCampo 	=  array('reftipoconceptos');
          break;
 
       case 'dbusuarios':
@@ -671,11 +674,11 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $servicios
          	$cadRef 	= $serviciosFunciones->devolverSelectBox($refRoles,array(1),'');
          }
 
-         //traigo las unidades de negocios 
+         //traigo las unidades de negocios
          $refUN = $serviciosReferencias->traerUnidadesnegocios();
          $cadRefUN    = $serviciosFunciones->devolverSelectBoxActivo($refUN,array(1),'', mysql_result($resultado,0,'refunidadesnegocios'));
 
-         //traigo los contactos 
+         //traigo los contactos
          $refC = $serviciosReferencias->traerContactos();
          $cadRefC    = $serviciosFunciones->devolverSelectBoxActivo($refC,array(2,3,4,5,6),'', mysql_result($resultado,0,'refcontactos'));
 
@@ -958,38 +961,47 @@ function traerClientes($serviciosReferencias) {
 }
 
 function insertarConceptos($serviciosReferencias) {
-$concepto = $_POST['concepto'];
-$abreviatura = $_POST['abreviatura'];
-$leyenda = $_POST['leyenda'];
-if (isset($_POST['activo'])) {
-$activo	= 1;
-} else {
-$activo = 0;
-}
-$res = $serviciosReferencias->insertarConceptos($concepto,$abreviatura,$leyenda,$activo);
-if ((integer)$res > 0) {
-echo '';
-} else {
-echo 'Huvo un error al insertar datos';
-}
+   $reftipoconceptos = $_POST['reftipoconceptos'];
+   $concepto = $_POST['concepto'];
+   $abreviatura = $_POST['abreviatura'];
+   $leyenda = $_POST['leyenda'];
+
+   if (isset($_POST['activo'])) {
+      $activo	= 1;
+   } else {
+      $activo = 0;
+   }
+
+   $res = $serviciosReferencias->insertarConceptos($reftipoconceptos,$concepto,$abreviatura,$leyenda,$activo);
+
+   if ((integer)$res > 0) {
+      echo '';
+   } else {
+      echo 'Huvo un error al insertar datos';
+   }
 }
 
 function modificarConceptos($serviciosReferencias) {
-$id = $_POST['id'];
-$concepto = $_POST['concepto'];
-$abreviatura = $_POST['abreviatura'];
-$leyenda = $_POST['leyenda'];
-if (isset($_POST['activo'])) {
-$activo	= 1;
-} else {
-$activo = 0;
-}
-$res = $serviciosReferencias->modificarConceptos($id,$concepto,$abreviatura,$leyenda,$activo);
-if ($res == true) {
-echo '';
-} else {
-echo 'Huvo un error al modificar datos';
-}
+   $id = $_POST['id'];
+
+   $reftipoconceptos = $_POST['reftipoconceptos'];
+   $concepto = $_POST['concepto'];
+   $abreviatura = $_POST['abreviatura'];
+   $leyenda = $_POST['leyenda'];
+
+   if (isset($_POST['activo'])) {
+      $activo	= 1;
+   } else {
+      $activo = 0;
+   }
+
+   $res = $serviciosReferencias->modificarConceptos($id,$reftipoconceptos,$concepto,$abreviatura,$leyenda,$activo);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
 }
 
 function eliminarConceptos($serviciosReferencias) {
@@ -1481,7 +1493,7 @@ if(strlen($_POST['email']) <= 3){
    }else{
       $email = $_POST['email'];
    }
-   
+
 }
 if(strlen($_POST['nombrecompleto']) <= 3){
    echo 'Apellido y Nombre, ';
@@ -1529,7 +1541,7 @@ if($error){
       echo '';
    } else {
       echo 'Hubo un error al insertar datos';
-   }  
+   }
 }
 }
 

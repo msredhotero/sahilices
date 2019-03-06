@@ -674,18 +674,18 @@ return $res;
 
 /* PARA Conceptos */
 
-function insertarConceptos($concepto,$abreviatura,$leyenda,$activo) {
-$sql = "insert into dbconceptos(idconcepto,concepto,abreviatura,leyenda,activo)
-values ('','".($concepto)."','".($abreviatura)."','".($leyenda)."',".$activo.")";
+function insertarConceptos($reftipoconceptos,$concepto,$abreviatura,$leyenda,$activo) {
+$sql = "insert into dbconceptos(idconcepto,reftipoconceptos,concepto,abreviatura,leyenda,activo)
+values ('',".$reftipoconceptos.",'".($concepto)."','".($abreviatura)."','".($leyenda)."',".$activo.")";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarConceptos($id,$concepto,$abreviatura,$leyenda,$activo) {
+function modificarConceptos($id,$reftipoconceptos,$concepto,$abreviatura,$leyenda,$activo) {
 $sql = "update dbconceptos
 set
-concepto = '".($concepto)."',abreviatura = '".($abreviatura)."',leyenda = '".($leyenda)."',activo = ".$activo."
+reftipoconceptos = ".$reftipoconceptos.", concepto = '".($concepto)."',abreviatura = '".($abreviatura)."',leyenda = '".($leyenda)."',activo = ".$activo."
 where idconcepto =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -710,11 +710,13 @@ function traerConceptosajax($length, $start, $busqueda) {
 
 	$sql = "select
 	c.idconcepto,
+	tc.tipoconcepto,
 	c.concepto,
 	c.abreviatura,
 	c.leyenda,
 	(case when c.activo = 1 then 'Si' else 'No' end) as activo
 	from dbconceptos c
+	inner join tbtipoconceptos tc on tc.idtipoconcepto = c.reftipoconceptos
 	".$where."
 	order by c.concepto
 	limit ".$start.",".$length;
@@ -729,8 +731,10 @@ function traerConceptos() {
 	c.concepto,
 	c.abreviatura,
 	c.leyenda,
+	tc.tipoconcepto,
 	(case when c.activo = 1 then 'Si' else 'No' end) as activo
 	from dbconceptos c
+	inner join tbtipoconceptos tc on tc.idtipoconcepto = c.reftipoconceptos
 	order by 1";
 
 	$res = $this->query($sql,0);
@@ -739,7 +743,7 @@ function traerConceptos() {
 
 
 function traerConceptosPorId($id) {
-$sql = "select idconcepto,concepto,abreviatura,leyenda,activo from dbconceptos where idconcepto =".$id;
+$sql = "select idconcepto,reftipoconceptos,concepto,abreviatura,leyenda,activo from dbconceptos where idconcepto =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -1085,9 +1089,9 @@ function traerUsuariosajax($length, $start, $busqueda) {
 	u.nombrecompleto,
 	concat(cc.apellido, ' ', cc.nombre) as contacto,
 	ss.sector as refsector,
-	
+
 	(case when u.activo = 1 then 'Si' else 'No' end) as activo
-	
+
 	from dbusuarios u
 	left join dbcontactos cc on cc.idcontacto = u.refcontactos
 	left join dbsectores ss on ss.idsector = u.refsector
@@ -1914,7 +1918,7 @@ $sql = "select
 t.idtipoconcepto,
 t.tipoconcepto
 from tbtipoconceptos t
-order by t.tipoconcepto";
+order by 1";
 $res = $this->query($sql,0);
 return $res;
 }

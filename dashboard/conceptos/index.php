@@ -55,14 +55,14 @@ $modificar = "modificarConceptos";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbconceptos";
 
-$lblCambio	 	= array();
-$lblreemplazo	= array();
+$lblCambio	 	= array("reftipoconceptos");
+$lblreemplazo	= array('Tipo Conceptos');
 
+$resV = $serviciosReferencias->traerTipoconceptos();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resV,array(1),'');
 
-$cadRef 	= '';
-
-$refdescripcion = array();
-$refCampo 	=  array();
+$refdescripcion = array(0=>$cadRef);
+$refCampo 	=  array('reftipoconceptos');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -200,6 +200,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 									<table id="example" class="display table " style="width:100%">
 										<thead>
 											<tr>
+												<th>Tipo</th>
 												<th>Concepto</th>
 												<th>Abreviatura</th>
 												<th>Leyenda</th>
@@ -209,6 +210,7 @@ $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$l
 										</thead>
 										<tfoot>
 											<tr>
+												<th>Tipo</th>
 												<th>Concepto</th>
 												<th>Abreviatura</th>
 												<th>Leyenda</th>
