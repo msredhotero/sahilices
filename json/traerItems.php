@@ -20,7 +20,7 @@ $serviciosReferencias 	= new ServiciosReferencias();
 
 $fecha = date('Y-m-d');
 
-$resTraerConceptos = $serviciosReferencias->traerConceptos();
+$resTraerConceptos = $serviciosReferencias->traerConceptosPorTipo(1);
 /*
 id: "'.$row[0].'",
 

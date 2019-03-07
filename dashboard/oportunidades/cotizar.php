@@ -96,6 +96,10 @@ $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblr
 $resVarTM = $serviciosReferencias->traerTipomonedas();
 $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
+// formas de pago
+$resFormaPago = $serviciosReferencias->traerConceptosPorTipo(3);
+$cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
+
 ?>
 
 <!DOCTYPE html>
@@ -225,7 +229,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="card ">
-						<div class="header bg-blue">
+						<div class="header bg-indigo">
 							<h2>
 								<?php echo strtoupper($plural); ?>
 							</h2>
@@ -290,7 +294,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 										<div class="form-group">
 											<label>Buscar Item</label>
-											<div class="form-line">
+											<div class="form-line buscarItem">
 												<!--<input type="text" id="btnBuscar" name="lstItems" class="form-control" placeholder="Ingrese los datos de la busqueda"  />-->
 												<div style="position: relative; height: 80px;">
 													<input id="round" class="countrie" style="width: 100%; z-index:99999"/>
@@ -337,6 +341,19 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 										</div>
 									</div>
 
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<div class="form-group">
+											<label>Precio Unitario</label>
+											<div class="input-group">
+												<span class="input-group-addon">$</span>
+												<div class="form-line">
+													<input type="text" id="precio" name="precio" class="form-control" placeholder="Bonificacion" value="0"  readonly/>
+												</div>
+												<span class="input-group-addon">.00</span>
+											</div>
+										</div>
+									</div>
+
 								</div>
 								<!-- fin bonificaciones y otros -->
 								<!-- carro de compra -->
@@ -369,6 +386,44 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 											</tr>
 										</tfoot>
 									</table>
+								</div>
+								<hr>
+								<h4>Notas</h4>
+								<div class="row table-responsive">
+									<table id="example2" class="display table " style="width:100%">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Concepto</th>
+												<th>Leyenda</th>
+											</tr>
+										</thead>
+										<tbody id="lstNotas">
+
+										</tbody>
+									</table>
+								</div>
+								<hr>
+								<h4>Formas de Pago</h4>
+								<div class="row">
+									<div class="col-lg-12 col-md-12">
+										<div class="form-group">
+											<div class="form-line">
+												<select class="form-control show-tick" name="refformapago" id="refformapago">
+													<?php echo $cadRefFP; ?>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-12">
+										<div class="button-demo">
+											<button type="button" class="btn bg-blue waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
+												<i class="material-icons">save</i>
+												<span>GUARDAR</span>
+											</button>
+
+										</div>
+									</div>
 								</div>
 								<!-- fin carro de compra -->
 							</form>
@@ -534,9 +589,10 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 					var value = $("#round").getSelectedItemData().id;
 
 
-					$('#selction-ajax').html('<button type="button" id="' + value + '" class="btn bg-green waves-effect agregarJugador"> \
+					$('#selction-ajax').html('<button type="button" id="' + value + '" class="btn bg-green waves-effect agregarItem"> \
 													<i class="material-icons">add</i> \
-													<span>CARGAR</span>');
+													<span>AGREGAR</span>');
+					traerPrecioPorIdConcepto(value, $('#refclientes').val());
 				},
 
 				match: {
@@ -548,6 +604,10 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 		};
 
 		$("#round").easyAutocomplete(options);
+
+		$(".buscarItem").on("click",'.agregarItem', function(){
+			agregarItem(<?php echo $id; ?>, $(this).attr("id"), $('#cantidad').val(), $('#precio').val(), $('#bonificacion').val(), $('#reftipomonedas').val(), $('#refclientes').val());
+		});
 
 		$('.maximizar').click(function() {
 			if ($('.icomarcos').text() == 'web') {
@@ -567,12 +627,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 			e.preventDefault();
 		});
 
-		$('#activo').prop('checked',true);
 
-		$('#precio1').number( true, 2, '.', '' );
-		$('#precio2').number( true, 2, '.', '' );
-		$('#precio3').number( true, 2, '.', '' );
-		$('#precio4').number( true, 2, '.', '' );
 		$('#iva').number( true, 2, '.', '' );
 		$('#bonificacion').number( true, 2, '.', '' );
 		$('#cantidad').number( true, 0, '', '' );
@@ -638,13 +693,17 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 			devolverEstadoCliente($(this).val());
 		});
 
-		function frmAjaxModificar(id, $demoMaskedInput) {
+		function traerPrecioPorIdConcepto(idconcepto,idcliente) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
 				type: 'POST',
 				// Form data
 				//datos del formulario
-				data: {accion: 'frmAjaxModificar',tabla: '<?php echo $tabla; ?>', id: id},
+				data: {
+					accion: 'traerPrecioPorIdConcepto',
+					idconcepto: idconcepto,
+					idcliente: idcliente
+				},
 				//mientras enviamos el archivo
 				beforeSend: function(){
 					$('.frmAjaxModificar').html('');
@@ -652,21 +711,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 				//una vez finalizado correctamente
 				success: function(data){
 
-					if (data != '') {
-						$('.frmAjaxModificar').html(data);
-						$('.formMod #precio1').number( true, 2, '.', '' );
-						$('.formMod #precio2').number( true, 2, '.', '' );
-						$('.formMod #precio3').number( true, 2, '.', '' );
-						$('.formMod #precio4').number( true, 2, '.', '' );
-						$('.formMod #iva').number( true, 2, '.', '' );
-						$('.formMod #vigenciadesde').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
-						$('.formMod #vigenciahasta').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
-
-					} else {
-						swal("Error!", data, "warning");
-
-						$("#load").html('');
-					}
+					$('#precio').val(data);
 				},
 				//si ha ocurrido un error
 				error: function(){
@@ -677,9 +722,74 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
 		}
 
+		function agregarItem(id, refconceptos, cantidad, preciounitario, porcentajebonificado, reftipomonedas, refclientes) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {
+					accion: 'agregarItem',
+					id: id,
+					refconceptos: refconceptos,
+					cantidad: cantidad,
+					preciounitario: preciounitario,
+					porcentajebonificado: porcentajebonificado,
+					reftipomonedas: reftipomonedas,
+					refclientes: refclientes
+				},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$('.round').val('');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					table.ajax.reload();
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+
+		}
+
+		traerNotasPorTipoTrabajo($('#reftipostrabajos').val());
+
+		function traerNotasPorTipoTrabajo(id) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {
+					accion: 'traerTipotrabajoconceptosPorTipoTrabajo',
+					id: id
+				},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$('#lstNotas').html('');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+					$.each(data, function(i, item) {
+
+						$('#lstNotas').append('<tr><td>' + (i + 1) + '</td><td>' + item.concepto + '</td><td>' + item.leyenda + '</td>');
+					})
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+		}
+
 		setInterval(function() {
 			verificarSemaforo();
-		},5000);
+		},25000);
 
 
 		function verificarSemaforo() {
@@ -720,7 +830,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 				type: 'POST',
 				// Form data
 				//datos del formulario
-				data: {accion: '<?php echo $eliminar; ?>', id: id},
+				data: {accion: 'eliminarCotizaciondetallesaux', id: id},
 				//mientras enviamos el archivo
 				beforeSend: function(){
 
@@ -780,7 +890,7 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 			$('#lgmModificar').modal();
 		});//fin del boton modificar
 
-		$('.nuevo').click(function(){
+		$('.agregarItem').click(function(){
 
 			//información del formulario
 			var formData = new FormData($(".formulario")[0]);

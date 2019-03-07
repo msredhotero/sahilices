@@ -351,12 +351,95 @@ switch ($accion) {
       eliminarTipotrabajoconceptos($serviciosReferencias);
    break;
 
+   case 'traerPrecioPorIdConcepto':
+      traerPrecioPorIdConcepto($serviciosReferencias);
+   break;
+
+   /* carrito de items */
+   case 'agregarItem':
+      agregarItem($serviciosReferencias);
+   break;
+   case 'eliminarCotizaciondetallesaux':
+      eliminarCotizaciondetallesaux($serviciosReferencias);
+   break;
+   case 'traerTipotrabajoconceptosPorTipoTrabajo':
+      traerTipotrabajoconceptosPorTipoTrabajo($serviciosReferencias);
+   break;
+   /* fin carrito */
+
 
 /* Fin */
 
 }
 /* Fin */
 
+
+   /* carrito de items */
+   function agregarItem($serviciosReferencias) {
+
+      $refclientes            = $_POST['refclientes'];
+
+      $refoportunidad         = $_POST['id'];
+      $refconceptos           = $_POST['refconceptos'];
+      $cantidad               = $_POST['cantidad'];
+
+      $porcentajebonificado   = $_POST['porcentajebonificado'];
+      $reftipomonedas         = $_POST['reftipomonedas'];
+      $rango                  = 0;
+      $aplicatotal            = 0;
+      $cargavieja             = 0;
+      $concepto               = '';
+      $leyenda                = '';
+
+      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
+
+
+
+      $res = $serviciosReferencias->insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda);
+
+      echo '';
+   }
+
+   function eliminarCotizaciondetallesaux($serviciosReferencias) {
+      $id = $_POST['id'];
+
+      $res = $serviciosReferencias->eliminarCotizaciondetallesaux($id);
+
+      if ($res == true) {
+         echo '';
+      } else {
+         echo 'Hubo un error al modificar datos';
+      }
+   }
+
+   function traerTipotrabajoconceptosPorTipoTrabajo($serviciosReferencias) {
+      $id = $_POST['id'];
+
+      $error = false;
+
+      $res = $serviciosReferencias->traerTipotrabajoconceptosPorTipoTrabajo($id);
+      $ar = array();
+      if (mysql_num_rows($res)>0) {
+         while ($row = mysql_fetch_array($res)) {
+            array_push($ar, array('refconceptos' => $row['refconceptos'], 'concepto' => $row['concepto'], 'leyenda' => $row['leyenda']));
+         }
+      } else {
+         $ar = array();
+      }
+
+      header('Content-type: application/json');
+   	echo json_encode($ar);
+   }
+   /* fin carrito */
+
+function traerPrecioPorIdConcepto($serviciosReferencias) {
+   $idconcepto = $_POST['idconcepto'];
+   $idcliente = $_POST['idcliente'];
+
+   $res = $serviciosReferencias->traerPrecioPorIdConcepto($idconcepto, $idcliente);
+
+   echo $res;
+}
 
 function insertarTipotrabajoconceptos($serviciosReferencias) {
    $reftipostrabajos = $_POST['reftipostrabajos'];

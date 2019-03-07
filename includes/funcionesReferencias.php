@@ -10,6 +10,37 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosReferencias {
 
 
+function traerPrecioPorIdConcepto($idconcepto, $idcliente) {
+	$resEstadoCliente = $this->traerClienteestadosPorCliente($idcliente);
+
+	$resListaPrecio = $this->traerListaspreciosPorConcepto($idconcepto);
+
+	$precio = 0;
+
+	if (mysql_num_rows($resListaPrecio)>0) {
+		switch (mysql_result($resEstadoCliente,0,'refestados')) {
+			case 1:
+				$precio = mysql_result($resListaPrecio,0,'precio1');
+				break;
+			case 2:
+				$precio = mysql_result($resListaPrecio,0,'precio2');
+				break;
+			case 3:
+				$precio = mysql_result($resListaPrecio,0,'precio3');
+				break;
+			default:
+
+				$precio = mysql_result($resListaPrecio,0,'precio4');
+
+				break;
+		}
+	} else {
+		$precio = 0;
+	}
+
+	return $precio;
+}
+
 /* PARA Cotizaciondetallesaux TABLA AUXILIAR PARA GUARDAR LOS ITEMS */
 
 function insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda) {
@@ -107,12 +138,12 @@ function traerCotizaciondetallesauxPorOportunidadajax($idoportunidad, $length, $
 			from (select
 	c.idcotizaciondetalleaux,
 	co.concepto,
-	SUBSTRING(co.leyenda, 0, 40) as leyenda,
+	SUBSTRING(co.leyenda, 1, 40) as leyenda,
 	c.cantidad,
 	c.preciounitario,
 	tm.tipomoneda,
 	c.porcentajebonificado,
-	c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100) as subtotal,
+	ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
 	c.reftipomonedas,
 	c.rango,
 	c.aplicatotal,
@@ -286,6 +317,12 @@ return $res;
 
 function traerClienteestadosPorId($id) {
 $sql = "select idclienteestado,refclientes,refestados,comentarios from dbclienteestados where idclienteestado =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerClienteestadosPorCliente($idcliente) {
+$sql = "select idclienteestado,refclientes,refestados,comentarios from dbclienteestados where refclientes =".$idcliente;
 $res = $this->query($sql,0);
 return $res;
 }
@@ -1465,6 +1502,12 @@ return $res;
 
 function traerListaspreciosPorId($id) {
 $sql = "select idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta from dblistasprecios where idlistaprecio =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerListaspreciosPorConcepto($idconcepto) {
+$sql = "select idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta from dblistasprecios where refconceptos =".$idconcepto;
 $res = $this->query($sql,0);
 return $res;
 }
