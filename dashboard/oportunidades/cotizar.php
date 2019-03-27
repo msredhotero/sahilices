@@ -422,6 +422,11 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 												<span>GUARDAR</span>
 											</button>
 
+											<button type="button" class="btn bg-brown waves-effect btnNuevo" data-toggle="modal" data-target="#btnPrevisualizar">
+												<i class="material-icons">print</i>
+												<span>PREVISUALIZAR</span>
+											</button>
+
 										</div>
 									</div>
 								</div>

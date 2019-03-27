@@ -20,24 +20,11 @@ require('fpdf.php');
 //$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
 ////***** Parametros ****////////////////////////////////
-$idCountries		=	$_GET['idcountrie'];
+$id		=	$_GET['id'];
 
-$resTemporadas = $serviciosReferencias->traerUltimaTemporada(); 
-
-if (mysql_num_rows($resTemporadas)>0) {
-    $ultimaTemporada = mysql_result($resTemporadas,0,0);    
-} else {
-    $ultimaTemporada = 0;   
-}
-
-/////////////////////////////  fin parametross  ///////////////////////////
+$resultado = $serviciosReferencias->traerOportunidadesPorId($id);
 
 
-$resDatos = $serviciosReferencias->traerEquiposdelegadosPorCountrieFinalizado($idCountries, $ultimaTemporada);
-
-$resCountrie = $serviciosReferencias->traerCountriesPorId($idCountries);
-
-$nombre 	= mysql_result($resCountrie,0,'nombre');
 
 
 
@@ -51,31 +38,31 @@ $pdf->SetY(-10);
 
 $pdf->SetFont('Arial','I',10);
 
-$pdf->Cell(0,10,'Firma: ______________________________________________  -  Pagina '.$pdf->PageNo()." - Fecha: ".date('Y-m-d'),0,0,'C');
+$pdf->Cell(0,10,'Cotizacion sin validez  -  Pagina '.$pdf->PageNo()." - Fecha: ".date('Y-m-d'),0,0,'C');
 }
 
 
 $cantidadJugadores = 0;
-#Establecemos los márgenes izquierda, arriba y derecha: 
-//$pdf->SetMargins(2, 2 , 2); 
+#Establecemos los márgenes izquierda, arriba y derecha:
+//$pdf->SetMargins(2, 2 , 2);
 
-#Establecemos el margen inferior: 
-$pdf->SetAutoPageBreak(false,1); 
+#Establecemos el margen inferior:
+$pdf->SetAutoPageBreak(false,1);
 
 
-	
+
 	$pdf->AddPage();
 	/***********************************    PRIMER CUADRANTE ******************************************/
-	
+
 	$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
 
 	/***********************************    FIN ******************************************/
-	
-	
-	
+
+
+
 	//////////////////// Aca arrancan a cargarse los datos de los equipos  /////////////////////////
 
-	
+
 	$pdf->SetFillColor(183,183,183);
 	$pdf->SetFont('Arial','B',12);
 	$pdf->Ln();
@@ -90,7 +77,7 @@ $pdf->SetAutoPageBreak(false,1);
 	$pdf->Ln();
 	$pdf->Ln();
 	$pdf->SetX(5);
-	
+
 	$pdf->SetFont('Arial','',12);
 	$pdf->Cell(5,5,'',1,0,'C',true);
 	$pdf->Cell(60,5,'EQUIPO',1,0,'C',true);
@@ -99,17 +86,17 @@ $pdf->SetAutoPageBreak(false,1);
 
 	$cantPartidos = 0;
 	$i=0;
-	
+
 	$contadorY1 = 44;
 	$contadorY2 = 44;
 while ($rowE = mysql_fetch_array($resDatos)) {
-	$i+=1;	
+	$i+=1;
 	$cantPartidos += 1;
-	
+
 	if ($i > 50) {
 		Footer($pdf);
 		$pdf->AddPage();
-		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);	
+		$pdf->Image('../imagenes/logoparainformes.png',2,2,40);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Ln();
 		$pdf->Ln();
@@ -121,7 +108,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->SetX(5);
 
 		$i=0;
-		
+
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(5,5,'',1,0,'C',true);
 		$pdf->Cell(60,5,'EQUIPO',1,0,'C',true);
@@ -129,8 +116,8 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 		$pdf->Cell(60,5,'DIVISION',1,0,'C',true);
 
 	}
-	
-	
+
+
 	$pdf->Ln();
 	$pdf->SetX(5);
 	$pdf->SetFont('Arial','',10);
@@ -142,7 +129,7 @@ while ($rowE = mysql_fetch_array($resDatos)) {
 
 	$contadorY1 += 4;
 
-	//$pdf->SetY($contadorY1);		
+	//$pdf->SetY($contadorY1);
 
 
 }
@@ -163,4 +150,3 @@ $pdf->Output($nombreTurno,'I');
 
 
 ?>
-
