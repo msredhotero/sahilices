@@ -88,8 +88,8 @@ $pdf->SetX(50);
 $pdf->Cell(100,5,'COTIZACION SIN VALIDEZ',0,0,'C',false);
 $pdf->Line(5,30,200,30);
 
-
 $pdf->SetX(5);
+$pdf->Cell(200,5,'Cotizacion Nro: xxxx',0,0,'C',false);
 
 
 
