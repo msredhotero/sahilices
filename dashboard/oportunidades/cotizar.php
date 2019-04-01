@@ -100,6 +100,14 @@ $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 $resFormaPago = $serviciosReferencias->traerConceptosPorTipo(3);
 $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 
+// plazos de entrega
+$resEntrega = $serviciosReferencias->traerConceptosPorTipo(5);
+$cadRefE 	= $serviciosFunciones->devolverSelectBox($resEntrega,array(3),'');
+
+// validez
+$resValidez = $serviciosReferencias->traerConceptosPorTipo(4);
+$cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
+
 ?>
 
 <!DOCTYPE html>
@@ -354,6 +362,17 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 										</div>
 									</div>
 
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<div class="form-group">
+											<label>Lista de Precio</label>
+											<div class="input-group">
+												<div class="form-line">
+													<input type="number" class="form-control reflistas" id="reflistas" name="reflistas" readonly>
+												</div>
+											</div>
+										</div>
+									</div>
+
 								</div>
 								<!-- fin bonificaciones y otros -->
 								<!-- carro de compra -->
@@ -404,17 +423,40 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 									</table>
 								</div>
 								<hr>
-								<h4>Formas de Pago</h4>
+
 								<div class="row">
-									<div class="col-lg-12 col-md-12">
+									<div class="col-lg-4 col-md-4">
 										<div class="form-group">
+											<label for="">Forma de Pago</label>
 											<div class="form-line">
 												<select class="form-control show-tick" name="refformapago" id="refformapago">
-													<?php echo $cadRefFP; ?>
+													<?php echo utf8_decode($cadRefFP); ?>
 												</select>
 											</div>
 										</div>
 									</div>
+									<div class="col-lg-4 col-md-4">
+										<div class="form-group">
+											<label for="">Validez de la oferta</label>
+											<div class="form-line">
+												<select class="form-control show-tick" name="refvalidez" id="refvalidez">
+													<?php echo utf8_decode($cadRefV); ?>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4">
+										<div class="form-group">
+											<label for="">Plazos de entrega</label>
+											<div class="form-line">
+												<select class="form-control show-tick" name="refplazos" id="refplazos">
+													<?php echo utf8_decode($cadRefE); ?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
 									<div class="col-lg-12 col-md-12">
 										<div class="button-demo">
 											<button type="button" class="btn bg-blue waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
@@ -422,7 +464,7 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 												<span>GUARDAR</span>
 											</button>
 
-											<button type="button" class="btn bg-brown waves-effect btnNuevo" data-toggle="modal" data-target="#btnPrevisualizar">
+											<button type="button" class="btn bg-brown waves-effect btnPreview">
 												<i class="material-icons">print</i>
 												<span>PREVISUALIZAR</span>
 											</button>
@@ -535,6 +577,12 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 
 <script>
 	$(document).ready(function(){
+
+
+
+		$(".button-demo").on("click",'.btnPreview', function(){
+			window.open("../../reportes/rptPreviaCotizacion.php?id=<?php echo $id; ?>&idempresa=" + $('#refempresas').val() + '&idcliente=' + $('#refclientes').val() + '&idcontacto=' + $('#refcontactos').val() + '&idtrabajo=' + $('#reftipostrabajos').val() + '&idpago=' + $('#refformapago').val() + '&idplazoentrega=' + $('#refplazos').val() + '&idvalidez=' + $('#refvalidez').val() ,'_blank');
+		});
 
 		var table = $('#example').DataTable({
 			"bProcessing": true,
@@ -659,9 +707,6 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 
 		$demoMaskedInput.find('.date').inputmask('yyyy-mm-dd', { placeholder: '____-__-__' });
 
-
-
-
 		function devolverEstadoCliente(id) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
@@ -682,6 +727,19 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 					$('.lblEstado').html('Estado: ' + data.Estado);
 					$('.lblComentario').html('Estado: ' + data.Comentario);
 					$('.alertEstadoCliente').addClass( 'bg-'+data.Color);
+
+					switch (data.Estado) {
+						case 'Bueno':
+							$('.reflistas').val(1);
+							break;
+						case 'Regular':
+							$('.reflistas').val(2);
+							break;
+						case 'Malo':
+							$('.reflistas').val(3);
+							break;
+					}
+
 
 				},
 				//si ha ocurrido un error
@@ -761,7 +819,50 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 
 		}
 
+		traerContactosPorCliente($('#refclientes').val());
+
+		$('#refclientes').change(function() {
+			traerContactosPorCliente($(this).val());
+
+		});
+
+
+		function traerContactosPorCliente(id) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {
+					accion: 'traerContactosPorCliente',
+					refclientes: id
+				},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$('#refcontactos').html('');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+					$.each(data, function(i, item) {
+
+						$('#refcontactos').append('<option value="' + item.idcontacto + '">' + item.apellido + item.nombre + ' - Planta: ' + item.planta + ' - Sector: ' + item.sector + '</option>');
+					});
+					//$('#refcontactos').find('option:selected').prop('disabled', true);
+      			$('#refcontactos').selectpicker('refresh');
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+		}
+
 		traerNotasPorTipoTrabajo($('#reftipostrabajos').val());
+
+		$('#reftipostrabajos').change(function() {
+			traerNotasPorTipoTrabajo($(this).val());
+		});
 
 		function traerNotasPorTipoTrabajo(id) {
 			$.ajax({
@@ -1004,7 +1105,6 @@ $cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
 				}
 			});
 		});
-
 
 		function traerNotificaciones() {
 			$.ajax({

@@ -355,6 +355,10 @@ switch ($accion) {
       traerPrecioPorIdConcepto($serviciosReferencias);
    break;
 
+   case 'traerContactosPorCliente':
+      traerContactosPorCliente($serviciosReferencias);
+   break;
+
    /* carrito de items */
    case 'agregarItem':
       agregarItem($serviciosReferencias);
@@ -367,11 +371,200 @@ switch ($accion) {
    break;
    /* fin carrito */
 
+   case 'insertarCotizaciones':
+      insertarCotizaciones($serviciosReferencias);
+   break;
+   case 'modificarCotizaciones':
+      modificarCotizaciones($serviciosReferencias);
+   break;
+   case 'eliminarCotizaciones':
+      eliminarCotizaciones($serviciosReferencias);
+   break;
+   case 'traerCotizaciones':
+      traerCotizaciones($serviciosReferencias);
+   break;
+   case 'traerCotizacionesPorId':
+      traerCotizacionesPorId($serviciosReferencias);
+   break;
+   case 'insertarCotizacionmovimientos':
+      insertarCotizacionmovimientos($serviciosReferencias);
+   break;
+   case 'modificarCotizacionmovimientos':
+      modificarCotizacionmovimientos($serviciosReferencias);
+   break;
+   case 'eliminarCotizacionmovimientos':
+      eliminarCotizacionmovimientos($serviciosReferencias);
+   break;
+   case 'traerCotizacionmovimientos':
+      traerCotizacionmovimientos($serviciosReferencias);
+   break;
+   case 'traerCotizacionmovimientosPorId':
+      traerCotizacionmovimientosPorId($serviciosReferencias);
+   break;
+
 
 /* Fin */
 
 }
 /* Fin */
+
+function insertarCotizaciones($serviciosReferencias) {
+   $refclientes = $_POST['refclientes'];
+   $refestados = $_POST['refestados'];
+   $refcontactos = $_POST['refcontactos'];
+   $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
+   $reftipostrabajos = $_POST['reftipostrabajos'];
+   $refusuarios = $_POST['refusuarios'];
+   $observaciones = $_POST['observaciones'];
+   $fechacrea = $_POST['fechacrea'];
+   $fechamodi = $_POST['fechamodi'];
+   $usuariomodi = $_POST['usuariomodi'];
+   $refempresas = $_POST['refempresas'];
+   $reflistas = $_POST['reflistas'];
+
+   $res = $serviciosReferencias->insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas);
+
+   if ((integer)$res > 0) {
+      echo '';
+   } else {
+      echo 'Huvo un error al insertar datos';	 
+   }
+}
+
+function modificarCotizaciones($serviciosReferencias) {
+   $id = $_POST['id'];
+   $refclientes = $_POST['refclientes'];
+   $refestados = $_POST['refestados'];
+   $refcontactos = $_POST['refcontactos'];
+   $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
+   $reftipostrabajos = $_POST['reftipostrabajos'];
+   $refusuarios = $_POST['refusuarios'];
+   $observaciones = $_POST['observaciones'];
+   $fechacrea = $_POST['fechacrea'];
+   $fechamodi = $_POST['fechamodi'];
+   $usuariomodi = $_POST['usuariomodi'];
+   $refempresas = $_POST['refempresas'];
+
+   $reflistas = $_POST['reflistas'];
+
+   $res = $serviciosReferencias->modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
+}
+
+function eliminarCotizaciones($serviciosReferencias) {
+   $id = $_POST['id'];
+   $res = $serviciosReferencias->eliminarCotizaciones($id);
+   echo $res;
+}
+
+function traerCotizaciones($serviciosReferencias) {
+   $res = $serviciosReferencias->traerCotizaciones();
+   $ar = array();
+
+   while ($row = mysql_fetch_array($res) {
+      array_push($ar, $row);
+   }
+
+   $resV['datos'] = $ar;
+
+   header('Content-type: application/json');
+   echo json_encode($resV);
+}
+
+function insertarCotizacionmovimientos($serviciosReferencias) {
+   $refcotizaciondetalles = $_POST['refcotizaciondetalles'];
+   $refconceptos = $_POST['refconceptos'];
+   $cantidad = $_POST['cantidad'];
+   $preciounitario = $_POST['preciounitario'];
+   $porcentajebonificado = $_POST['porcentajebonificado'];
+   $reftipomonedas = $_POST['reftipomonedas'];
+   $rango = $_POST['rango'];
+
+   if (isset($_POST['aplicatotal'])) {
+      $aplicatotal	= 1;
+   } else {
+      $aplicatotal = 0;
+   }
+
+   $fechacrea = $_POST['fechacrea'];
+   $usuariocrea = $_POST['usuariocrea'];
+
+   $res = $serviciosReferencias->insertarCotizacionmovimientos($refcotizaciondetalles,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$fechacrea,$usuariocrea);
+
+   if ((integer)$res > 0) {
+      echo '';
+   } else {
+      echo 'Huvo un error al insertar datos';
+   }
+}
+
+function modificarCotizacionmovimientos($serviciosReferencias) {
+   $id = $_POST['id'];
+   $refcotizaciondetalles = $_POST['refcotizaciondetalles'];
+   $refconceptos = $_POST['refconceptos'];
+   $cantidad = $_POST['cantidad'];
+   $preciounitario = $_POST['preciounitario'];
+   $porcentajebonificado = $_POST['porcentajebonificado'];
+   $reftipomonedas = $_POST['reftipomonedas'];
+   $rango = $_POST['rango'];
+
+   if (isset($_POST['aplicatotal'])) {
+      $aplicatotal	= 1;
+   } else {
+      $aplicatotal = 0;
+   }
+
+   $fechacrea = $_POST['fechacrea'];
+   $usuariocrea = $_POST['usuariocrea'];
+
+   $res = $serviciosReferencias->modificarCotizacionmovimientos($id,$refcotizaciondetalles,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$fechacrea,$usuariocrea);
+
+   if ($res == true) {
+      echo '';
+   } else {
+      echo 'Huvo un error al modificar datos';
+   }
+}
+
+function eliminarCotizacionmovimientos($serviciosReferencias) {
+   $id = $_POST['id'];
+   $res = $serviciosReferencias->eliminarCotizacionmovimientos($id);
+   echo $res;
+}
+
+function traerCotizacionmovimientos($serviciosReferencias) {
+   $res = $serviciosReferencias->traerCotizacionmovimientos();
+   $ar = array();
+   while ($row = mysql_fetch_array($res)) {
+   array_push($ar, $row);
+   }
+   $resV['datos'] = $ar;
+   header('Content-type: application/json');
+   echo json_encode($resV);
+}
+
+   function traerContactosPorCliente($serviciosReferencias) {
+      $refclientes            = $_POST['refclientes'];
+
+      $res = $serviciosReferencias->traerContactosPorCliente($refclientes);
+
+      $ar = array();
+      if (mysql_num_rows($res)>0) {
+         while ($row = mysql_fetch_array($res)) {
+            array_push($ar, array('idcontacto' => $row['idcontacto'], 'apellido' => $row['apellido'], 'nombre' => $row['nombre'], 'sector' => $row['sector'], 'planta' => $row['planta']));
+         }
+      } else {
+         $ar = array();
+      }
+
+      header('Content-type: application/json');
+   	echo json_encode($ar);
+   }
 
 
    /* carrito de items */

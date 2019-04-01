@@ -393,58 +393,6 @@ return $res;
 
 	/* PARA Cotizaciones */
 
-	function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi) {
-		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi)
-		values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."')";
-
-		$res = $this->query($sql,1);
-		return $res;
-	}
-
-
-	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi) {
-		$sql = "update dbcotizaciones
-		set
-		refclientes = ".$refclientes.",refestados = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."'
-		where idcotizacion =".$id;
-
-		$res = $this->query($sql,0);
-		return $res;
-	}
-
-
-	function eliminarCotizaciones($id) {
-		$sql = "delete from dbcotizaciones where idcotizacion =".$id;
-		$res = $this->query($sql,0);
-		return $res;
-	}
-
-
-	function traerCotizaciones() {
-		$sql = "select
-		c.idcotizacion,
-		c.refclientes,
-		c.refestados,
-		c.refcontactos,
-		c.refmotivosoportunidades,
-		c.reftipostrabajos,
-		c.refusuarios,
-		c.observaciones,
-		c.fechacrea,
-		c.fechamodi,
-		c.usuariomodi
-		from dbcotizaciones c
-		order by 1";
-		$res = $this->query($sql,0);
-		return $res;
-	}
-
-
-	function traerCotizacionesPorId($id) {
-		$sql = "select idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi from dbcotizaciones where idcotizacion =".$id;
-		$res = $this->query($sql,0);
-		return $res;
-	}
 
 	function traerUltimos5ClientesCotizaciones() {
 		$sql = "select
@@ -464,6 +412,68 @@ return $res;
 		$res = $this->query($sql,0);
 		return $res;
 	}
+
+	/* PARA Cotizaciones */
+
+function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
+	$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas)
+	values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."',".$refempresas.",".$reflistas.")";
+
+	$res = $this->query($sql,1);
+	return $res;
+}
+
+
+function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
+	$sql = "update dbcotizaciones
+	set
+	refclientes = ".$refclientes.",refestados = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
+	where idcotizacion =".$id;
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function eliminarCotizaciones($id) {
+	$sql = "delete from dbcotizaciones where idcotizacion =".$id;
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerCotizaciones() {
+	$sql = "select
+	c.idcotizacion,
+	c.refclientes,
+	c.refestados,
+	c.refcontactos,
+	c.refmotivosoportunidades,
+	c.reftipostrabajos,
+	c.refusuarios,
+	c.observaciones,
+	c.fechacrea,
+	c.fechamodi,
+	c.usuariomodi,
+	c.refempresas,
+	c.reflistas
+	from dbcotizaciones c
+	order by 1";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerCotizacionesPorId($id) {
+	$sql = "select idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas from dbcotizaciones where idcotizacion =".$id;
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+/* Fin */
+/* /* Fin de la Tabla: dbcotizaciones*/
 
 
 	/* Fin */
@@ -1193,7 +1203,9 @@ c.apellido,
 c.nombre,
 c.nrodocumento,
 c.email,
-c.telefono
+c.telefono,
+sec.sector,
+pl.planta
 from dbcontactos c
 inner join dbsectores sec ON sec.idsector = c.refsectores
 inner join dbplantas pl ON pl.idplanta = sec.refplantas

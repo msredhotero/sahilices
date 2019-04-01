@@ -22,9 +22,14 @@ require('fpdf.php');
 ////***** Parametros ****////////////////////////////////
 $id		=	$_GET['id'];
 $idempresa = $_GET['idempresa'];
+$idcliente = $_GET['idcliente'];
 $idcontacto = $_GET['idcontacto'];
 $idtrabajo = $_GET['idtrabajo'];
 $idpago = $_GET['idpago'];
+
+$idplazoentrega = $_GET['idplazoentrega'];
+$idvalidez = $_GET['idvalidez'];
+
 
 session_start();
 
@@ -37,8 +42,8 @@ $convenio    = mysql_result($resLogos,0,'convenio');
 $direccion = mysql_result($resLogos,0,'direccion');
 $observaciones    = mysql_result($resLogos,0,'observaciones');
 
-$resEmpresa = $serviciosReferencias->traerClientesPorId(5);
-$empresa    = mysql_result($resEmpresa,0,'razonsocial');
+$resCliente = $serviciosReferencias->traerClientesPorId($idcliente);
+$empresa    = mysql_result($resCliente,0,'razonsocial');
 
 $resContacto = $serviciosReferencias->traerContactosPorId($idcontacto);
 $contacto    = mysql_result($resContacto,0,'apellido').' '.mysql_result($resContacto,0,'nombre');
@@ -51,6 +56,12 @@ $resItem  = $serviciosReferencias->traerCotizaciondetallesauxPorOportunidad($id)
 
 $resPago = $serviciosReferencias->traerConceptosPorId($idpago);
 $formadepago = mysql_result($resPago,0,'leyenda');
+
+$resPlazo = $serviciosReferencias->traerConceptosPorId($idplazoentrega);
+$plazoentrega = mysql_result($resPlazo,0,'leyenda');
+
+$resValidez = $serviciosReferencias->traerConceptosPorId($idvalidez);
+$validez = mysql_result($resValidez,0,'leyenda');
 
 
 $pdf = new FPDF();
@@ -203,6 +214,7 @@ while ($row = mysql_fetch_array($resItem)) {
    $pdf->Ln();
    $pdf->SetX(5);
    $pdf->Cell(200,5,'Se cotiza: '.$row['simbolo'].''.($row['preciounitario'] * $row['cantidad']).' + IVA',0,0,'L',false);
+   $pdf->Ln();
 }
 
 
@@ -239,7 +251,10 @@ $pdf->SetFont('Arial','U',12);
 $pdf->Ln();
 $pdf->SetX(5);
 $pdf->Cell(200,5,'Plazos de entrega:',0,0,'L',false);
-
+$pdf->SetFont('Arial','',12);
+$pdf->Ln();
+$pdf->SetX(5);
+$pdf->Cell(200,5,($plazoentrega),0,0,'L',false);
 
 $pdf->Ln();
 $pdf->Ln();
@@ -263,7 +278,10 @@ $pdf->SetFont('Arial','U',12);
 $pdf->Ln();
 $pdf->SetX(5);
 $pdf->Cell(200,5,'Validez de la oferta:',0,0,'L',false);
-
+$pdf->SetFont('Arial','',12);
+$pdf->Ln();
+$pdf->SetX(5);
+$pdf->Cell(200,5,($validez),0,0,'L',false);
 
 $pdf->Ln();
 $pdf->Ln();
