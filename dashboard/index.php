@@ -52,6 +52,15 @@ $insertar = "";
 
 ///////////////////////////              fin                   ////////////////////////
 
+//////////////////////////		Opciones estadisticas		///////////////////////////
+
+$cotizacionesUltimosClientes=$serviciosReferencias->traerUltimos5ClientesCotizaciones();
+$rows=mysql_num_rows($cotizacionesUltimosClientes);
+$cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
+
+
+///////////////////////////              fin                   ////////////////////////
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -148,7 +157,7 @@ $insertar = "";
 							  </div>
 							  <div class="content">
 									<div class="text">COTIZACIONES</div>
-									<div class="number count-to" data-from="0" data-to="0" data-speed="1000" data-fresh-interval="20"></div>
+									<div class="number count-to" data-from="0" data-to=<?php echo mysql_result($cotizaciones,0) ?> data-speed="1000" data-fresh-interval="20"></div>
 							  </div>
 						 </div>
 					</div>
@@ -197,27 +206,19 @@ $insertar = "";
 							  <div class="body bg-cyan">
 									<div class="m-b--35 font-bold">ULTIMOS CLIENTES</div>
 									<ul class="dashboard-stat-list">
-										 <li>
-											  #socialtrends
-											  <span class="pull-right">
-													<i class="material-icons">trending_up</i>
-											  </span>
-										 </li>
-										 <li>
-											  #materialdesign
-											  <span class="pull-right">
-													<i class="material-icons">trending_up</i>
-											  </span>
-										 </li>
-										 <li>#adminbsb</li>
-										 <li>#freeadmintemplate</li>
-										 <li>#bootstraptemplate</li>
-										 <li>
-											  #freehtmltemplate
-											  <span class="pull-right">
-													<i class="material-icons">trending_up</i>
-											  </span>
-										 </li>
+										<?php if($rows >0){
+												for($i = 0; $i <= ($rows-1); $i++){
+													?>
+													<li>
+														<?php  echo mysql_result($cotizacionesUltimosClientes,$i)
+														if($i ==6){
+															$i=$rows-1;
+														} ?>
+											 		</li>
+											 		<?php
+												}
+										}
+										 ?>
 									</ul>
 							  </div>
 						 </div>

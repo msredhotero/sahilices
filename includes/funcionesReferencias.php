@@ -445,6 +445,26 @@ return $res;
 		return $res;
 	}
 
+	function traerUltimos5ClientesCotizaciones() {
+		$sql = "select
+		DISTINCT (cl.razonsocial)
+		from dbcotizaciones c
+		inner join dbclientes cl ON c.refclientes = cl.idcliente
+		order by c.idcotizacion desc
+		";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function traerCotizacionesActivas() {
+		$sql = "select count(*)
+		from dbcotizaciones c
+		";
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
 	/* Fin */
 	/* /* Fin de la Tabla: dbcotizaciones*/
 
