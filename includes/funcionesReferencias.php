@@ -111,7 +111,8 @@ function traerCotizaciondetallesauxPorOportunidad($idoportunidad) {
 	c.aplicatotal,
 	c.cargavieja,
 	c.refoportunidad,
-	c.refconceptos
+	c.refconceptos,
+	tm.simbolo
 	from dbcotizaciondetallesaux c
 	inner join dbconceptos co on co.idconcepto = c.refconceptos
 	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
@@ -856,7 +857,7 @@ return $res;
 
 
 	function traerConfiguracionPorId($id) {
-	$sql = "select idconfiguracion,razonsocial,empresa,sistema,direccion,telefono,email from tbconfiguracion where idconfiguracion =".$id;
+	$sql = "select idconfiguracion,razonsocial,empresa,sistema,direccion,telefono,email,cuit,convenio,observaciones from tbconfiguracion where idconfiguracion =".$id;
 	$res = $this->query($sql,0);
 	return $res;
 	}

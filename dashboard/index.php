@@ -210,7 +210,8 @@ $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
 												for($i = 0; $i <= ($rows-1); $i++){
 													?>
 													<li>
-														<?php  echo mysql_result($cotizacionesUltimosClientes,$i)
+														<?php
+														echo mysql_result($cotizacionesUltimosClientes,$i);
 														if($i ==6){
 															$i=$rows-1;
 														} ?>
