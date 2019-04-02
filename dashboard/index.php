@@ -59,7 +59,6 @@ $insertar = "";
 $demoraOportunidades=$serviciosReferencias->traerDemoraOportunidades();
 $oportunidadesEstadistica=$serviciosReferencias->traerOportunidadesEstadistica();
 $rowsOportunidades = mysql_fetch_row($oportunidadesEstadistica);
-//var_dump($rowsOportunidades);die;
 
 $cotizacionesUltimosClientes=$serviciosReferencias->traerUltimos5ClientesCotizaciones();
 $rowsUltimosClientes=mysql_num_rows($cotizacionesUltimosClientes);

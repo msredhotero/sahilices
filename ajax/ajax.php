@@ -481,12 +481,8 @@ function traerCotizaciones($serviciosReferencias) {
 function traerEstadosCotizaciones($serviciosReferencias) {
    $res = $serviciosReferencias->traerEstadosCotizaciones();
    $ar = array();
-   if(mysql_fetch_array($res)){
-      while ($row = mysql_fetch_array($res)) {
-         array_push($ar, $row);
-      }
-   }
-
+   $row = mysql_fetch_row($res);
+   array_push($ar, $row); 
    $resV['datos'] = $ar;
 
    header('Content-type: application/json');

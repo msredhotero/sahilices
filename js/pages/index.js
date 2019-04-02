@@ -37,7 +37,7 @@ function initDonutChart() {
                 },
                 //una vez finalizado correctamente
                 success: function(data){
-                        console.log(data.datos);
+                    var result=data.datos[0];
                        if(data.datos.length ==0){
                            Morris.Donut({
                             element: 'donut_chart',
@@ -51,11 +51,11 @@ function initDonutChart() {
                             }
                         });     
                        }else{
-                          var facturado =data.datos[3];
-                          var adjudicado=data.datos[1];
-                          var noAdjudicado=data.datos[2];
-                          var anulado=data.datos[4];
-                          var otro=data.datos[0];  
+                          var facturado =result[3];
+                          var adjudicado=result[1];
+                          var noAdjudicado=result[2];
+                          var anulado=result[4];
+                          var otro=result[0];  
                        
                          Morris.Donut({
                             element: 'donut_chart',
