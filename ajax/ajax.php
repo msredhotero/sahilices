@@ -383,6 +383,9 @@ switch ($accion) {
    case 'traerCotizaciones':
       traerCotizaciones($serviciosReferencias);
    break;
+   case 'traerEstadosCotizaciones':
+      traerEstadosCotizaciones($serviciosReferencias);
+   break;
    case 'traerCotizacionesPorId':
       traerCotizacionesPorId($serviciosReferencias);
    break;
@@ -466,8 +469,22 @@ function traerCotizaciones($serviciosReferencias) {
    $res = $serviciosReferencias->traerCotizaciones();
    $ar = array();
 
-   while ($row = mysql_fetch_array($res) {
+   while ($row = mysql_fetch_array($res)) {
       array_push($ar, $row);
+   }
+
+   $resV['datos'] = $ar;
+
+   header('Content-type: application/json');
+   echo json_encode($resV);
+}
+function traerEstadosCotizaciones($serviciosReferencias) {
+   $res = $serviciosReferencias->traerEstadosCotizaciones();
+   $ar = array();
+   if(mysql_fetch_array($res)){
+      while ($row = mysql_fetch_array($res)) {
+         array_push($ar, $row);
+      }
    }
 
    $resV['datos'] = $ar;

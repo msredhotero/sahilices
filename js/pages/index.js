@@ -25,30 +25,78 @@ function initSparkline() {
 }
 
 function initDonutChart() {
-    Morris.Donut({
-        element: 'donut_chart',
-        data: [{
-            label: 'FACTURADO',
-            value: 37
-        }, {
-            label: 'ADJUDICADO',
-            value: 30
-        }, {
-            label: 'NO ADJUDICADO',
-            value: 18
-        }, {
-            label: 'ANULADO',
-            value: 12
-        },
-        {
-            label: 'OTRO',
-            value: 3
-        }],
-        colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
-        formatter: function (y) {
-            return y + '%'
-        }
-    });
+    $.ajax({
+                url: '../ajax/ajax.php',
+                type: 'POST',
+                // Form data
+                //datos del formulario
+                data: {accion: 'traerEstadosCotizaciones'},
+                //mientras enviamos el archivo
+                beforeSend: function(){
+
+                },
+                //una vez finalizado correctamente
+                success: function(data){
+                        console.log(data.datos);
+                       if(data.datos.length ==0){
+                           Morris.Donut({
+                            element: 'donut_chart',
+                            data: [{
+                                label: 'Sin Datos',
+                                value: 0
+                            }],
+                            colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
+                            formatter: function (y) {
+                                return y + '%'
+                            }
+                        });     
+                       }else{
+                          var facturado =data.datos[3];
+                          var adjudicado=data.datos[1];
+                          var noAdjudicado=data.datos[2];
+                          var anulado=data.datos[4];
+                          var otro=data.datos[0];  
+                       
+                         Morris.Donut({
+                            element: 'donut_chart',
+                            data: [{
+                                label: 'FACTURADO',
+                                value: facturado
+                            }, {
+                                label: 'ADJUDICADO',
+                                value: adjudicado
+                            }, {
+                                label: 'NO ADJUDICADO',
+                                value: noAdjudicado
+                            }, {
+                                label: 'ANULADO',
+                                value: anulado
+                            },
+                            {
+                                label: 'OTRO',
+                                value: otro
+                            }],
+                            colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
+                            formatter: function (y) {
+                                return y + '%'
+                            }
+                        });
+                   
+                    }
+                },
+                //si ha ocurrido un error
+                error: function(){
+                    swal({
+                            title: "Respuesta",
+                            text: 'Actualice la pagina',
+                            type: "error",
+                            timer: 2000,
+                            showConfirmButton: false
+                    });
+
+                }
+            });
+   
 }
 
 var data = [], totalPoints = 110;

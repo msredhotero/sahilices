@@ -391,8 +391,65 @@ return $res;
 	/* /* Fin de la Tabla: dbcotizaciondetalles*/
 
 
+
 	/* PARA Cotizaciones */
 
+	function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
+		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas)
+		values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."',".$refempresas.",".$reflistas.")";
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+
+	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
+		$sql = "update dbcotizaciones
+		set
+		refclientes = ".$refclientes.",refestados = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
+		where idcotizacion =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function eliminarCotizaciones($id) {
+		$sql = "delete from dbcotizaciones where idcotizacion =".$id;
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizaciones() {
+		$sql = "select
+		c.idcotizacion,
+		c.refclientes,
+		c.refestados,
+		c.refcontactos,
+		c.refmotivosoportunidades,
+		c.reftipostrabajos,
+		c.refusuarios,
+		c.observaciones,
+		c.fechacrea,
+		c.fechamodi,
+		c.usuariomodi,
+		c.refempresas,
+		c.reflistas
+		from dbcotizaciones c
+		order by 1";
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizacionesPorId($id) {
+		$sql = "select idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas from dbcotizaciones where idcotizacion =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
 
 	function traerUltimos5ClientesCotizaciones() {
 		$sql = "select
@@ -408,72 +465,37 @@ return $res;
 	function traerCotizacionesActivas() {
 		$sql = "select count(*)
 		from dbcotizaciones c
+		where refestadocotizacion in (1,2)
 		";
 		$res = $this->query($sql,0);
 		return $res;
 	}
 
-	/* PARA Cotizaciones */
+	function traerCotizacionesEstadistica() {
+        $sql = "select (select count(*) FROM dbcotizaciones where DAY(fechacrea) = DAY(NOW())) as Hoy,
+        (select count(*) FROM dbcotizaciones where DAY(fechacrea) = DAY(NOW())-1) as Ayer,
+        (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW()) AND WEEKOFYEAR(fechacrea) = (WEEKOFYEAR(NOW())-1)) as SemanaPasada,
+        (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW()) AND MONTH(fechacrea) = (MONTH(NOW())-1)) as MesPasado,
+        (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW())-1) as AnioPasado, 
+        (select count(*) FROM dbcotizaciones) as Todo from dbcotizaciones
+        ";
+        $res = $this->query($sql,0);
+        return $res;
+    }
 
-function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
-	$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas)
-	values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."',".$refempresas.",".$reflistas.")";
-
-	$res = $this->query($sql,1);
-	return $res;
-}
-
-
-function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
-	$sql = "update dbcotizaciones
-	set
-	refclientes = ".$refclientes.",refestados = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
-	where idcotizacion =".$id;
-
-	$res = $this->query($sql,0);
-	return $res;
-}
-
-
-function eliminarCotizaciones($id) {
-	$sql = "delete from dbcotizaciones where idcotizacion =".$id;
-	$res = $this->query($sql,0);
-	return $res;
-}
+    function traerEstadosCotizaciones() {
+        $sql = "select  (select count(*) FROM dbcotizaciones where refestadocotizacion = 1) as Otros,
+		(select count(*) FROM dbcotizaciones where refestadocotizacion=2 ) as Adjudicada,
+        (select count(*) FROM dbcotizaciones where refestadocotizacion=3) as NoAdjudicada,
+        (select count(*) FROM dbcotizaciones where refestadocotizacion=4) as Facturada,
+        (select count(*) FROM dbcotizaciones where refestadocotizacion=5) as Rechazada
+        from dbcotizaciones
+        ";
+        $res = $this->query($sql,0);
+        return $res;
+    }
 
 
-function traerCotizaciones() {
-	$sql = "select
-	c.idcotizacion,
-	c.refclientes,
-	c.refestados,
-	c.refcontactos,
-	c.refmotivosoportunidades,
-	c.reftipostrabajos,
-	c.refusuarios,
-	c.observaciones,
-	c.fechacrea,
-	c.fechamodi,
-	c.usuariomodi,
-	c.refempresas,
-	c.reflistas
-	from dbcotizaciones c
-	order by 1";
-
-	$res = $this->query($sql,0);
-	return $res;
-}
-
-
-function traerCotizacionesPorId($id) {
-	$sql = "select idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas from dbcotizaciones where idcotizacion =".$id;
-
-	$res = $this->query($sql,0);
-	return $res;
-}
-
-/* Fin */
-/* /* Fin de la Tabla: dbcotizaciones*/
 
 
 	/* Fin */
@@ -717,6 +739,33 @@ function traerCotizacionesPorId($id) {
 		$res = $this->query($sql,0);
 		return $res;
 	}
+
+    function traerDemoraOportunidades() {
+        $sql = "select count(*)
+        from dboportunidades
+        where refsemaforos = 2";
+        $res = $this->query($sql,0);
+        return $res;
+    }
+
+    function traerOportunidadesSinAtender() {
+        $sql = "select count(*)
+        from dboportunidades
+        where refsemaforos = 3";
+        $res = $this->query($sql,0);
+        return $res;
+    }
+
+     function traerOportunidadesEstadistica() {
+        $sql = "select  (select count(*) FROM dboportunidades where DAY(fechacreacion) = DAY(NOW())) as Hoy,
+		(select count(*) FROM dboportunidades where DAY(fechacreacion) = DAY(NOW())-1) as Ayer,
+        (select count(*) FROM dboportunidades where YEAR(fechacreacion) = YEAR(NOW()) AND WEEKOFYEAR(fechacreacion) = (WEEKOFYEAR(NOW())-1))
+        as SemanaPasada
+        from dboportunidades
+        ";
+        $res = $this->query($sql,0);
+        return $res;
+    }
 
 /* Fin */
 /* Fin de la Tabla: dboportunidades*/

@@ -42,6 +42,8 @@ $eliminar = "";
 
 $insertar = "";
 
+
+
 //$tituloWeb = "Gestión: Talleres";
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
@@ -54,9 +56,21 @@ $insertar = "";
 
 //////////////////////////		Opciones estadisticas		///////////////////////////
 
+$demoraOportunidades=$serviciosReferencias->traerDemoraOportunidades();
+$oportunidadesEstadistica=$serviciosReferencias->traerOportunidadesEstadistica();
+$rowsOportunidades = mysql_fetch_row($oportunidadesEstadistica);
+//var_dump($rowsOportunidades);die;
+
 $cotizacionesUltimosClientes=$serviciosReferencias->traerUltimos5ClientesCotizaciones();
-$rows=mysql_num_rows($cotizacionesUltimosClientes);
+$rowsUltimosClientes=mysql_num_rows($cotizacionesUltimosClientes);
 $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
+$cotizacionesEstadistica=$serviciosReferencias->traerCotizacionesEstadistica();
+$rowsCotizacionesEstadistica=mysql_fetch_row($cotizacionesEstadistica);
+
+$oportunidadesSinAtender=$serviciosReferencias->traerOportunidadesSinAtender();
+
+
+
 
 
 ///////////////////////////              fin                   ////////////////////////
@@ -146,7 +160,7 @@ $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
 							  </div>
 							  <div class="content">
 									<div class="text">DEMORA OPORTUNIDADES</div>
-									<div class="number count-to" data-from="0" data-to="150" data-speed="15" data-fresh-interval="20"></div>
+									<div class="number count-to" data-from="0" data-to=<?php echo mysql_result($demoraOportunidades,0) ?> data-speed="15" data-fresh-interval="20"></div>
 							  </div>
 						 </div>
 					</div>
@@ -168,7 +182,7 @@ $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
 							  </div>
 							  <div class="content">
 									<div class="text">SIN ATENDER OPORTUNIDADES</div>
-									<div class="number count-to" data-from="0" data-to="3" data-speed="1000" data-fresh-interval="20"></div>
+									<div class="number count-to" data-from="0" data-to=<?php echo mysql_result($oportunidadesSinAtender,0) ?> data-speed="1000" data-fresh-interval="20"></div>
 							  </div>
 						 </div>
 					</div>
@@ -185,15 +199,15 @@ $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
 									<ul class="dashboard-stat-list">
 										 <li>
 											  HOY
-											  <span class="pull-right"><b>1 200</b> <small>CARGADAS</small></span>
+											  <span class="pull-right"><b><?php echo $rowsOportunidades[0] ?></b> <small>CARGADAS</small></span>
 										 </li>
 										 <li>
 											  AYER
-											  <span class="pull-right"><b>3 872</b> <small>CARGADAS</small></span>
+											  <span class="pull-right"><b><?php echo $rowsOportunidades[1] ?></b> <small>CARGADAS</small></span>
 										 </li>
 										 <li>
 											  LA SEMANA PASADA
-											  <span class="pull-right"><b>26 582</b> <small>CARGADAS</small></span>
+											  <span class="pull-right"><b><?php echo $rowsOportunidades[2] ?></b> <small>CARGADAS</small></span>
 										 </li>
 									</ul>
 							  </div>
@@ -206,14 +220,14 @@ $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
 							  <div class="body bg-cyan">
 									<div class="m-b--35 font-bold">ULTIMOS CLIENTES</div>
 									<ul class="dashboard-stat-list">
-										<?php if($rows >0){
-												for($i = 0; $i <= ($rows-1); $i++){
+										<?php if($rowsUltimosClientes >0){
+												for($i = 0; $i <= ($rowsUltimosClientes-1); $i++){
 													?>
 													<li>
 														<?php
 														echo mysql_result($cotizacionesUltimosClientes,$i);
 														if($i ==6){
-															$i=$rows-1;
+															$i=$rowsUltimosClientes-1;
 														} ?>
 											 		</li>
 											 		<?php
@@ -233,27 +247,27 @@ $cotizaciones=$serviciosReferencias->traerCotizacionesActivas();
 									<ul class="dashboard-stat-list">
 										 <li>
 											  HOY
-											  <span class="pull-right"><b>12</b> <small>FACTURADO</small></span>
+											  <span class="pull-right"><b><?php echo $rowsCotizacionesEstadistica[0] ?></b> <small>FACTURADO</small></span>
 										 </li>
 										 <li>
 											  AYER
-											  <span class="pull-right"><b>15</b> <small>FACTURADO</small></span>
+											  <span class="pull-right"><b><?php echo $rowsCotizacionesEstadistica[1] ?></b> <small>FACTURADO</small></span>
 										 </li>
 										 <li>
 											  LA SEMANA PASADA
-											  <span class="pull-right"><b>90</b> <small>FACTURADO</small></span>
+											  <span class="pull-right"><b><?php echo $rowsCotizacionesEstadistica[2] ?></b> <small>FACTURADO</small></span>
 										 </li>
 										 <li>
 											  EL MES PASADO
-											  <span class="pull-right"><b>342</b> <small>FACTURADO</small></span>
+											  <span class="pull-right"><b><?php echo $rowsCotizacionesEstadistica[3] ?></b> <small>FACTURADO</small></span>
 										 </li>
 										 <li>
 											  ULTIMO AÑO
-											  <span class="pull-right"><b>4 225</b> <small>FACTURADO</small></span>
+											  <span class="pull-right"><b><?php echo $rowsCotizacionesEstadistica[4] ?></b> <small>FACTURADO</small></span>
 										 </li>
 										 <li>
 											  TODO
-											  <span class="pull-right"><b>8 752</b> <small>FACTURADO</small></span>
+											  <span class="pull-right"><b><?php echo $rowsCotizacionesEstadistica[5] ?></b> <small>FACTURADO</small></span>
 										 </li>
 									</ul>
 							  </div>
