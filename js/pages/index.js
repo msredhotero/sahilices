@@ -37,8 +37,12 @@ function initDonutChart() {
                 },
                 //una vez finalizado correctamente
                 success: function(data){
+               
+                  if (data.dato) {
+                     console.log('asdasdasd');
                     var result=data.datos[0];
-                       if(data.datos.length ==0){
+
+                       if(data.datos.length == 0){
                            Morris.Donut({
                             element: 'donut_chart',
                             data: [{
@@ -49,14 +53,15 @@ function initDonutChart() {
                             formatter: function (y) {
                                 return y + '%'
                             }
-                        });     
+                        });
                        }else{
+                          //console.log(result);
                           var facturado =result[3];
                           var adjudicado=result[1];
                           var noAdjudicado=result[2];
                           var anulado=result[4];
-                          var otro=result[0];  
-                       
+                          var otro=result[0];
+
                          Morris.Donut({
                             element: 'donut_chart',
                             data: [{
@@ -81,8 +86,22 @@ function initDonutChart() {
                                 return y + '%'
                             }
                         });
-                   
-                    }
+
+
+                     }
+                  } else {
+                     Morris.Donut({
+                      element: 'donut_chart',
+                      data: [{
+                          label: 'Sin Datos',
+                          value: 0
+                      }],
+                      colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
+                      formatter: function (y) {
+                          return y + '%'
+                      }
+                   });
+                  }
                 },
                 //si ha ocurrido un error
                 error: function(){
@@ -96,7 +115,7 @@ function initDonutChart() {
 
                 }
             });
-   
+
 }
 
 var data = [], totalPoints = 110;

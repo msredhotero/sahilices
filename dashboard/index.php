@@ -225,9 +225,10 @@ $oportunidadesSinAtender=$serviciosReferencias->traerOportunidadesSinAtender();
 													<li>
 														<?php
 														echo mysql_result($cotizacionesUltimosClientes,$i);
-														if($i ==6){
-															$i=$rowsUltimosClientes-1;
-														} ?>
+														//if($i ==6){
+															//$i=$rowsUltimosClientes-1;
+														//}
+														?>
 											 		</li>
 											 		<?php
 												}

@@ -457,6 +457,7 @@ return $res;
 		from dbcotizaciones c
 		inner join dbclientes cl ON c.refclientes = cl.idcliente
 		order by c.idcotizacion desc
+		limit 6
 		";
 		$res = $this->query($sql,0);
 		return $res;
@@ -476,7 +477,7 @@ return $res;
         (select count(*) FROM dbcotizaciones where DAY(fechacrea) = DAY(NOW())-1) as Ayer,
         (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW()) AND WEEKOFYEAR(fechacrea) = (WEEKOFYEAR(NOW())-1)) as SemanaPasada,
         (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW()) AND MONTH(fechacrea) = (MONTH(NOW())-1)) as MesPasado,
-        (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW())-1) as AnioPasado, 
+        (select count(*) FROM dbcotizaciones where YEAR(fechacrea) = YEAR(NOW())-1) as AnioPasado,
         (select count(*) FROM dbcotizaciones) as Todo from dbcotizaciones
         ";
         $res = $this->query($sql,0);
