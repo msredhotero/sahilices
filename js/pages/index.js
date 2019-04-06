@@ -37,7 +37,7 @@ function initDonutChart() {
                 },
                 //una vez finalizado correctamente
                 success: function(data){
-
+                    
                        if(data.datos.length == 0){
                            Morris.Donut({
                             element: 'donut_chart',
@@ -61,7 +61,6 @@ function initDonutChart() {
                         for (var i = 0; i < data.datos.length; i++) {
                             miArray.push({'label':data.datos[i][0] ,'value':((parseInt(data.datos[i][1]))*100/total)});
                         }
-                        console.log(miArray);
                         Morris.Donut({
                             element: 'donut_chart',
                             data: miArray
