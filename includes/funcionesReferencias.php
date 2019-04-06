@@ -485,12 +485,10 @@ return $res;
     }
 
     function traerEstadosCotizaciones() {
-        $sql = "select  (select count(*) FROM dbcotizaciones where refestadocotizacion = 1) as Otros,
-		(select count(*) FROM dbcotizaciones where refestadocotizacion=2 ) as Adjudicada,
-        (select count(*) FROM dbcotizaciones where refestadocotizacion=3) as NoAdjudicada,
-        (select count(*) FROM dbcotizaciones where refestadocotizacion=4) as Facturada,
-        (select count(*) FROM dbcotizaciones where refestadocotizacion=5) as Rechazada
-        from dbcotizaciones
+        $sql = "select ec.estadocotizacion, count(*) 
+        from dbcotizaciones d 
+        inner join tbestadocotizacion ec on d.refestadocotizacion=ec.idestadocotizacion 
+        group by ec.estadocotizacion
         ";
         $res = $this->query($sql,0);
         return $res;
