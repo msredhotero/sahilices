@@ -423,14 +423,72 @@ function insertarCotizaciones($serviciosReferencias) {
    $fechamodi = $_POST['fechamodi'];
    $usuariomodi = $_POST['usuariomodi'];
    $refempresas = $_POST['refempresas'];
-   $reflistas = $_POST['reflistas'];
+   $reflistas = $_POST['reflistasaux'];
+
+   // depende de donde venga, si es de una oportunidad el id oportunidad sino el id cotizacion
+   $tiporeferencia = $_POST['tiporeferencia']; // 0 => de una oportunidad, 1 => cotizacion de cero
+   $referencia1 = $_POST['referencia1'];
+
+   /* detalle de la cotizacion */
+   $formadepago = $_POST['refformapago'];
+   $validez = $_POST['refvalidez'];
+   $plazosentrega = $_POST['refplazos'];
+
+   $resNotas = $serviciosReferencias->traerTipotrabajoconceptosPorTipoTrabajo($reftipostrabajos);
+   // item
+   $resItem = $serviciosReferencias->traerCotizaciondetallesauxPorOportunidad($referencia1);
+   /* fin detalle */
 
    $res = $serviciosReferencias->insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas);
 
    if ((integer)$res > 0) {
+      while ($rowItem = mysql_fetch_array($resItem)) {
+         $refcotizaciones = $res;
+         $refconceptos = $rowItem['refconceptos'];
+         $cantidad = $rowItem['cantidad'];
+         $preciounitario = $rowItem['preciounitario'];
+         $porcentajebonificado = $rowItem['porcentajebonificado'];
+         $reftipomonedas = $rowItem['reftipomonedas'];
+         $rango = 0;
+         $aplicatotal = 1;
+         $cargavieja = $rowItem['cargavieja'];
+         $concepto = '';
+         $leyenda = '';
+
+         $resInsertItem = $serviciosReferencias->insertarCotizaciondetalles($refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja, $concepto, $leyenda);
+      }
+
+      while ($rowNotas = mysql_fetch_array($resNotas)) {
+         $refcotizaciones = $res;
+         $refconceptos = $rowNotas['refconceptos'];
+         $cantidad = 1;
+         $preciounitario = 0;
+         $porcentajebonificado = 0;
+         $reftipomonedas = 1;
+         $rango = 0;
+         $aplicatotal = 1;
+         $cargavieja = 0;
+         $concepto = $serviciosReferencias->devolverConcepto($rowNotas['refconceptos'],2);
+         $leyenda = $serviciosReferencias->devolverConcepto($rowNotas['refconceptos'],4);
+
+         $resInsertNotas = $serviciosReferencias->insertarCotizaciondetalles($refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja, $concepto, $leyenda);
+      }
+
+      // forma de pago
+      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$formadepago,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($formadepago, $serviciosReferencias->devolverConcepto($formadepago,4));
+
+      // validez
+      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$validez,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($validez, $serviciosReferencias->devolverConcepto($validez,4));
+
+      // plazos de entrega
+      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$plazosentrega,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($plazosentrega, $serviciosReferencias->devolverConcepto($plazosentrega,4));
+
+      //actualizo la oportunidad en caso de que venga de una oportunidades
+      
+
       echo '';
    } else {
-      echo 'Huvo un error al insertar datos';	 
+      echo 'Huvo un error al insertar datos';
    }
 }
 

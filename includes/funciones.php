@@ -381,7 +381,7 @@ class Servicios {
 				$ocultar = array("refcotizaciones","fechacreacion","refsemaforos","refusuarios","refestadocotizacion");
 				break;
 			case 'dbcotizaciones':
-				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios",'refempresas');
+				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios",'refempresas','reflistas');
 				break;
 
 

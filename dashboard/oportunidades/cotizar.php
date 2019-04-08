@@ -60,8 +60,8 @@ $resultado = $serviciosReferencias->traerOportunidadesPorId($id);
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcotizaciones";
 
-$lblCambio	 	= array('refclientes','refmotivosoportunidades','refcontactos','refestados','reftipostrabajos','refusuarios');
-$lblreemplazo	= array('Cliente','Motivo de Oportunidad','Contacto','Estado','Tipo de Trabajo','Usuario');
+$lblCambio	 	= array('refclientes','refmotivosoportunidades','refcontactos','refestadocotizacion','reftipostrabajos','refusuarios','reflistas');
+$lblreemplazo	= array('Cliente','Motivo de Oportunidad','Contacto','Estado','Tipo de Trabajo','Usuario','Lista de Precio');
 
 
 $resVar1 = $serviciosReferencias->traerTipostrabajos();
@@ -88,7 +88,7 @@ $refdescripcion = array(0=>$cadRef5,
 								3=>$cadRef4,
 								4=>$cadRef1,
 								5=>$cadRef3);
-$refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refestados','reftipostrabajos','refusuarios');
+$refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refestadocotizacion','reftipostrabajos','refusuarios');
 
 $frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -367,7 +367,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 											<label>Lista de Precio</label>
 											<div class="input-group">
 												<div class="form-line">
-													<input type="number" class="form-control reflistas" id="reflistas" name="reflistas" readonly>
+													<input type="number" class="reflistasaux form-control" id="reflistasaux" name="reflistasaux" readonly/>
 												</div>
 											</div>
 										</div>
@@ -730,13 +730,13 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 					switch (data.Estado) {
 						case 'Bueno':
-							$('.reflistas').val(1);
+							$('.reflistasaux').val(1);
 							break;
 						case 'Regular':
-							$('.reflistas').val(2);
+							$('.reflistasaux').val(2);
 							break;
 						case 'Malo':
-							$('.reflistas').val(3);
+							$('.reflistasaux').val(3);
 							break;
 					}
 

@@ -334,9 +334,9 @@ return $res;
 
 	/* PARA Cotizaciondetalles */
 
-	function insertarCotizaciondetalles($refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja) {
-		$sql = "insert into dbcotizaciondetalles(idcotizaciondetalle,refcotizaciones,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja)
-		values ('',".$refcotizaciones.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$cargavieja.")";
+	function insertarCotizaciondetalles($refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja, $concepto, $leyenda) {
+		$sql = "insert into dbcotizaciondetalles(idcotizaciondetalle,refcotizaciones,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja, concepto, leyenda)
+		values ('',".$refcotizaciones.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$cargavieja.",'".$concepto."','".$leyenda."')";
 
 		$res = $this->query($sql,1);
 		return $res;
@@ -485,9 +485,9 @@ return $res;
     }
 
     function traerEstadosCotizaciones() {
-        $sql = "select ec.estadocotizacion, count(*) 
-        from dbcotizaciones d 
-        inner join tbestadocotizacion ec on d.refestadocotizacion=ec.idestadocotizacion 
+        $sql = "select ec.estadocotizacion, count(*)
+        from dbcotizaciones d
+        inner join tbestadocotizacion ec on d.refestadocotizacion=ec.idestadocotizacion
         group by ec.estadocotizacion
         ";
         $res = $this->query($sql,0);
@@ -1113,6 +1113,16 @@ function traerConceptosPorId($id) {
 $sql = "select idconcepto,reftipoconceptos,concepto,abreviatura,leyenda,activo from dbconceptos where idconcepto =".$id;
 $res = $this->query($sql,0);
 return $res;
+}
+
+function devolverConcepto($id,$valor) {
+	$sql = "select idconcepto,reftipoconceptos,concepto,abreviatura,leyenda,activo from dbconceptos where idconcepto =".$id;
+
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res)>0) {
+		return mysql_result($res,0,$valor);
+	}
+	return '';
 }
 
 /* Fin */
