@@ -47,11 +47,11 @@ $singular = "Oportunidad";
 
 $plural = "Oportunidades - Cotizar";
 
-$eliminar = "eliminarOportunidades";
+$eliminar = "eliminarCotizaciones";
 
-$insertar = "insertarOportunidades";
+$insertar = "insertarCotizaciones";
 
-$modificar = "modificarOportunidades";
+$modificar = "modificarCotizaciones";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
@@ -278,7 +278,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 										<div class="form-group">
 											<label>Empresa:</label>
 											<div class="form-line">
-												<select class="form-control show-tick" name="refempresas" id="refempresas">
+												<select class="form-control show-tick" name="refempresasaux" id="refempresasaux">
 													<?php echo $cadEmpresas; ?>
 												</select>
 											</div>
@@ -459,11 +459,10 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 								<div class="row">
 									<div class="col-lg-12 col-md-12">
 										<div class="button-demo">
-											<button type="button" class="btn bg-blue waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
+											<button type="button" class="btn bg-blue waves-effect btnNuevo">
 												<i class="material-icons">save</i>
 												<span>GUARDAR</span>
 											</button>
-
 											<button type="button" class="btn bg-brown waves-effect btnPreview">
 												<i class="material-icons">print</i>
 												<span>PREVISUALIZAR</span>
@@ -473,6 +472,8 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 									</div>
 								</div>
 								<!-- fin carro de compra -->
+								<input type="hidden" name="tiporeferencia" id="tiporeferencia" value="0">
+								<input type="hidden" name="referencia1" id="referencia1" value="<?php echo $id; ?>">
 							</form>
 							</div>
 						</div>
@@ -996,10 +997,10 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 			$('#lgmModificar').modal();
 		});//fin del boton modificar
 
-		$('.agregarItem').click(function(){
+		$('.btnNuevo').click(function(){
 
 			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
+			var formData = new FormData($(".form")[0]);
 			var message = "";
 			//hacemos la petición ajax
 			$.ajax({
@@ -1027,10 +1028,10 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 								timer: 1500,
 								showConfirmButton: false
 						});
-
-						$('#lgmNuevo').modal('hide');
-						$('#unidadnegocio').val('');
-						table.ajax.reload();
+						
+						//$('#lgmNuevo').modal('hide');
+						//$('#unidadnegocio').val('');
+						//table.ajax.reload();
 					} else {
 						swal({
 								title: "Respuesta",
@@ -1084,8 +1085,8 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 								showConfirmButton: false
 						});
 
-						$('#lgmModificar').modal('hide');
-						table.ajax.reload();
+						//$('#lgmModificar').modal('hide');
+						//table.ajax.reload();
 					} else {
 						swal({
 								title: "Respuesta",

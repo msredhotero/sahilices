@@ -395,7 +395,7 @@ return $res;
 	/* PARA Cotizaciones */
 
 	function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
-		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas)
+		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestadocotizacion,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas)
 		values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."',".$refempresas.",".$reflistas.")";
 
 		$res = $this->query($sql,1);
@@ -406,7 +406,7 @@ return $res;
 	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
 		$sql = "update dbcotizaciones
 		set
-		refclientes = ".$refclientes.",refestados = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
+		refclientes = ".$refclientes.",refestadocotizacion = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
 		where idcotizacion =".$id;
 
 		$res = $this->query($sql,0);
@@ -425,7 +425,7 @@ return $res;
 		$sql = "select
 		c.idcotizacion,
 		c.refclientes,
-		c.refestados,
+		c.refestadocotizacion,
 		c.refcontactos,
 		c.refmotivosoportunidades,
 		c.reftipostrabajos,
@@ -445,7 +445,7 @@ return $res;
 
 
 	function traerCotizacionesPorId($id) {
-		$sql = "select idcotizacion,refclientes,refestados,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas from dbcotizaciones where idcotizacion =".$id;
+		$sql = "select idcotizacion,refclientes,refestadocotizacion,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas from dbcotizaciones where idcotizacion =".$id;
 
 		$res = $this->query($sql,0);
 		return $res;
@@ -601,6 +601,15 @@ return $res;
 	function modificarSemaforoOportunidad($idoportunidad, $idsemaforo) {
 		$sql = "update dboportunidades
 					set refsemaforos = ".$idsemaforo."
+					where idoportunidad = ".$idoportunidad;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+	function modificarEstadoCotizacionOportunidad($idoportunidad, $idcotizacion) {
+		$sql = "update dboportunidades
+					set refcotizaciones = ".$idcotizacion."
 					where idoportunidad = ".$idoportunidad;
 
 		$res = $this->query($sql,0);

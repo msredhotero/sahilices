@@ -413,7 +413,7 @@ switch ($accion) {
 
 function insertarCotizaciones($serviciosReferencias) {
    $refclientes = $_POST['refclientes'];
-   $refestados = $_POST['refestados'];
+   $refestados = $_POST['refestadocotizacion'];
    $refcontactos = $_POST['refcontactos'];
    $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
    $reftipostrabajos = $_POST['reftipostrabajos'];
@@ -422,7 +422,7 @@ function insertarCotizaciones($serviciosReferencias) {
    $fechacrea = $_POST['fechacrea'];
    $fechamodi = $_POST['fechamodi'];
    $usuariomodi = $_POST['usuariomodi'];
-   $refempresas = $_POST['refempresas'];
+   $refempresas = $_POST['refempresasaux'];
    $reflistas = $_POST['reflistasaux'];
 
    // depende de donde venga, si es de una oportunidad el id oportunidad sino el id cotizacion
@@ -440,6 +440,7 @@ function insertarCotizaciones($serviciosReferencias) {
    /* fin detalle */
 
    $res = $serviciosReferencias->insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas);
+
 
    if ((integer)$res > 0) {
       while ($rowItem = mysql_fetch_array($resItem)) {
@@ -475,21 +476,24 @@ function insertarCotizaciones($serviciosReferencias) {
       }
 
       // forma de pago
-      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$formadepago,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($formadepago, $serviciosReferencias->devolverConcepto($formadepago,4));
+      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$formadepago,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($formadepago,2) , $serviciosReferencias->devolverConcepto($formadepago,4) );
 
       // validez
-      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$validez,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($validez, $serviciosReferencias->devolverConcepto($validez,4));
+      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$validez,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($validez,2) , $serviciosReferencias->devolverConcepto($validez,4));
 
       // plazos de entrega
-      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$plazosentrega,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($plazosentrega, $serviciosReferencias->devolverConcepto($plazosentrega,4));
+      $resInsertFormaPago = $serviciosReferencias->insertarCotizaciondetalles($res,$plazosentrega,1,0,0,1,0,1,0, $serviciosReferencias->devolverConcepto($plazosentrega,2) , $serviciosReferencias->devolverConcepto($plazosentrega,4));
 
       //actualizo la oportunidad en caso de que venga de una oportunidades
-      
+      $resCambioEstado = $serviciosReferencias->modificarEstadoCotizacionOportunidad($referencia1, $res);
+
 
       echo '';
    } else {
-      echo 'Huvo un error al insertar datos';
+      echo 'Hubo un error al insertar datos';
    }
+
+   //echo $res;
 }
 
 function modificarCotizaciones($serviciosReferencias) {
@@ -513,7 +517,7 @@ function modificarCotizaciones($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
@@ -571,7 +575,7 @@ function insertarCotizacionmovimientos($serviciosReferencias) {
    if ((integer)$res > 0) {
       echo '';
    } else {
-      echo 'Huvo un error al insertar datos';
+      echo 'Hubo un error al insertar datos';
    }
 }
 
@@ -599,7 +603,7 @@ function modificarCotizacionmovimientos($serviciosReferencias) {
    if ($res == true) {
       echo '';
    } else {
-      echo 'Huvo un error al modificar datos';
+      echo 'Hubo un error al modificar datos';
    }
 }
 
