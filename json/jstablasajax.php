@@ -34,6 +34,28 @@ function armarAcciones($id,$label='',$class,$icon) {
 }
 
 switch ($tabla) {
+	case 'cotizador':
+		$resAjax = $serviciosReferencias->traerCotizacionesajax($length, $start, $busqueda);
+		$res = $serviciosReferencias->traerCotizaciones();
+		$label = array('btnModificar','btnEliminar','btnVer');
+		$class = array('bg-amber','bg-red','bg-blue');
+		$icon = array('create','delete','layers');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 6;
+
+	break;
+	case 'cotizadorauxusuario':
+		$resAjax = $serviciosReferencias->traerCotizaciondetallesauxPorUsuarioajax($referencia1,$length, $start, $busqueda);
+		$res = $serviciosReferencias->traerCotizaciondetallesauxPorUsuario($referencia1);
+		$label = array('btnEliminar');
+		$class = array('bg-red');
+		$icon = array('delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 8;
+
+	break;
 	case 'cotizadoraux':
 		$resAjax = $serviciosReferencias->traerCotizaciondetallesauxPorOportunidadajax($referencia1,$length, $start, $busqueda);
 		$res = $serviciosReferencias->traerCotizaciondetallesauxPorOportunidad($referencia1);

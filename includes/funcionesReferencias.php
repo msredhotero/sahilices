@@ -43,9 +43,9 @@ function traerPrecioPorIdConcepto($idconcepto, $idcliente) {
 
 /* PARA Cotizaciondetallesaux TABLA AUXILIAR PARA GUARDAR LOS ITEMS */
 
-function insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda) {
-$sql = "insert into dbcotizaciondetallesaux(idcotizaciondetalleaux,refoportunidad,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja,concepto,leyenda)
-values ('',".$refoportunidad.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$cargavieja.",'".($concepto)."','".($leyenda)."')";
+function insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda,$refcotizaciones) {
+$sql = "insert into dbcotizaciondetallesaux(idcotizaciondetalleaux,refoportunidad,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja,concepto,leyenda,refcotizaciones)
+values ('',".$refoportunidad.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$cargavieja.",'".($concepto)."','".($leyenda)."',".$refcotizaciones.")";
 $res = $this->query($sql,1);
 return $res;
 }
@@ -135,7 +135,7 @@ function traerCotizaciondetallesauxPorOportunidadajax($idoportunidad, $length, $
 
 
 	$sql = "select
-			@rownum:=@rownum+1 as 'item', t.*
+			t.idcotizaciondetalleaux, @rownum:=@rownum+1 as 'item', t.*
 			from (select
 	c.idcotizaciondetalleaux,
 	co.concepto,
@@ -155,6 +155,75 @@ function traerCotizaciondetallesauxPorOportunidadajax($idoportunidad, $length, $
 	inner join dbconceptos co on co.idconcepto = c.refconceptos
 	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
 	where c.refoportunidad = ".$idoportunidad.$where."
+	) t,(SELECT @rownum:=0) r
+	limit ".$start.",".$length;
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerCotizaciondetallesauxPorUsuario($idoportunidad) {
+	$sql = "select
+			@rownum:=@rownum+1 as 'item', t.*
+			from (select
+	c.idcotizaciondetalleaux,
+	co.concepto,
+	co.leyenda,
+	c.cantidad,
+	c.preciounitario,
+	tm.tipomoneda,
+	c.porcentajebonificado,
+	c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100) as subtotal,
+	c.reftipomonedas,
+	c.rango,
+	c.aplicatotal,
+	c.cargavieja,
+	c.refoportunidad,
+	c.refconceptos,
+	tm.simbolo
+	from dbcotizaciondetallesaux c
+	inner join dbconceptos co on co.idconcepto = c.refconceptos
+	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
+	where c.refcotizaciones = ".$idoportunidad."
+	) t,(SELECT @rownum:=0) r";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
+function traerCotizaciondetallesauxPorUsuarioajax($idoportunidad, $length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = " and co.concepto like '%".$busqueda."%' or co.leyenda like '%".$busqueda."%' or c.cantidad like '%".$busqueda."%'";
+	}
+
+
+	$sql = "select
+			t.idcotizaciondetalleaux, @rownum:=@rownum+1 as 'item', t.*
+			from (select
+	c.idcotizaciondetalleaux,
+	co.concepto,
+	SUBSTRING(co.leyenda, 1, 40) as leyenda,
+	c.cantidad,
+	c.preciounitario,
+	tm.tipomoneda,
+	c.porcentajebonificado,
+	ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
+	c.reftipomonedas,
+	c.rango,
+	c.aplicatotal,
+	c.cargavieja,
+	c.refoportunidad,
+	c.refconceptos
+	from dbcotizaciondetallesaux c
+	inner join dbconceptos co on co.idconcepto = c.refconceptos
+	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
+	where c.refcotizaciones = ".$idoportunidad.$where."
 	) t,(SELECT @rownum:=0) r
 	limit ".$start.",".$length;
 
@@ -394,19 +463,19 @@ return $res;
 
 	/* PARA Cotizaciones */
 
-	function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
-		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestadocotizacion,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,fechacrea,fechamodi,usuariomodi,refempresas,reflistas)
-		values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."','".($fechacrea)."','".($fechamodi)."','".($usuariomodi)."',".$refempresas.",".$reflistas.")";
+	function insertarCotizaciones($refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$usuariomodi,$refempresas,$reflistas) {
+		$sql = "insert into dbcotizaciones(idcotizacion,refclientes,refestadocotizacion,refcontactos,refmotivosoportunidades,reftipostrabajos,refusuarios,observaciones,usuariomodi,refempresas,reflistas)
+		values ('',".$refclientes.",".$refestados.",".$refcontactos.",".$refmotivosoportunidades.",".$reftipostrabajos.",".$refusuarios.",'".($observaciones)."',now(),now(),'".($usuariomodi)."',".$refempresas.",".$reflistas.")";
 
 		$res = $this->query($sql,1);
 		return $res;
 	}
 
 
-	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas) {
+	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$usuariomodi,$refempresas,$reflistas) {
 		$sql = "update dbcotizaciones
 		set
-		refclientes = ".$refclientes.",refestadocotizacion = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',fechacrea = '".($fechacrea)."',fechamodi = '".($fechamodi)."',usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
+		refclientes = ".$refclientes.",refestadocotizacion = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',,fechamodi = now(),usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
 		where idcotizacion =".$id;
 
 		$res = $this->query($sql,0);
@@ -438,6 +507,47 @@ return $res;
 		c.reflistas
 		from dbcotizaciones c
 		order by 1";
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
+
+	function traerCotizacionesajax($length, $start, $busqueda) {
+		$where = '';
+
+		$busqueda = str_replace("'","",$busqueda);
+		if ($busqueda != '') {
+			$where = " where clie.razonsocial like '%".$busqueda."%' or tt.tipotrabajo like '%".$busqueda."%' or co.razonsocial like '%".$busqueda."%'";
+		}
+
+		$sql = "select
+		c.idcotizacion,
+		clie.razonsocial,
+		tt.tipotrabajo,
+		co.razonsocial as operador,
+		c.fechacrea,
+		c.fechamodi,
+		est.estadocotizacion,
+		c.refclientes,
+		c.refestadocotizacion,
+		c.refcontactos,
+		c.refmotivosoportunidades,
+		c.reftipostrabajos,
+		c.refusuarios,
+		c.observaciones,
+		c.usuariomodi,
+		c.refempresas,
+		c.reflistas
+		from dbcotizaciones c
+		inner join tbconfiguracion co ON co.idconfiguracion = c.refempresas
+		inner join dbclientes clie ON clie.idcliente = c.refclientes
+		inner join tbtipostrabajos tt ON tt.idtipotrabajo = c.reftipostrabajos
+		inner join dbusuarios u ON u.idusuario = c.refusuarios
+		inner join tbestadocotizacion est ON est.idestadocotizacion = c.refestadocotizacion
+		".$where."
+		order by c.fechacrea
+		limit ".$start.",".$length;
 
 		$res = $this->query($sql,0);
 		return $res;

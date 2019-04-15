@@ -363,6 +363,9 @@ switch ($accion) {
    case 'agregarItem':
       agregarItem($serviciosReferencias);
    break;
+   case 'agregarItemUsuario':
+      agregarItemUsuario($serviciosReferencias);
+   break;
    case 'eliminarCotizaciondetallesaux':
       eliminarCotizaciondetallesaux($serviciosReferencias);
    break;
@@ -662,9 +665,37 @@ function traerCotizacionmovimientos($serviciosReferencias) {
 
       $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
 
+      $refcotizaciones        = $_POST['id'];
+
+      $res = $serviciosReferencias->insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda,$refcotizaciones);
+
+      echo '';
+   }
+
+   /* carrito de items */
+   function agregarItemUsuario($serviciosReferencias) {
+
+      $refclientes            = $_POST['refclientes'];
+
+      $refoportunidad         = 0;
+      $refconceptos           = $_POST['refconceptos'];
+      $cantidad               = $_POST['cantidad'];
+
+      $porcentajebonificado   = $_POST['porcentajebonificado'];
+      $reftipomonedas         = $_POST['reftipomonedas'];
+      $rango                  = 0;
+      $aplicatotal            = 0;
+      $cargavieja             = 0;
+      $concepto               = '';
+      $leyenda                = '';
+
+      $refcotizaciones        = $_POST['id'];
+
+      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
 
 
-      $res = $serviciosReferencias->insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda);
+
+      $res = $serviciosReferencias->insertarCotizaciondetallesaux($refoportunidad,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja,$concepto,$leyenda,$refcotizaciones);
 
       echo '';
    }

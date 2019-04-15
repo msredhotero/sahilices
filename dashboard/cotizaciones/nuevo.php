@@ -24,15 +24,13 @@ $baseHTML = new BaseHTML();
 //*** SEGURIDAD ****/
 include ('../../includes/funcionesSeguridad.php');
 $serviciosSeguridad = new ServiciosSeguridad();
-$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../oportunidades/');
+$serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../cotizaciones/');
 //*** FIN  ****/
 
 $fecha = date('Y-m-d');
 
-$id = $_GET['id'];
-
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Oportunidades",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Cotizaciones",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
@@ -43,9 +41,9 @@ $tituloWeb = mysql_result($configuracion,0,'sistema');
 $breadCumbs = '<a class="navbar-brand" href="../index.php">Dashboard</a>';
 
 /////////////////////// Opciones pagina ///////////////////////////////////////////////
-$singular = "Oportunidad";
+$singular = "Cotizacion";
 
-$plural = "Oportunidades - Cotizar";
+$plural = "Cotizaciones";
 
 $eliminar = "eliminarCotizaciones";
 
@@ -55,7 +53,7 @@ $modificar = "modificarCotizaciones";
 
 //////////////////////// Fin opciones ////////////////////////////////////////////////
 
-$resultado = $serviciosReferencias->traerOportunidadesPorId($id);
+$id = $_SESSION['usuaid_sahilices'];
 
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcotizaciones";
@@ -65,10 +63,10 @@ $lblreemplazo	= array('Cliente','Motivo de Oportunidad','Contacto','Estado','Tip
 
 
 $resVar1 = $serviciosReferencias->traerTipostrabajos();
-$cadRef1 	= $serviciosFunciones->devolverSelectBoxActivo($resVar1,array(1),'',mysql_result($resultado,0,'reftipostrabajos'));
+$cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
 $resVar2 = $serviciosReferencias->traerMotivosoportunidades();
-$cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),'',mysql_result($resultado,0,'refmotivosoportunidades'));
+$cadRef2 	= $serviciosFunciones->devolverSelectBox($resVar2,array(1),'');
 
 $resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
@@ -472,7 +470,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 									</div>
 								</div>
 								<!-- fin carro de compra -->
-								<input type="hidden" name="tiporeferencia" id="tiporeferencia" value="0">
+								<input type="hidden" name="tiporeferencia" id="tiporeferencia" value="1">
 								<input type="hidden" name="referencia1" id="referencia1" value="<?php echo $id; ?>">
 							</form>
 							</div>
@@ -582,13 +580,13 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 
 		$(".button-demo").on("click",'.btnPreview', function(){
-			window.open("../../reportes/rptPreviaCotizacion.php?id=<?php echo $id; ?>&idempresa=" + $('#refempresasaux').val() + '&idcliente=' + $('#refclientes').val() + '&idcontacto=' + $('#refcontactos').val() + '&idtrabajo=' + $('#reftipostrabajos').val() + '&idpago=' + $('#refformapago').val() + '&idplazoentrega=' + $('#refplazos').val() + '&idvalidez=' + $('#refvalidez').val() ,'_blank');
+			window.open("../../reportes/rptPreviaCotizacionCompleta.php?id=<?php echo $id; ?>&idempresa=" + $('#refempresasaux').val() + '&idcliente=' + $('#refclientes').val() + '&idcontacto=' + $('#refcontactos').val() + '&idtrabajo=' + $('#reftipostrabajos').val() + '&idpago=' + $('#refformapago').val() + '&idplazoentrega=' + $('#refplazos').val() + '&idvalidez=' + $('#refvalidez').val() ,'_blank');
 		});
 
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=cotizadoraux&referencia1=<?php echo $id; ?>",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=cotizadorauxusuario&referencia1=<?php echo $id; ?>",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -793,7 +791,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 				// Form data
 				//datos del formulario
 				data: {
-					accion: 'agregarItem',
+					accion: 'agregarItemUsuario',
 					id: id,
 					refconceptos: refconceptos,
 					cantidad: cantidad,
