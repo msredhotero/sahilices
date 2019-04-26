@@ -500,8 +500,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 		$("#example").on("click",'.btnModificar', function(){
 			idTable =  $(this).attr("id");
-			frmAjaxModificar(idTable);
-			$('#lgmModificar').modal();
+			window.location.href = "modificar.php?id="+idTable;
 		});//fin del boton modificar
 
 		$('.btnNuevo').click(function(){

@@ -408,11 +408,37 @@ switch ($accion) {
       traerCotizacionmovimientosPorId($serviciosReferencias);
    break;
 
+   case 'modificarCotizacionDetalleLeyendasPorId':
+      modificarCotizacionDetalleLeyendasPorId($serviciosReferencias);
+   break;
+
 
 /* Fin */
 
 }
 /* Fin */
+
+function modificarCotizacionDetalleLeyendasPorId($serviciosReferencias) {
+   $id =          $_POST['id'];
+   $concepto =    $_POST['concepto'];
+   $leyenda  =    $_POST['leyenda'];
+
+
+
+   if (($concepto != '') && ($leyenda != '')) {
+      $res = $serviciosReferencias->modificarCotizacionDetalleLeyendasPorId($id, $concepto, $leyenda);
+      if ($res == true) {
+         session_start();
+         $serviciosReferencias->copiarDetallePorId($id,$_SESSION['nombre_sahilices']);
+         echo '';
+      } else {
+         echo 'Hubo un error al modificar datos';
+      }
+   } else {
+      echo 'Hubo un error, los campos concepto y leyenda son obligatorios';
+   }
+
+}
 
 function insertarCotizaciones($serviciosReferencias) {
    $refclientes = $_POST['refclientes'];

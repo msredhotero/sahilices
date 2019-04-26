@@ -164,7 +164,9 @@ class BaseHTML {
                                     </ul>
                                 </li>
                                 <!-- #END# Tasks -->
+                                <li class="pull-right asideCotizaciones"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
                                 <li class="pull-right"><a href="javascript:void(0);" class="maximizar"><i class="material-icons icomarcos">aspect_ratio</i></a></li>
+
 
                             </ul>
                         </div>
@@ -209,8 +211,8 @@ class BaseHTML {
                 <!-- Right Sidebar -->
                 <aside id="rightsidebar" class="right-sidebar">
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                        <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
-                        <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
+                        <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Cotizaciones Anteriores</a></li>
+                        
                     </ul>
 
                 </aside>

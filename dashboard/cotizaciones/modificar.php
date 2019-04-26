@@ -29,12 +29,22 @@ $serviciosSeguridad->seguridadRuta($_SESSION['refroll_sahilices'], '../cotizacio
 
 $fecha = date('Y-m-d');
 
+//////////////////////// Fin opciones ////////////////////////////////////////////////
+
+$id = $_GET['id'];
+
+$resultado = $serviciosReferencias->traerCotizacionesPorId($id);
+
+
+
+/////////////////////// Opciones para la creacion del formulario  /////////////////////
+
 //$resProductos = $serviciosProductos->traerProductosLimite(6);
 $resMenu = $serviciosHTML->menu($_SESSION['nombre_sahilices'],"Cotizaciones",$_SESSION['refroll_sahilices'],$_SESSION['email_sahilices']);
 
 $configuracion = $serviciosReferencias->traerConfiguracion();
 
-$cadEmpresas = $serviciosFunciones->devolverSelectBox($configuracion,array(1),'');
+$cadEmpresas = $serviciosFunciones->devolverSelectBoxActivo($configuracion,array(1),'', mysql_result($resultado,0,'refempresas'));
 
 $tituloWeb = mysql_result($configuracion,0,'sistema');
 
@@ -51,13 +61,7 @@ $insertar = "insertarCotizaciones";
 
 $modificar = "modificarCotizaciones";
 
-//////////////////////// Fin opciones ////////////////////////////////////////////////
 
-$id = $_GET['id'];
-
-$resultado = $serviciosReferencias->traerCotizacionesPorId($id);
-
-/////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dbcotizaciones";
 
 $lblCambio	 	= array('refclientes','refmotivosoportunidades','refcontactos','refestadocotizacion','reftipostrabajos','refusuarios','reflistas');
@@ -97,16 +101,25 @@ $resVarTM = $serviciosReferencias->traerTipomonedas();
 $cadRefTM 	= $serviciosFunciones->devolverSelectBox($resVarTM,array(2),'');
 
 // formas de pago
+$resDCformapago = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,3);
+
 $resFormaPago = $serviciosReferencias->traerConceptosPorTipo(3);
-$cadRefFP 	= $serviciosFunciones->devolverSelectBox($resFormaPago,array(3),'');
+$cadRefFP 	= $serviciosFunciones->devolverSelectBoxActivo($resFormaPago,array(3),'', mysql_result($resDCformapago,0,0));
 
 // plazos de entrega
+$resDCplazo = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,5);
+
 $resEntrega = $serviciosReferencias->traerConceptosPorTipo(5);
-$cadRefE 	= $serviciosFunciones->devolverSelectBox($resEntrega,array(3),'');
+$cadRefE 	= $serviciosFunciones->devolverSelectBoxActivo($resEntrega,array(3),'', mysql_result($resDCplazo,0,0));
 
 // validez
+$resDCvalidez = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,4);
+
 $resValidez = $serviciosReferencias->traerConceptosPorTipo(4);
-$cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
+$cadRefV 	= $serviciosFunciones->devolverSelectBoxActivo($resValidez,array(3),'', mysql_result($resDCvalidez,0,0));
+
+// notas
+$resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2);
 
 ?>
 
@@ -237,9 +250,9 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="card ">
-						<div class="header bg-indigo">
+						<div class="header bg-red">
 							<h2>
-								<?php echo strtoupper($plural); ?>
+								MODIFICAR <?php echo strtoupper('cotizacion'); ?>
 							</h2>
 							<ul class="header-dropdown m-r--5">
 								<li class="dropdown">
@@ -257,14 +270,14 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 								<div class="row">
 									<div class="col-lg-12 col-md-12">
-										<div class="button-demo">
-											<button type="button" class="btn bg-light-green waves-effect btnNuevo" data-toggle="modal" data-target="#lgmNuevo">
-												<i class="material-icons">add</i>
-												<span>NUEVO CLIENTE</span>
-											</button>
-
+										<div class="alert bg-orange">
+											<p><b>Importante!.</b> Recuerde que todo cambio sera auditado.</p>
+											<p>Una vez FINALIZADA la cotización no podra realizar mas cambios.</p>
 										</div>
 									</div>
+								</div>
+
+								<div class="row">
 									<div class="col-lg-12 col-md-12">
 										<div class="alert alertEstadoCliente">
 											<h4 class="lblEstado"></h4>
@@ -409,23 +422,47 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 								<hr>
 								<h4>Notas</h4>
 								<div class="row table-responsive">
-									<table id="example2" class="display table " style="width:100%">
+									<table class="display table " style="width:100%">
 										<thead>
 											<tr>
 												<th>#</th>
 												<th>Concepto</th>
 												<th>Leyenda</th>
+												<th>Acciones</th>
 											</tr>
 										</thead>
 										<tbody id="lstNotas">
+										<?php
+											$i=1;
+											while ($rowNotas = mysql_fetch_array($resDCnotas)) {
+												echo "<tr id='".$rowNotas['idcotizaciondetalle']."'>";
+												echo "<td>";
+												echo $i;
+												echo "</td>";
+												echo "<td>";
+												echo '<textarea rows="3" cols="30" name="concepto'.$rowNotas['idcotizaciondetalle'].'" id="concepto'.$rowNotas['idcotizaciondetalle'].'" class="form-class">'.utf8_decode($rowNotas['concepto']).'</textarea>';
+												echo "</td>";
+												echo "<td>";
+												echo '<textarea rows="3" cols="90" name="leyenda'.$rowNotas['idcotizaciondetalle'].'" id="leyenda'.$rowNotas['idcotizaciondetalle'].'" class="form-class">'.utf8_decode($rowNotas['leyenda']).'</textarea>';
+												echo "</td>";
+												echo "<td>";
+												echo '<button type="button" id="'.$rowNotas['idcotizaciondetalle'].'" class="btn bg-orange waves-effect btnModificarNota">
+													<i class="material-icons">save</i>
+													<span>MODIFICAR</span>
+												</button>';
+												echo "</td>";
+												echo "</tr>";
 
+												$i += 1;
+											}
+										?>
 										</tbody>
 									</table>
 								</div>
 								<hr>
 
 								<div class="row">
-									<div class="col-lg-4 col-md-4">
+									<div class="col-lg-8 col-md-8">
 										<div class="form-group">
 											<label for="">Forma de Pago</label>
 											<div class="form-line">
@@ -445,7 +482,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-4 col-md-4">
+									<div class="col-lg-12 col-md-12">
 										<div class="form-group">
 											<label for="">Plazos de entrega</label>
 											<div class="form-line">
@@ -485,29 +522,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 </section>
 
 
-<!-- NUEVO -->
-	<form class="formulario" role="form" id="sign_in">
-	   <div class="modal fade" id="lgmNuevo" tabindex="-1" role="dialog">
-	       <div class="modal-dialog modal-lg" role="document">
-	           <div class="modal-content">
-	               <div class="modal-header">
-	                   <h4 class="modal-title" id="largeModalLabel">CREAR <?php echo strtoupper($singular); ?></h4>
-	               </div>
-	               <div class="modal-body demo-masked-input">
-							<div class="row">
-							<?php echo $frmUnidadNegocios; ?>
-							</div>
 
-	               </div>
-	               <div class="modal-footer">
-	                   <button type="submit" class="btn btn-primary waves-effect nuevo">GUARDAR</button>
-	                   <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
-	               </div>
-	           </div>
-	       </div>
-	   </div>
-		<input type="hidden" id="accion" name="accion" value="<?php echo $insertar; ?>"/>
-	</form>
 
 	<!-- MODIFICAR -->
 		<form class="formulario formMod" role="form" id="sign_in">
@@ -574,8 +589,6 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 <script src="../../DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
 
-
-
 <script>
 	$(document).ready(function(){
 
@@ -588,7 +601,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 		var table = $('#example').DataTable({
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": "../../json/jstablasajax.php?tabla=cotizadorauxusuario&referencia1=<?php echo $id; ?>",
+			"sAjaxSource": "../../json/jstablasajax.php?tabla=cotizadorid&referencia1=<?php echo $id; ?>&referencia2=1",
 			"language": {
 				"emptyTable":     "No hay datos cargados",
 				"info":           "Mostrar _START_ hasta _END_ del total de _TOTAL_ filas",
@@ -658,6 +671,62 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 		};
 
 		$("#round").easyAutocomplete(options);
+
+
+		function modificarCotizacionDetalleLeyendasPorId(id, concepto, leyenda) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {
+					accion: 'modificarCotizacionDetalleLeyendasPorId',
+	            id: id,
+	            concepto: concepto,
+	            leyenda: leyenda
+				},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$('.frmAjaxModificar').html('');
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data == '') {
+						swal({
+		                  title: "Respuesta",
+		                  text: "Registro fue modificado con exito!!",
+		                  type: "success",
+		                  timer: 1500,
+		                  showConfirmButton: false
+		            });
+					} else {
+						swal({
+								title: "Respuesta",
+								text: data,
+								type: "error",
+								timer: 3000,
+								showConfirmButton: false
+						});
+					}
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+
+
+	   }
+
+		$("#lstNotas").on("click",'.btnModificarNota', function(){
+			idTable =  $(this).attr("id");
+
+			modificarCotizacionDetalleLeyendasPorId(idTable, $('#concepto'+idTable).val(), $('#leyenda'+idTable).val());
+
+
+		});
 
 		$(".buscarItem").on("click",'.agregarItem', function(){
 			agregarItem(<?php echo $id; ?>, $(this).attr("id"), $('#cantidad').val(), $('#precio').val(), $('#bonificacion').val(), $('#reftipomonedas').val(), $('#refclientes').val());
@@ -858,12 +927,6 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 				}
 			});
 		}
-
-		traerNotasPorTipoTrabajo($('#reftipostrabajos').val());
-
-		$('#reftipostrabajos').change(function() {
-			traerNotasPorTipoTrabajo($(this).val());
-		});
 
 		function traerNotasPorTipoTrabajo(id) {
 			$.ajax({

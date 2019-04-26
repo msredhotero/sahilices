@@ -14,11 +14,18 @@ $length = $_GET['iDisplayLength'];
 $busqueda = $_GET['sSearch'];
 
 $referencia1 = 0;
+$referencia2 = 0;
 
 if (isset($_GET['referencia1'])) {
 	$referencia1 = $_GET['referencia1'];
 } else {
 	$referencia1 = 0;
+}
+
+if (isset($_GET['referencia2'])) {
+	$referencia2 = $_GET['referencia2'];
+} else {
+	$referencia2 = 0;
 }
 
 function armarAcciones($id,$label='',$class,$icon) {
@@ -43,6 +50,17 @@ switch ($tabla) {
 		$indiceID = 0;
 		$empieza = 1;
 		$termina = 6;
+
+	break;
+	case 'cotizadorid':
+		$resAjax = $serviciosReferencias->traerCotizacionDetallePorTipoConceptoajax($referencia1,$referencia2,$length, $start, $busqueda);
+		$res = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($referencia1,$referencia2);
+		$label = array('btnEliminar');
+		$class = array('bg-red');
+		$icon = array('delete');
+		$indiceID = 0;
+		$empieza = 1;
+		$termina = 8;
 
 	break;
 	case 'cotizadorauxusuario':

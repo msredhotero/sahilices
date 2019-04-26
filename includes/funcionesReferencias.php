@@ -192,6 +192,49 @@ function traerCotizaciondetallesauxPorUsuario($idoportunidad) {
 	return $res;
 }
 
+function traerCotizacionDetallePorTipoConceptoajax($idcotizacion, $idtipoconcepto, $length, $start, $busqueda) {
+
+	$where = '';
+
+	$busqueda = str_replace("'","",$busqueda);
+	if ($busqueda != '') {
+		$where = " and co.concepto like '%".$busqueda."%' or co.leyenda like '%".$busqueda."%' or c.cantidad like '%".$busqueda."%'";
+	}
+
+	$sql = "select
+			t.idcotizaciondetalle, @rownum:=@rownum+1 as 'item', t.*
+			from (select
+				c.idcotizaciondetalle,
+				co.concepto,
+				SUBSTRING(co.leyenda, 1, 40) as leyenda,
+				c.cantidad,
+				c.preciounitario,
+				tm.tipomoneda,
+				c.porcentajebonificado,
+				ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
+				c.reftipomonedas,
+				c.rango,
+				c.aplicatotal,
+				c.cargavieja,
+				c.refconceptos
+			FROM
+				 dbcotizaciondetalles c
+					  INNER JOIN
+				 tbtipomonedas tm ON tm.idtipomoneda = c.reftipomonedas
+					  INNER JOIN
+				 dbconceptos co ON co.idconcepto = c.refconceptos
+					  INNER JOIN
+				 tbtipoconceptos tc ON tc.idtipoconcepto = co.reftipoconceptos
+			WHERE
+				 c.refcotizaciones = ".$idcotizacion."
+					  AND tc.idtipoconcepto = ".$idtipoconcepto.$where."
+				  	) t,(SELECT @rownum:=0) r
+				  	limit ".$start.",".$length;
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
 
 function traerCotizaciondetallesauxPorUsuarioajax($idoportunidad, $length, $start, $busqueda) {
 
@@ -423,6 +466,17 @@ return $res;
 		return $res;
 	}
 
+	function modificarCotizacionDetalleLeyendasPorId($id, $concepto, $leyenda) {
+		$sql = "update dbcotizaciondetalles
+		set
+		concepto = '".$concepto."',
+		leyenda = '".$leyenda."'
+		where idcotizaciondetalle =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
 
 	function eliminarCotizaciondetalles($id) {
 		$sql = "delete from dbcotizaciondetalles where idcotizaciondetalle =".$id;
@@ -442,7 +496,9 @@ return $res;
 		c.reftipomonedas,
 		c.rango,
 		c.aplicatotal,
-		c.cargavieja
+		c.cargavieja,
+		c.concepto,
+		c.leyenda
 		from dbcotizaciondetalles c
 		order by 1";
 		$res = $this->query($sql,0);
@@ -450,8 +506,39 @@ return $res;
 	}
 
 
+	function traerCotizacionDetallePorTipoConcepto($idcotizacion, $idtipoconcepto) {
+		$sql = "SELECT
+				    c.refconceptos,
+				    c.concepto,
+				    c.leyenda,
+				    c.cantidad,
+				    c.preciounitario,
+				    c.porcentajebonificado,
+				    c.reftipomonedas,
+				    c.rango,
+				    c.aplicatotal,
+				    c.cargavieja,
+				    c.idcotizaciondetalle,
+				    c.refcotizaciones
+				FROM
+				    dbcotizaciondetalles c
+				        INNER JOIN
+				    tbtipomonedas tm ON tm.idtipomoneda = c.reftipomonedas
+				        INNER JOIN
+				    dbconceptos cc ON cc.idconcepto = c.refconceptos
+				        INNER JOIN
+				    tbtipoconceptos tc ON tc.idtipoconcepto = cc.reftipoconceptos
+				WHERE
+				    c.refcotizaciones = ".$idcotizacion."
+				        AND tc.idtipoconcepto = ".$idtipoconcepto;
+
+		$res = $this->query($sql,0);
+  		return $res;
+	}
+
+
 	function traerCotizaciondetallesPorId($id) {
-		$sql = "select idcotizaciondetalle,refcotizaciones,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja from dbcotizaciondetalles where idcotizaciondetalle =".$id;
+		$sql = "select idcotizaciondetalle,refcotizaciones,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,cargavieja, concepto, leyenda from dbcotizaciondetalles where idcotizaciondetalle =".$id;
 		$res = $this->query($sql,0);
 		return $res;
 	}
@@ -613,9 +700,21 @@ return $res;
 
 	/* PARA Cotizacionmovimientos */
 
-	function insertarCotizacionmovimientos($refcotizaciondetalles,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$fechacrea,$usuariocrea) {
-		$sql = "insert into dbcotizacionmovimientos(idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea)
-		values ('',".$refcotizaciondetalles.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$fechacrea.",'".($usuariocrea)."')";
+	function copiarDetallePorId($id, $usuario) {
+		$sql = "insert into dbcotizacionmovimientos(idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea,concepto,leyenda,refestadocotizacion)
+		select
+		'',cd.idcotizaciondetalle,cd.refconceptos,cd.cantidad,cd.preciounitario,cd.porcentajebonificado,cd.reftipomonedas,cd.rango,cd.aplicatotal,'".date('Y-d-m H:i:s')."','".$usuario."',cd.concepto,cd.leyenda,c.refestadocotizacion
+		from dbcotizaciondetalles cd
+		inner join dbcotizaciones c on c.idcotizacion = cd.refcotizaciones
+		where cd.idcotizaciondetalle = ".$id;
+
+		$res = $this->query($sql,1);
+		return $res;
+	}
+
+	function insertarCotizacionmovimientos($refcotizaciondetalles,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$fechacrea,$usuariocrea,$concepto,$leyenda,$refestadocotizacion) {
+		$sql = "insert into dbcotizacionmovimientos(idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea,concepto,leyenda,refestadocotizacion)
+		values ('',".$refcotizaciondetalles.",".$refconceptos.",".$cantidad.",".$preciounitario.",".$porcentajebonificado.",".$reftipomonedas.",".$rango.",".$aplicatotal.",".$fechacrea.",'".$usuariocrea."','".$concepto."','".$leyenda."',".$refestadocotizacion.")";
 
 		$res = $this->query($sql,1);
 		return $res;
@@ -2749,6 +2848,76 @@ return $res;
 	/* /* Fin de la Tabla: tbmeses*/
 
 
+	/* PARA Auditoria */
+
+	   function insertarAuditoria($tabla,$operacion,$campo,$valornuevo,$valorviejo,$id,$usuario) {
+	      $sql = "insert into dbauditoria(idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha)
+	      values ('','".$tabla."','".$operacion."','".$campo."','".$valornuevo."','".$valorviejo."',".$id.",'".$usuario."',now())";
+	      $res = $this->query($sql,1);
+	      return $res;
+	   }
+
+	   function insertAuditoria($tabla, $operacion,$id,$usuario) {
+	      $sql = "SHOW COLUMNS FROM ".$tabla;
+	      $res = $this->query($sql,0);
+
+	      $idnombre = mysql_result($res,0,0);
+
+	      while ($row = mysql_fetch_array($res)) {
+
+	         $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+	         $resValor = $this->query($sqlValor,0);
+	         $valornuevo = mysql_result($resValor,0,0);
+	         $valorviejo = '';
+	         $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+	      }
+
+	      return $insert;
+	   }
+
+	   function modiAuditoria($tabla, $operacion,$id,$usuario) {
+	      $sql = "SHOW COLUMNS FROM ".$tabla;
+	      $res = $this->query($sql,0);
+
+	      $idnombre = mysql_result($res,0,0);
+
+	      while ($row = mysql_fetch_array($res)) {
+
+	         $sqlValor = "SELECT ".$row[0].' from '.$tabla.' where '.$idnombre.' = '.$id;
+	         $resValor = $this->query($sqlValor,0);
+	         $valornuevo = '';
+	         $valorviejo = mysql_result($resValor,0,0);
+	         $insert = $this->insertarAuditoria($tabla,$operacion,$row[0],$valornuevo,$valorviejo,$id,$usuario);
+	      }
+	   }
+
+
+	   function traerAuditoria() {
+	   $sql = "select
+	   a.idauditoria,
+	   a.tabla,
+	   a.operacion,
+	   a.campo,
+	   a.valornuevo,
+	   a.valorviejo,
+	   a.id,
+	   a.usuario,
+	   a.fecha
+	   from dbauditoria a
+	   order by 1";
+	   $res = $this->query($sql,0);
+	   return $res;
+	   }
+
+
+	   function traerAuditoriaPorId($id) {
+	   $sql = "select idauditoria,tabla,operacion,campo,valornuevo,valorviejo,id,usuario,fecha from dbauditoria where idauditoria =".$id;
+	   $res = $this->query($sql,0);
+	   return $res;
+	   }
+
+	/* Fin */
+	/* /* Fin de la Tabla: dbauditoria*/
 
 
 function query($sql,$accion) {

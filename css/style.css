@@ -7743,7 +7743,7 @@ fieldset[disabled] .form-control {
       .right-sidebar .nav-tabs li:first-child {
         width: 45%; }
       .right-sidebar .nav-tabs li:last-child {
-        width: 55%; }
+        width: 100%; }
 
 /* Bootstrap Notify ============================ */
 .bootstrap-notify-container {
