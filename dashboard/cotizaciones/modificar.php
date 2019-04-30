@@ -94,7 +94,7 @@ $refdescripcion = array(0=>$cadRef5,
 								5=>$cadRef3);
 $refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refestadocotizacion','reftipostrabajos','refusuarios');
 
-$frm 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$frm 	= $serviciosFunciones->camposTablaViejo($modificar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 $resVarTM = $serviciosReferencias->traerTipomonedas();
@@ -435,10 +435,20 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 										<?php
 											$i=1;
 											while ($rowNotas = mysql_fetch_array($resDCnotas)) {
-												echo "<tr id='".$rowNotas['idcotizaciondetalle']."'>";
-												echo "<td>";
-												echo $i;
-												echo "</td>";
+												$semodifico = $serviciosReferencias->buscarMovimientoPorCotizacionDetalle($rowNotas['idcotizaciondetalle']);
+
+												if ($semodifico == 0) {
+													echo "<tr id='".$rowNotas['idcotizaciondetalle']."'>";
+													echo "<td style='font-weight: bold !important;'>";
+													echo $i;
+													echo "</td>";
+												} else {
+													echo "<tr id='".$rowNotas['idcotizaciondetalle']."' class='bg-orange' style='color: black !important;'>";
+													echo "<td style='font-weight: bold !important;'>";
+													echo $i.' ('.$semodifico.')';
+													echo "</td>";
+												}
+
 												echo "<td>";
 												echo '<textarea rows="3" cols="30" name="concepto'.$rowNotas['idcotizaciondetalle'].'" id="concepto'.$rowNotas['idcotizaciondetalle'].'" class="form-class">'.utf8_decode($rowNotas['concepto']).'</textarea>';
 												echo "</td>";
@@ -446,7 +456,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 												echo '<textarea rows="3" cols="90" name="leyenda'.$rowNotas['idcotizaciondetalle'].'" id="leyenda'.$rowNotas['idcotizaciondetalle'].'" class="form-class">'.utf8_decode($rowNotas['leyenda']).'</textarea>';
 												echo "</td>";
 												echo "<td>";
-												echo '<button type="button" id="'.$rowNotas['idcotizaciondetalle'].'" class="btn bg-orange waves-effect btnModificarNota">
+												echo '<button type="button" id="'.$rowNotas['idcotizaciondetalle'].'" class="btn bg-blue waves-effect btnModificarNota">
 													<i class="material-icons">save</i>
 													<span>MODIFICAR</span>
 												</button>';
@@ -687,7 +697,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 				},
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$('.frmAjaxModificar').html('');
+					$('#'+id).removeClass('bg-orange');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
@@ -700,6 +710,8 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 		                  timer: 1500,
 		                  showConfirmButton: false
 		            });
+						$('#'+id).addClass('bg-orange');
+						$('#'+id).attr('style',"color:black !important");
 					} else {
 						swal({
 								title: "Respuesta",
@@ -862,7 +874,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 				// Form data
 				//datos del formulario
 				data: {
-					accion: 'agregarItemUsuario',
+					accion: 'agregarItemId',
 					id: id,
 					refconceptos: refconceptos,
 					cantidad: cantidad,
@@ -1000,7 +1012,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 				type: 'POST',
 				// Form data
 				//datos del formulario
-				data: {accion: 'eliminarCotizaciondetallesaux', id: id},
+				data: {accion: 'eliminarCotizaciondetalles', id: id},
 				//mientras enviamos el archivo
 				beforeSend: function(){
 

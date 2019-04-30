@@ -369,6 +369,12 @@ switch ($accion) {
    case 'eliminarCotizaciondetallesaux':
       eliminarCotizaciondetallesaux($serviciosReferencias);
    break;
+   case 'eliminarCotizaciondetalles':
+      eliminarCotizaciondetalles($serviciosReferencias);
+   break;
+   case 'agregarItemId':
+      agregarItemId($serviciosReferencias);
+   break;
    case 'traerTipotrabajoconceptosPorTipoTrabajo':
       traerTipotrabajoconceptosPorTipoTrabajo($serviciosReferencias);
    break;
@@ -429,7 +435,7 @@ function modificarCotizacionDetalleLeyendasPorId($serviciosReferencias) {
       $res = $serviciosReferencias->modificarCotizacionDetalleLeyendasPorId($id, $concepto, $leyenda);
       if ($res == true) {
          session_start();
-         $serviciosReferencias->copiarDetallePorId($id,$_SESSION['nombre_sahilices']);
+         $serviciosReferencias->copiarDetallePorId($id,$_SESSION['nombre_sahilices'],'M');
          echo '';
       } else {
          echo 'Hubo un error al modificar datos';
@@ -527,21 +533,20 @@ function insertarCotizaciones($serviciosReferencias) {
 
 function modificarCotizaciones($serviciosReferencias) {
    $id = $_POST['id'];
-   $refclientes = $_POST['refclientes'];
+
    $refestados = $_POST['refestados'];
    $refcontactos = $_POST['refcontactos'];
    $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
-   $reftipostrabajos = $_POST['reftipostrabajos'];
-   $refusuarios = $_POST['refusuarios'];
+
    $observaciones = $_POST['observaciones'];
-   $fechacrea = $_POST['fechacrea'];
-   $fechamodi = $_POST['fechamodi'];
-   $usuariomodi = $_POST['usuariomodi'];
+
+   $fechamodi = date('Y-m-d H:i:s');
+
+   session_start();
+   $usuariomodi = $_SESSION['nombre_sahilices'];
    $refempresas = $_POST['refempresas'];
 
-   $reflistas = $_POST['reflistas'];
-
-   $res = $serviciosReferencias->modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$fechacrea,$fechamodi,$usuariomodi,$refempresas,$reflistas);
+   $res = $serviciosReferencias->modificarCotizaciones($id,$refestados,$refcontactos,$refmotivosoportunidades,$observaciones,$fechamodi,$usuariomodi,$refempresas);
 
    if ($res == true) {
       echo '';
@@ -726,12 +731,59 @@ function traerCotizacionmovimientos($serviciosReferencias) {
       echo '';
    }
 
+   function agregarItemId($serviciosReferencias) {
+
+      $refclientes            = $_POST['refclientes'];
+
+      $refoportunidad         = 0;
+      $refconceptos           = $_POST['refconceptos'];
+      $cantidad               = $_POST['cantidad'];
+
+      $porcentajebonificado   = $_POST['porcentajebonificado'];
+      $reftipomonedas         = $_POST['reftipomonedas'];
+      $rango                  = 0;
+      $aplicatotal            = 0;
+      $cargavieja             = 0;
+      $concepto               = '';
+      $leyenda                = '';
+
+      $refcotizaciones        = $_POST['id'];
+
+      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
+
+
+
+      $res = $serviciosReferencias->insertarCotizaciondetalles($refcotizaciones,$refconceptos,$cantidad,$preciounitario,$porcentajebonificado,$reftipomonedas,$rango,$aplicatotal,$cargavieja, $concepto, $leyenda);
+
+      session_start();
+      $serviciosReferencias->copiarDetallePorId($res,$_SESSION['nombre_sahilices'],'I');
+
+      echo '';
+   }
+
    function eliminarCotizaciondetallesaux($serviciosReferencias) {
       $id = $_POST['id'];
 
       $res = $serviciosReferencias->eliminarCotizaciondetallesaux($id);
 
       if ($res == true) {
+
+         echo '';
+      } else {
+         echo 'Hubo un error al modificar datos';
+      }
+   }
+
+   function eliminarCotizaciondetalles($serviciosReferencias) {
+      $id = $_POST['id'];
+
+      session_start();
+      $serviciosReferencias->copiarDetallePorId($id,$_SESSION['nombre_sahilices'],'E');
+
+      $res = $serviciosReferencias->eliminarCotizaciondetalles($id);
+
+      if ($res == true) {
+
          echo '';
       } else {
          echo 'Hubo un error al modificar datos';

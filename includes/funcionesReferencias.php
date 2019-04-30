@@ -204,7 +204,7 @@ function traerCotizacionDetallePorTipoConceptoajax($idcotizacion, $idtipoconcept
 	$sql = "select
 			t.idcotizaciondetalle, @rownum:=@rownum+1 as 'item', t.*
 			from (select
-				c.idcotizaciondetalle,
+
 				co.concepto,
 				SUBSTRING(co.leyenda, 1, 40) as leyenda,
 				c.cantidad,
@@ -216,6 +216,7 @@ function traerCotizacionDetallePorTipoConceptoajax($idcotizacion, $idtipoconcept
 				c.rango,
 				c.aplicatotal,
 				c.cargavieja,
+				c.idcotizaciondetalle,
 				c.refconceptos
 			FROM
 				 dbcotizaciondetalles c
@@ -700,10 +701,18 @@ return $res;
 
 	/* PARA Cotizacionmovimientos */
 
-	function copiarDetallePorId($id, $usuario) {
-		$sql = "insert into dbcotizacionmovimientos(idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea,concepto,leyenda,refestadocotizacion)
+	function buscarMovimientoPorCotizacionDetalle( $iddetalle) {
+		$sql = "select count(*) from dbcotizacionmovimientos where refcotizaciondetalles = ".$iddetalle;
+
+		$res = $this->query($sql,0);
+
+		return mysql_result($res,0,0);
+	}
+
+	function copiarDetallePorId($id, $usuario, $tipo) {
+		$sql = "insert into dbcotizacionmovimientos(idcotizacionmovimiento,refcotizaciondetalles,refconceptos,cantidad,preciounitario,porcentajebonificado,reftipomonedas,rango,aplicatotal,fechacrea,usuariocrea,concepto,leyenda,refestadocotizacion, tipo)
 		select
-		'',cd.idcotizaciondetalle,cd.refconceptos,cd.cantidad,cd.preciounitario,cd.porcentajebonificado,cd.reftipomonedas,cd.rango,cd.aplicatotal,'".date('Y-d-m H:i:s')."','".$usuario."',cd.concepto,cd.leyenda,c.refestadocotizacion
+		'',cd.idcotizaciondetalle,cd.refconceptos,cd.cantidad,cd.preciounitario,cd.porcentajebonificado,cd.reftipomonedas,cd.rango,cd.aplicatotal,'".date('Y-d-m H:i:s')."','".$usuario."',cd.concepto,cd.leyenda,c.refestadocotizacion, '".$tipo."'
 		from dbcotizaciondetalles cd
 		inner join dbcotizaciones c on c.idcotizacion = cd.refcotizaciones
 		where cd.idcotizaciondetalle = ".$id;
