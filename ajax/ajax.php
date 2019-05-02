@@ -534,21 +534,52 @@ function insertarCotizaciones($serviciosReferencias) {
 function modificarCotizaciones($serviciosReferencias) {
    $id = $_POST['id'];
 
-   $refestados = $_POST['refestados'];
+   $refestados = $_POST['refestadocotizacion'];
    $refcontactos = $_POST['refcontactos'];
    $refmotivosoportunidades = $_POST['refmotivosoportunidades'];
 
    $observaciones = $_POST['observaciones'];
 
-   $fechamodi = date('Y-m-d H:i:s');
-
    session_start();
    $usuariomodi = $_SESSION['nombre_sahilices'];
-   $refempresas = $_POST['refempresas'];
+   $refempresas = $_POST['refempresasaux'];
 
-   $res = $serviciosReferencias->modificarCotizaciones($id,$refestados,$refcontactos,$refmotivosoportunidades,$observaciones,$fechamodi,$usuariomodi,$refempresas);
+   // los 3 conceptos de forma de pago, validez de la oferta y plazos de entrega
+   $formadepago = $_POST['refformapago'];
+   // formas de pago
+   $resDCformapago = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,3);
+
+   $validez = $_POST['refvalidez'];
+   // validez
+   $resDCvalidez = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,4);
+
+   $plazosentrega = $_POST['refplazos'];
+   // plazos de entrega
+   $resDCplazo = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,5);
+   // *****************         //
+
+   $res = $serviciosReferencias->modificarCotizaciones($id,$refestados,$refcontactos,$refmotivosoportunidades,$observaciones,$usuariomodi,$refempresas);
 
    if ($res == true) {
+      //$serviciosReferencias->copiarDetallePorId($id,$_SESSION['nombre_sahilices'],'M');
+      if ($formadepago != mysql_result($resDCformapago,0,0)) {
+
+         $res1 =$serviciosReferencias->copiarDetallePorId(mysql_result($resDCformapago,0,'idcotizaciondetalle'),$_SESSION['nombre_sahilices'],'M');
+
+         $res1m = $serviciosReferencias->modificarCotizacionDetalle3PorId(mysql_result($resDCformapago,0,'idcotizaciondetalle'), $formadepago);
+      }
+      if ($validez != mysql_result($resDCvalidez,0,0)) {
+
+         $res2 =$serviciosReferencias->copiarDetallePorId(mysql_result($resDCvalidez,0,'idcotizaciondetalle'),$_SESSION['nombre_sahilices'],'M');
+
+         $res2m = $serviciosReferencias->modificarCotizacionDetalle3PorId(mysql_result($resDCvalidez,0,'idcotizaciondetalle'), $validez);
+
+      }
+      if ($plazosentrega != mysql_result($resDCplazo,0,0)) {
+         $res3 = $serviciosReferencias->copiarDetallePorId(mysql_result($resDCplazo,0,'idcotizaciondetalle'),$_SESSION['nombre_sahilices'],'M');
+
+         $res3m = $serviciosReferencias->modificarCotizacionDetalle3PorId(mysql_result($resDCplazo,0,'idcotizaciondetalle'), $plazosentrega);
+      }
       echo '';
    } else {
       echo 'Hubo un error al modificar datos';

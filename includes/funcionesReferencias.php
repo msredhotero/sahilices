@@ -237,6 +237,46 @@ function traerCotizacionDetallePorTipoConceptoajax($idcotizacion, $idtipoconcept
 }
 
 
+function traerCotizacionDetallePorTipoConceptoTodos($idcotizacion, $idtipoconcepto) {
+
+
+	$sql = "select
+			t.idcotizaciondetalle, @rownum:=@rownum+1 as 'item', t.*
+			from (select
+
+				co.concepto,
+				SUBSTRING(co.leyenda, 1, 40) as leyenda,
+				c.cantidad,
+				c.preciounitario,
+				tm.tipomoneda,
+				c.porcentajebonificado,
+				ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
+				c.reftipomonedas,
+				c.rango,
+				c.aplicatotal,
+				c.cargavieja,
+				c.idcotizaciondetalle,
+				c.refconceptos,
+				tm.simbolo
+			FROM
+				 dbcotizaciondetalles c
+					  INNER JOIN
+				 tbtipomonedas tm ON tm.idtipomoneda = c.reftipomonedas
+					  INNER JOIN
+				 dbconceptos co ON co.idconcepto = c.refconceptos
+					  INNER JOIN
+				 tbtipoconceptos tc ON tc.idtipoconcepto = co.reftipoconceptos
+			WHERE
+				 c.refcotizaciones = ".$idcotizacion."
+					  AND tc.idtipoconcepto = ".$idtipoconcepto."
+				  	) t,(SELECT @rownum:=0) r
+				  	 ";
+
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+
 function traerCotizaciondetallesauxPorUsuarioajax($idoportunidad, $length, $start, $busqueda) {
 
 	$where = '';
@@ -478,6 +518,16 @@ return $res;
 		return $res;
 	}
 
+	function modificarCotizacionDetalle3PorId($id, $idconcepto) {
+		$sql = "update dbcotizaciondetalles
+		set
+		refconceptos = ".$idconcepto."
+		where idcotizaciondetalle =".$id;
+
+		$res = $this->query($sql,0);
+		return $res;
+	}
+
 
 	function eliminarCotizaciondetalles($id) {
 		$sql = "delete from dbcotizaciondetalles where idcotizaciondetalle =".$id;
@@ -521,6 +571,7 @@ return $res;
 				    c.cargavieja,
 				    c.idcotizaciondetalle,
 				    c.refcotizaciones
+
 				FROM
 				    dbcotizaciondetalles c
 				        INNER JOIN
@@ -560,10 +611,10 @@ return $res;
 	}
 
 
-	function modificarCotizaciones($id,$refclientes,$refestados,$refcontactos,$refmotivosoportunidades,$reftipostrabajos,$refusuarios,$observaciones,$usuariomodi,$refempresas,$reflistas) {
+	function modificarCotizaciones($id,$refestados,$refcontactos,$refmotivosoportunidades,$observaciones,$usuariomodi,$refempresas) {
 		$sql = "update dbcotizaciones
 		set
-		refclientes = ".$refclientes.",refestadocotizacion = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",reftipostrabajos = ".$reftipostrabajos.",refusuarios = ".$refusuarios.",observaciones = '".($observaciones)."',,fechamodi = now(),usuariomodi = '".($usuariomodi)."',refempresas = ".$refempresas.",reflistas = ".$reflistas."
+		refestadocotizacion = ".$refestados.",refcontactos = ".$refcontactos.",refmotivosoportunidades = ".$refmotivosoportunidades.",observaciones = '".$observaciones."',fechamodi = now(),usuariomodi = '".$usuariomodi."',refempresas = ".$refempresas."
 		where idcotizacion =".$id;
 
 		$res = $this->query($sql,0);
@@ -953,7 +1004,7 @@ return $res;
 		inner join dbusuarios usu ON usu.idusuario = o.refusuarios
 		inner join tbestadocotizacion ec ON ec.idestadocotizacion = o.refestadocotizacion
 		inner join tbsemaforos sem ON sem.idsemaforo = o.refsemaforos
-		where o.refcotizaciones = 0
+		where o.refcotizaciones = 0 and sem.idsemaforo in (1,2)
 		order by o.fechacreacion desc";
 		$res = $this->query($sql,0);
 		return $res;
@@ -2469,6 +2520,12 @@ return $res;
 
 function traerEstadocotizacionPorId($id) {
 $sql = "select idestadocotizacion,estadocotizacion from tbestadocotizacion where idestadocotizacion =".$id;
+$res = $this->query($sql,0);
+return $res;
+}
+
+function traerEstadocotizacionPorIn($id) {
+$sql = "select idestadocotizacion,estadocotizacion from tbestadocotizacion where idestadocotizacion in ('".$id."')";
 $res = $this->query($sql,0);
 return $res;
 }

@@ -51,16 +51,16 @@ $contacto    = mysql_result($resContacto,0,'apellido').' '.mysql_result($resCont
 $resTrabajo = $serviciosReferencias->traerTipostrabajosPorId($idtrabajo);
 $trabajo = mysql_result($resTrabajo,0,'tipotrabajo');
 
-$resNotas = $serviciosReferencias->traerTipotrabajoconceptosPorTipoTrabajo($idtrabajo);
-$resItem  = $serviciosReferencias->traerCotizaciondetallesauxPorUsuario($id);
+$resNotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2);
+$resItem  = $serviciosReferencias->traerCotizacionDetallePorTipoConceptoTodos($id,1);
 
-$resPago = $serviciosReferencias->traerConceptosPorId($idpago);
+$resPago = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,3);
 $formadepago = mysql_result($resPago,0,'leyenda');
 
-$resPlazo = $serviciosReferencias->traerConceptosPorId($idplazoentrega);
+$resPlazo = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,5);
 $plazoentrega = mysql_result($resPlazo,0,'leyenda');
 
-$resValidez = $serviciosReferencias->traerConceptosPorId($idvalidez);
+$resValidez = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,4);
 $validez = mysql_result($resValidez,0,'leyenda');
 
 

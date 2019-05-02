@@ -303,7 +303,7 @@ $id = 0;
 		//$id = $row[$indiceID];
 
 		for ($i=$empieza;$i<=$termina;$i++) {
-			array_push($arAux, $row[$i]);
+			array_push($arAux, utf8_decode($row[$i]));
 		}
 
 		array_push($arAux, armarAcciones($row[0],$label,$class,$icon));

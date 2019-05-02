@@ -71,7 +71,7 @@ $cadRef2 	= $serviciosFunciones->devolverSelectBox($resVar2,array(1),'');
 $resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
 
-$resVar4 = $serviciosReferencias->traerEstadosPorFormulario(1);
+$resVar4 = $serviciosReferencias->traerEstadocotizacionPorIn(1);
 $cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
 
 $resVar5 = $serviciosReferencias->traerClientes();

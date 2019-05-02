@@ -1139,7 +1139,16 @@ class Servicios {
 		$sql	=	"show columns from ".$tabla;
 		$res 	=	$this->query($sql,0);
 
-		$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","idusuario");
+		switch ($tabla) {
+			case 'dbcotizaciones':
+				$ocultar = array("fechacrea","fechamodi","usuariomodi","refusuarios",'refempresas','reflistas');
+				break;
+
+			default:
+				$ocultar = array("fechacrea","fechamodi","usuacrea","usuamodi","idusuario");
+				break;
+		}
+
 
 		$camposEscondido = "";
 		$lblObligatorio = '';
@@ -1271,7 +1280,7 @@ class Servicios {
 
 									$form	=	$form.'
 
-									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:'.$lblOculta.'">
 										 <b>'.$label.'</b>
 										 <div class="input-group">
 											  <span class="input-group-addon">

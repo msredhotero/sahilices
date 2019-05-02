@@ -77,8 +77,8 @@ $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),'',my
 $resVar3 = $serviciosUsuario->traerUsuarioId($_SESSION['usuaid_sahilices']);
 $cadRef3 	= $serviciosFunciones->devolverSelectBox($resVar3,array(1),'');
 
-$resVar4 = $serviciosReferencias->traerEstadosPorFormulario(1);
-$cadRef4 	= $serviciosFunciones->devolverSelectBox($resVar4,array(1),'');
+$resVar4 = $serviciosReferencias->traerEstadocotizacion();
+$cadRef4 	= $serviciosFunciones->devolverSelectBoxActivo($resVar4,array(1),'',mysql_result($resultado,0,'refestadocotizacion'));
 
 $resVar5 = $serviciosReferencias->traerClientesPorId(mysql_result($resultado,0,'refclientes'));
 $cadRef5 	= $serviciosFunciones->devolverSelectBox($resVar5,array(1),' ');
@@ -94,7 +94,8 @@ $refdescripcion = array(0=>$cadRef5,
 								5=>$cadRef3);
 $refCampo 	=  array('refclientes','refmotivosoportunidades','refcontactos','refestadocotizacion','reftipostrabajos','refusuarios');
 
-$frm 	= $serviciosFunciones->camposTablaViejo($modificar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+$frm 	= $serviciosFunciones->camposTablaModificar($id,'idcotizacion',$modificar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
+
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
 
 $resVarTM = $serviciosReferencias->traerTipomonedas();
@@ -120,6 +121,16 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBoxActivo($resValidez,array(3),''
 
 // notas
 $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2);
+
+$puedeModificar = 1;
+
+if ($_SESSION['idroll_sahilices'] != 1) {
+	if (mysql_result($resultado,0,'refestadocotizacion') > 1) {
+		$puedeModificar = 0;
+	} else {
+		$puedeModificar = 1;
+	}
+}
 
 ?>
 
@@ -308,12 +319,14 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 										<h4>Detalle de la Cotizacion</h4>
 									</div>
 								</div>
+								<?php if ($puedeModificar == 1) { ?>
 								<!-- buscador -->
 								<div class="row">
 
 
 									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 										<div class="form-group">
+
 											<label>Buscar Item</label>
 											<div class="form-line buscarItem">
 												<!--<input type="text" id="btnBuscar" name="lstItems" class="form-control" placeholder="Ingrese los datos de la busqueda"  />-->
@@ -322,6 +335,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 												</div>
 												<div id="selction-ajax"></div>
 											</div>
+
 										</div>
 									</div>
 
@@ -387,6 +401,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 									</div>
 
 								</div>
+								<?php } ?>
 								<!-- fin bonificaciones y otros -->
 								<!-- carro de compra -->
 								<div class="row table-responsive">
@@ -456,10 +471,12 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 												echo '<textarea rows="3" cols="90" name="leyenda'.$rowNotas['idcotizaciondetalle'].'" id="leyenda'.$rowNotas['idcotizaciondetalle'].'" class="form-class">'.utf8_decode($rowNotas['leyenda']).'</textarea>';
 												echo "</td>";
 												echo "<td>";
+												if ($puedeModificar == 1) {
 												echo '<button type="button" id="'.$rowNotas['idcotizaciondetalle'].'" class="btn bg-blue waves-effect btnModificarNota">
 													<i class="material-icons">save</i>
 													<span>MODIFICAR</span>
 												</button>';
+												}
 												echo "</td>";
 												echo "</tr>";
 
@@ -506,10 +523,12 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 								<div class="row">
 									<div class="col-lg-12 col-md-12">
 										<div class="button-demo">
+											<?php if ($puedeModificar == 1) { ?>
 											<button type="button" class="btn bg-blue waves-effect btnNuevo">
 												<i class="material-icons">save</i>
 												<span>GUARDAR</span>
 											</button>
+											<?php } ?>
 											<button type="button" class="btn bg-brown waves-effect btnPreview">
 												<i class="material-icons">print</i>
 												<span>PREVISUALIZAR</span>
@@ -521,6 +540,7 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 								<!-- fin carro de compra -->
 								<input type="hidden" name="tiporeferencia" id="tiporeferencia" value="1">
 								<input type="hidden" name="referencia1" id="referencia1" value="<?php echo $id; ?>">
+								<input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
 							</form>
 							</div>
 						</div>
@@ -1057,9 +1077,19 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 		}
 
 		$("#example").on("click",'.btnEliminar', function(){
+			<?php if ($puedeModificar == 1) { ?>
 			idTable =  $(this).attr("id");
 			$('#ideliminar').val(idTable);
 			$('#lgmEliminar').modal();
+			<?php } else { ?>
+				swal({
+						title: "Respuesta",
+						text: 'La cotización ya cerro. no podrá modificarla',
+						type: "error",
+						timer: 2000,
+						showConfirmButton: false
+				});
+			<?php }  ?>
 		});//fin del boton eliminar
 
 		$('.eliminar').click(function() {
@@ -1103,6 +1133,10 @@ $resDCnotas = $serviciosReferencias->traerCotizacionDetallePorTipoConcepto($id,2
 								timer: 1500,
 								showConfirmButton: false
 						});
+
+						if ($('#refestadocotizacion').val() > 1) {
+							location.reload();
+						}
 
 						//$('#lgmNuevo').modal('hide');
 						//$('#unidadnegocio').val('');
