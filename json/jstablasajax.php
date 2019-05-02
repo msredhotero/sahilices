@@ -60,7 +60,7 @@ switch ($tabla) {
 		$icon = array('delete');
 		$indiceID = 0;
 		$empieza = 1;
-		$termina = 8;
+		$termina = 9;
 
 	break;
 	case 'cotizadorauxusuario':
@@ -71,7 +71,7 @@ switch ($tabla) {
 		$icon = array('delete');
 		$indiceID = 0;
 		$empieza = 1;
-		$termina = 8;
+		$termina = 9;
 
 	break;
 	case 'cotizadoraux':
@@ -82,7 +82,7 @@ switch ($tabla) {
 		$icon = array('delete');
 		$indiceID = 0;
 		$empieza = 1;
-		$termina = 8;
+		$termina = 9;
 
 	break;
 	case 'tipotrabajoconceptos':

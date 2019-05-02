@@ -137,20 +137,21 @@ function traerCotizaciondetallesauxPorOportunidadajax($idoportunidad, $length, $
 	$sql = "select
 			t.idcotizaciondetalleaux, @rownum:=@rownum+1 as 'item', t.*
 			from (select
-	c.idcotizaciondetalleaux,
+
 	co.concepto,
 	SUBSTRING(co.leyenda, 1, 40) as leyenda,
 	c.cantidad,
 	c.preciounitario,
 	tm.tipomoneda,
 	c.porcentajebonificado,
+	(case when c.aplicatotal = 1 then 'Si' else 'No' end) as aplicatotal,
 	ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
 	c.reftipomonedas,
 	c.rango,
-	c.aplicatotal,
 	c.cargavieja,
 	c.refoportunidad,
-	c.refconceptos
+	c.refconceptos,
+	c.idcotizaciondetalleaux
 	from dbcotizaciondetallesaux c
 	inner join dbconceptos co on co.idconcepto = c.refconceptos
 	inner join tbtipomonedas tm on tm.idtipomoneda = c.reftipomonedas
@@ -211,10 +212,10 @@ function traerCotizacionDetallePorTipoConceptoajax($idcotizacion, $idtipoconcept
 				c.preciounitario,
 				tm.tipomoneda,
 				c.porcentajebonificado,
+				(case when c.aplicatotal = 1 then 'Si' else 'No' end) as aplicatotal,
 				ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
 				c.reftipomonedas,
 				c.rango,
-				c.aplicatotal,
 				c.cargavieja,
 				c.idcotizaciondetalle,
 				c.refconceptos
@@ -297,10 +298,10 @@ function traerCotizaciondetallesauxPorUsuarioajax($idoportunidad, $length, $star
 	c.preciounitario,
 	tm.tipomoneda,
 	c.porcentajebonificado,
+	(case when c.aplicatotal = 1 then 'Si' else 'No' end) as aplicatotal,
 	ROUND(c.cantidad * c.preciounitario - (c.cantidad * c.preciounitario * c.porcentajebonificado / 100),2) as subtotal,
 	c.reftipomonedas,
 	c.rango,
-	c.aplicatotal,
 	c.cargavieja,
 	c.refoportunidad,
 	c.refconceptos

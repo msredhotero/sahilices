@@ -371,6 +371,20 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 										</div>
 									</div>
 
+									<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+										<div class="form-group">
+											<label>Aplica al total</label>
+											<div class="input-group">
+												<div class="">
+													<div class="switch">
+														<label><input type="checkbox" checked id="aplicatotal" name="aplicatotal"/><span class="lever switch-col-green"></span></label>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+
 								</div>
 								<!-- fin bonificaciones y otros -->
 								<!-- carro de compra -->
@@ -385,6 +399,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 												<th>Precio Unit.</th>
 												<th>Moneda</th>
 												<th>% Bonif.</th>
+												<th>Aplica</th>
 												<th>SubTotal</th>
 												<th>Acciones</th>
 											</tr>
@@ -398,6 +413,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 												<th>Precio Unit.</th>
 												<th>Moneda</th>
 												<th>% Bonif.</th>
+												<th>Aplica</th>
 												<th>SubTotal</th>
 												<th>Acciones</th>
 											</tr>
@@ -423,7 +439,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 								<hr>
 
 								<div class="row">
-									<div class="col-lg-4 col-md-4">
+									<div class="col-lg-8 col-md-8">
 										<div class="form-group">
 											<label for="">Forma de Pago</label>
 											<div class="form-line">
@@ -443,7 +459,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-4 col-md-4">
+									<div class="col-lg-12 col-md-12">
 										<div class="form-group">
 											<label for="">Plazos de entrega</label>
 											<div class="form-line">
@@ -658,7 +674,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 		$("#round").easyAutocomplete(options);
 
 		$(".buscarItem").on("click",'.agregarItem', function(){
-			agregarItem(<?php echo $id; ?>, $(this).attr("id"), $('#cantidad').val(), $('#precio').val(), $('#bonificacion').val(), $('#reftipomonedas').val(), $('#refclientes').val());
+			agregarItem(<?php echo $id; ?>, $(this).attr("id"), $('#cantidad').val(), $('#precio').val(), $('#bonificacion').val(), $('#reftipomonedas').val(), $('#refclientes').val(),$('#aplicatotal').prop("checked") ? 1 : 0);
 		});
 
 		$('.maximizar').click(function() {
@@ -784,7 +800,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 
 		}
 
-		function agregarItem(id, refconceptos, cantidad, preciounitario, porcentajebonificado, reftipomonedas, refclientes) {
+		function agregarItem(id, refconceptos, cantidad, preciounitario, porcentajebonificado, reftipomonedas, refclientes, aplicatotal) {
 			$.ajax({
 				url: '../../ajax/ajax.php',
 				type: 'POST',
@@ -798,7 +814,8 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 					preciounitario: preciounitario,
 					porcentajebonificado: porcentajebonificado,
 					reftipomonedas: reftipomonedas,
-					refclientes: refclientes
+					refclientes: refclientes,
+					aplicatotal: aplicatotal
 				},
 				//mientras enviamos el archivo
 				beforeSend: function(){

@@ -720,7 +720,7 @@ function traerCotizacionmovimientos($serviciosReferencias) {
       $porcentajebonificado   = $_POST['porcentajebonificado'];
       $reftipomonedas         = $_POST['reftipomonedas'];
       $rango                  = 0;
-      $aplicatotal            = 0;
+      $aplicatotal            = $_POST['aplicatotal'];
       $cargavieja             = 0;
       $concepto               = '';
       $leyenda                = '';
@@ -746,7 +746,7 @@ function traerCotizacionmovimientos($serviciosReferencias) {
       $porcentajebonificado   = $_POST['porcentajebonificado'];
       $reftipomonedas         = $_POST['reftipomonedas'];
       $rango                  = 0;
-      $aplicatotal            = 0;
+      $aplicatotal            = $_POST['aplicatotal'];
       $cargavieja             = 0;
       $concepto               = '';
       $leyenda                = '';
@@ -773,7 +773,7 @@ function traerCotizacionmovimientos($serviciosReferencias) {
       $porcentajebonificado   = $_POST['porcentajebonificado'];
       $reftipomonedas         = $_POST['reftipomonedas'];
       $rango                  = 0;
-      $aplicatotal            = 0;
+      $aplicatotal            = $_POST['aplicatotal'];
       $cargavieja             = 0;
       $concepto               = '';
       $leyenda                = '';
