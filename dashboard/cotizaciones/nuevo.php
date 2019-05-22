@@ -324,7 +324,7 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 											<label>Moneda</label>
 											<div class="form-line">
 												<select class="form-control show-tick" name="reftipomonedas" id="reftipomonedas">
-													<?php echo $cadRefTM; ?>
+
 												</select>
 											</div>
 										</div>
@@ -785,11 +785,15 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 				//mientras enviamos el archivo
 				beforeSend: function(){
 					$('.frmAjaxModificar').html('');
+					$('#reftipomonedas').html('');
 				},
 				//una vez finalizado correctamente
 				success: function(data){
 
-					$('#precio').val(data);
+					$('#precio').val(data.precio);
+
+					$('#reftipomonedas').append('<option value="' + data.idmoneda + '">' + data.moneda + '</option>');
+					$('#reftipomonedas').selectpicker('refresh');
 				},
 				//si ha ocurrido un error
 				error: function(){

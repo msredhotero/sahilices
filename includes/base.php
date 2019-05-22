@@ -88,6 +88,31 @@ class BaseHTML {
         echo $cad;
     }
 
+    function cargarCotizaciones($datos = null, $altura = '') {
+
+        $cad = '<ul class="menu lstCotizaciones">';
+
+        while ($row = mysql_fetch_array($datos)) {
+            $cad .= '<li>
+                            <a href="javascript:void(0);">
+                            <div class="icon-circle '.$row['color'].'">
+                                <i class="material-icons">'.$row['icono'].'</i>
+                            </div>
+                            <div class="menu-info">
+                                <h4>'.$row['titulo'].'</h4>
+                                <p>
+                                    <i class="material-icons">access_time</i> '.$row['fechacreacion'].'
+                                </p>
+                            </div>
+                        </a>
+                    </li>';
+        }
+
+        $cad .= '</ul>';
+
+        echo $cad;
+    }
+
 
    function cargarTareas($datos = null, $altura = '') {
 
@@ -126,6 +151,25 @@ class BaseHTML {
                                 <!-- Call Search -->
                                 <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                                 <!-- #END# Call Search -->
+                                <!-- Cotizaciones -->
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                                        <i class="material-icons">assignment_late</i>
+                                        <span class="label-count cotizaciones-cantidad">0</span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="header">Cotizaciones</li>
+                                        <li class="body">
+                                           <ul class="menu cotizaciones">
+
+                                           </ul>
+                                        </li>
+                                        <li class="footer">
+                                            <a href="javascript:void(0);">Ver Todas</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- #END# Cotizaciones -->
                                 <!-- Notifications -->
                                 <li class="dropdown">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
@@ -212,7 +256,7 @@ class BaseHTML {
                 <aside id="rightsidebar" class="right-sidebar">
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
                         <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Cotizaciones Anteriores</a></li>
-                        
+
                     </ul>
 
                 </aside>

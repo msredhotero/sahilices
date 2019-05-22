@@ -55,15 +55,17 @@ $modificar = "modificarListasprecios";
 /////////////////////// Opciones para la creacion del formulario  /////////////////////
 $tabla 			= "dblistasprecios";
 
-$lblCambio	 	= array('refconceptos','precio1','precio2','precio3','precio4','vigenciadesde','vigenciahasta');
-$lblreemplazo	= array('Conceptos','Precio 1','Precio 2','Precio 3','Precio 4','Vig. Desde','Vig. Hasta');
+$lblCambio	 	= array('refconceptos','precio1','precio2','precio3','precio4','vigenciadesde','vigenciahasta','reftipomonedas');
+$lblreemplazo	= array('Conceptos','Precio 1','Precio 2','Precio 3','Precio 4','Vig. Desde','Vig. Hasta','Tipo Moneda');
 
+$resVar = $serviciosReferencias->traerTipomonedas();
+$cadRef 	= $serviciosFunciones->devolverSelectBox($resVar,array(1),'');
 
 $resVar1 = $serviciosReferencias->traerConceptos();
 $cadRef1 	= $serviciosFunciones->devolverSelectBox($resVar1,array(1),'');
 
-$refdescripcion = array(0=>$cadRef1);
-$refCampo 	=  array('refconceptos');
+$refdescripcion = array(0=>$cadRef1, 1=>$cadRef);
+$refCampo 	=  array('refconceptos','reftipomonedas');
 
 $frmUnidadNegocios 	= $serviciosFunciones->camposTablaViejo($insertar ,$tabla,$lblCambio,$lblreemplazo,$refdescripcion,$refCampo);
 //////////////////////////////////////////////  FIN de los opciones //////////////////////////
@@ -212,6 +214,7 @@ $existe = $serviciosReferencias->existe('select idconcepto from dbconceptos');
 												<th>IVA</th>
 												<th>Vig. Desde</th>
 												<th>Vig. Hasta</th>
+												<th>Tipo Moneda</th>
 												<th>Acciones</th>
 											</tr>
 										</thead>
@@ -226,6 +229,7 @@ $existe = $serviciosReferencias->existe('select idconcepto from dbconceptos');
 												<th>IVA</th>
 												<th>Vig. Desde</th>
 												<th>Vig. Hasta</th>
+												<th>Tipo Moneda</th>
 												<th>Acciones</th>
 											</tr>
 										</tfoot>

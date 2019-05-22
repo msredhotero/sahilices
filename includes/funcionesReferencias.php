@@ -16,8 +16,13 @@ function traerPrecioPorIdConcepto($idconcepto, $idcliente) {
 	$resListaPrecio = $this->traerListaspreciosPorConcepto($idconcepto);
 
 	$precio = 0;
+	$moneda = 1;
+	$monedanombre = 'ARG';
 
 	if (mysql_num_rows($resListaPrecio)>0) {
+		$moneda = mysql_result($resListaPrecio,0,'reftipomonedas');
+		$monedanombre = mysql_result($resListaPrecio,0,'abreviatura');
+
 		switch (mysql_result($resEstadoCliente,0,'refestados')) {
 			case 1:
 				$precio = mysql_result($resListaPrecio,0,'precio1');
@@ -34,11 +39,9 @@ function traerPrecioPorIdConcepto($idconcepto, $idcliente) {
 
 				break;
 		}
-	} else {
-		$precio = 0;
 	}
 
-	return $precio;
+	return array('precio'=> $precio, 'moneda' => $moneda, 'monedanombre'=>$monedanombre);
 }
 
 /* PARA Cotizaciondetallesaux TABLA AUXILIAR PARA GUARDAR LOS ITEMS */
@@ -1794,18 +1797,18 @@ return $res;
 
 /* PARA Listasprecios */
 
-function insertarListasprecios($nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta) {
-$sql = "insert into dblistasprecios(idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta)
-values ('','".($nombre)."',".$refconceptos.",".$precio1.",".$precio2.",".$precio3.",".$precio4.",".$iva.",'".($vigenciadesde)."','".($vigenciahasta)."')";
+function insertarListasprecios($nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta,$reftipomonedas) {
+$sql = "insert into dblistasprecios(idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta,reftipomonedas)
+values ('','".($nombre)."',".$refconceptos.",".$precio1.",".$precio2.",".$precio3.",".$precio4.",".$iva.",'".($vigenciadesde)."','".($vigenciahasta)."',".$reftipomonedas.")";
 $res = $this->query($sql,1);
 return $res;
 }
 
 
-function modificarListasprecios($id,$nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta) {
+function modificarListasprecios($id,$nombre,$refconceptos,$precio1,$precio2,$precio3,$precio4,$iva,$vigenciadesde,$vigenciahasta,$reftipomonedas) {
 $sql = "update dblistasprecios
 set
-nombre = '".($nombre)."',refconceptos = ".$refconceptos.",precio1 = ".$precio1.",precio2 = ".$precio2.",precio3 = ".$precio3.",precio4 = ".$precio4.",iva = ".$iva.",vigenciadesde = '".($vigenciadesde)."',vigenciahasta = '".($vigenciahasta)."'
+nombre = '".($nombre)."',refconceptos = ".$refconceptos.",precio1 = ".$precio1.",precio2 = ".$precio2.",precio3 = ".$precio3.",precio4 = ".$precio4.",iva = ".$iva.",vigenciadesde = '".($vigenciadesde)."',vigenciahasta = '".($vigenciahasta)."',reftipomonedas = ".$reftipomonedas."
 where idlistaprecio =".$id;
 $res = $this->query($sql,0);
 return $res;
@@ -1825,7 +1828,7 @@ function traerListaspreciosajax($length, $start, $busqueda) {
 
 	$busqueda = str_replace("'","",$busqueda);
 	if ($busqueda != '') {
-		$where = "where l.nombre like '%".$busqueda."%' and con.concepto like '%".$busqueda."%' and l.precio1 like '%".$busqueda."%' and l.precio2 like '%".$busqueda."%' and l.precio3 like '%".$busqueda."%' and l.precio4 like '%".$busqueda."%'";
+		$where = "where l.nombre like '%".$busqueda."%' and con.concepto like '%".$busqueda."%' and l.precio1 like '%".$busqueda."%' and l.precio2 like '%".$busqueda."%' and l.precio3 like '%".$busqueda."%' and l.precio4 like '%".$busqueda."%' and tm.tipomoneda like '%".$busqueda."%'";
 	}
 
 	$sql = "select
@@ -1838,9 +1841,11 @@ function traerListaspreciosajax($length, $start, $busqueda) {
 	l.precio4,
 	l.iva,
 	l.vigenciadesde,
-	l.vigenciahasta
+	l.vigenciahasta,
+	tm.tipomoneda
 	from dblistasprecios l
 	inner join dbconceptos con ON con.idconcepto = l.refconceptos
+	inner join tbtipomonedas tm ON tm.idtipomoneda = l.reftipomonedas
 	".$where."
 	order by l.nombre
 	limit ".$start.",".$length;
@@ -1861,7 +1866,8 @@ l.precio4,
 l.iva,
 l.vigenciadesde,
 l.vigenciahasta,
-l.refconceptos
+l.refconceptos,
+l.reftipomonedas
 from dblistasprecios l
 inner join dbconceptos con ON con.idconcepto = l.refconceptos
 order by l.nombre";
@@ -1871,13 +1877,30 @@ return $res;
 
 
 function traerListaspreciosPorId($id) {
-$sql = "select idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta from dblistasprecios where idlistaprecio =".$id;
+$sql = "select idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta,reftipomonedas from dblistasprecios where idlistaprecio =".$id;
 $res = $this->query($sql,0);
 return $res;
 }
 
 function traerListaspreciosPorConcepto($idconcepto) {
-$sql = "select idlistaprecio,nombre,refconceptos,precio1,precio2,precio3,precio4,iva,vigenciadesde,vigenciahasta from dblistasprecios where refconceptos =".$idconcepto;
+	$sql = "SELECT
+	    l.idlistaprecio,
+	    l.nombre,
+	    l.refconceptos,
+	    l.precio1,
+	    l.precio2,
+	    l.precio3,
+	    l.precio4,
+	    l.iva,
+	    l.vigenciadesde,
+	    l.vigenciahasta,
+	    l.reftipomonedas,
+	    tm.abreviatura
+	FROM
+	    dblistasprecios l
+	    inner join tbtipomonedas tm on tm.idtipomoneda = l.reftipomonedas
+	WHERE
+	    refconceptos = ".$idconcepto;
 $res = $this->query($sql,0);
 return $res;
 }

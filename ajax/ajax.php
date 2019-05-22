@@ -352,7 +352,7 @@ switch ($accion) {
    break;
 
    case 'traerPrecioPorIdConcepto':
-      traerPrecioPorIdConcepto($serviciosReferencias);
+      traerPrecioPorIdConceptoJ($serviciosReferencias);
    break;
 
    case 'traerContactosPorCliente':
@@ -725,7 +725,7 @@ function traerCotizacionmovimientos($serviciosReferencias) {
       $concepto               = '';
       $leyenda                = '';
 
-      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
+      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes)['precio'];
 
       $refcotizaciones        = $_POST['id'];
 
@@ -753,7 +753,7 @@ function traerCotizacionmovimientos($serviciosReferencias) {
 
       $refcotizaciones        = $_POST['id'];
 
-      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
+      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes)['precio'];
 
 
 
@@ -780,7 +780,7 @@ function traerCotizacionmovimientos($serviciosReferencias) {
 
       $refcotizaciones        = $_POST['id'];
 
-      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes);
+      $preciounitario         = $serviciosReferencias->traerPrecioPorIdConcepto($refconceptos, $refclientes)['precio'];
 
 
 
@@ -845,9 +845,31 @@ function traerPrecioPorIdConcepto($serviciosReferencias) {
    $idconcepto = $_POST['idconcepto'];
    $idcliente = $_POST['idcliente'];
 
-   $res = $serviciosReferencias->traerPrecioPorIdConcepto($idconcepto, $idcliente);
+   $res = $serviciosReferencias->traerPrecioPorIdConcepto($idconcepto, $idcliente)['precio'];
 
    echo $res;
+}
+
+function traerPrecioPorIdConceptoJ($serviciosReferencias) {
+   $idconcepto = $_POST['idconcepto'];
+   $idcliente = $_POST['idcliente'];
+
+   $res = $serviciosReferencias->traerPrecioPorIdConcepto($idconcepto, $idcliente);
+
+   $ar['error'] = true;
+   $ar['precio'] = 0;
+   $ar['idmoneda'] = 1;
+   $ar['moneda'] = 'ARG';
+
+   if (count($res) > 0) {
+      $ar['error'] = false;
+      $ar['precio'] = $res['precio'];
+      $ar['idmoneda'] = $res['moneda'];
+      $ar['moneda'] = $res['monedanombre'];
+   }
+
+   header('Content-type: application/json');
+   echo json_encode($ar);
 }
 
 function insertarTipotrabajoconceptos($serviciosReferencias) {
@@ -1309,14 +1331,17 @@ function frmAjaxModificar($serviciosFunciones, $serviciosReferencias, $servicios
          $modificar = "modificarListasprecios";
          $idTabla = "idlistaprecio";
 
-         $lblCambio	 	= array('refconceptos');
-         $lblreemplazo	= array('Conceptos');
+         $lblCambio	 	= array('refconceptos','reftipomonedas');
+         $lblreemplazo	= array('Conceptos','Tipo Moneda');
+
+         $resVar = $serviciosReferencias->traerTipomonedas();
+         $cadRef 	= $serviciosFunciones->devolverSelectBoxActivo($resVar,array(1),'',mysql_result($resultado,0,'reftipomonedas'));
 
          $resVar2 = $serviciosReferencias->traerConceptos();
          $cadRef2 	= $serviciosFunciones->devolverSelectBoxActivo($resVar2,array(1),' - ', mysql_result($resultado,0,'refconceptos'));
 
-         $refdescripcion = array(0=> $cadRef2);
-         $refCampo 	=  array('refconceptos');
+         $refdescripcion = array(0=> $cadRef2, 1=>$cadRef);
+         $refCampo 	=  array('refconceptos','reftipomonedas');
          break;
       case 'dboportunidades':
          $resultado = $serviciosReferencias->traerOportunidadesPorId($id);
