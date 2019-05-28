@@ -417,12 +417,33 @@ switch ($accion) {
    case 'modificarCotizacionDetalleLeyendasPorId':
       modificarCotizacionDetalleLeyendasPorId($serviciosReferencias);
    break;
+   case 'calcularViaticoPorConcepto':
+      calcularViaticoPorConcepto($serviciosReferencias);
+   break;
 
 
 /* Fin */
 
 }
 /* Fin */
+
+function calcularViaticoPorConcepto($serviciosReferencias) {
+   $idconcepto    =  $_POST['idconcepto'];
+   $cantidad      =  $_POST['cantidad'];
+   $j             =  $_POST['j'];
+   $k             =  $_POST['k'];
+   $l             =  $_POST['l'];
+   $m             =  $_POST['m'];
+   $n             =  $_POST['n'];
+   $o             =  $_POST['o'];
+   $p             =  $_POST['p'];
+   $r             =  $_POST['r'];
+   $s             =  $_POST['s'];
+
+   $res = $serviciosReferencias->calcularViaticoPorConcepto($idconcepto, $cantidad, $j, $k, $l, $m, $n, $o, $p, $r, $s);
+
+   echo $res;
+}
 
 function modificarCotizacionDetalleLeyendasPorId($serviciosReferencias) {
    $id =          $_POST['id'];

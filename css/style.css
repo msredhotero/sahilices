@@ -2996,12 +2996,12 @@ section.content {
 }
   .card .header {
     color: #555;
-    padding: 20px;
+    padding: 10px;
     position: relative;
     border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
     .card .header .header-dropdown {
       position: absolute;
-      top: 20px;
+      top: 10px;
       right: 15px;
       list-style: none; }
       .card .header .header-dropdown .dropdown-menu li {
@@ -3096,7 +3096,7 @@ section.content {
     .card .body .col-sm-12,
     .card .body .col-md-12,
     .card .body .col-lg-12 {
-      margin-bottom: 20px; }
+      margin-bottom: 3px; }
       .card .card-action:last-child {
         border-radius: 0 0 2px 2px;
     }
@@ -7671,7 +7671,7 @@ fieldset[disabled] .form-control {
         vertical-align: middle;
         text-align: left;
         width: 100%;
-        padding: 10px 13px; }
+        padding: 6px 13px; }
         .sidebar .menu .list a:hover, .sidebar .menu .list a:active, .sidebar .menu .list a:focus {
           text-decoration: none !important; }
         .sidebar .menu .list a small {

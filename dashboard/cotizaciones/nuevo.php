@@ -472,6 +472,73 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 								</div>
 								<div class="row">
 									<div class="col-lg-12 col-md-12">
+										<h4>Viaticos</h4>
+									</div>
+									<div class="col-lg-12 col-md-12">
+										<table>
+											<thead>
+												<th>Recursos Necesarios</th>
+												<th>Cantidad</th>
+												<th>Sub-Total</th>
+											</thead>
+											<tbody>
+												<tr>
+													<td>J - Cantidad Técnicos</td>
+													<td><input type="number" name="viaticosj" id="viaticosj" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticoj"></span></td>
+												</tr>
+												<tr>
+													<td>K - Cantidad Técnicos Esp.</td>
+													<td><input type="number" name="viaticosk" id="viaticosk" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticok"></span></td>
+												</tr>
+												<tr>
+													<td>L - KM Recorridos</td>
+													<td><input type="number" name="viaticosl" id="viaticosl" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticol"></span></td>
+												</tr>
+												<tr>
+													<td>M - Cant. Días de Trabajo</td>
+													<td><input type="number" name="viaticosm" id="viaticosm" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticom"></span></td>
+												</tr>
+												<tr>
+													<td>N - Kangoo</td>
+													<td><input type="number" name="viaticosn" id="viaticosn" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticon"></span></td>
+												</tr>
+												<tr>
+													<td>O - Master</td>
+													<td><input type="number" name="viaticoso" id="viaticoso" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticoo"></span></td>
+												</tr>
+												<tr>
+													<td>P - Camión chasis</td>
+													<td><input type="number" name="viaticosp" id="viaticosp" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticop"></span></td>
+												</tr>
+												<tr>
+													<td>R - Camión semi</td>
+													<td><input type="number" name="viaticosr" id="viaticosr" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticor"></span></td>
+												</tr>
+												<tr>
+													<td>S - Horas uso Autoelevador</td>
+													<td><input type="number" name="viaticoss" id="viaticoss" class="conceptoviatico form-control" value="0"/></td>
+													<td>$ <span class="totalviaticos"></span></td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2">Total Viaticos</td>
+													<td>$ <span class="totalviaticos"></span></td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12 col-md-12">
 										<div class="button-demo">
 											<button type="button" class="btn bg-blue waves-effect btnNuevo">
 												<i class="material-icons">save</i>
@@ -593,6 +660,59 @@ $cadRefV 	= $serviciosFunciones->devolverSelectBox($resValidez,array(3),'');
 <script>
 	$(document).ready(function(){
 
+		function calcularViaticoPorConcepto(idconcepto, cantidad, j, k, l, m, n, o, p, r, s, contenedor) {
+			$.ajax({
+				url: '../../ajax/ajax.php',
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: {
+					accion: 'calcularViaticoPorConcepto',
+					idconcepto: idconcepto,
+					cantidad: cantidad,
+					j: j,
+					k: k,
+					l: l,
+					m: m,
+					n: n,
+					o: o,
+					p: p,
+					r: r,
+					s: s
+				},
+				//mientras enviamos el archivo
+				beforeSend: function(){
+
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+					$('.'+contenedor).html(data);
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+					$("#load").html('');
+				}
+			});
+		}
+
+		$('.conceptoviatico').change(function() {
+			calcularViaticoPorConcepto(12,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticoj' );
+
+			calcularViaticoPorConcepto(13,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticok' );
+
+			calcularViaticoPorConcepto(14,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticol' );
+
+			calcularViaticoPorConcepto(15,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticom' );
+
+			calcularViaticoPorConcepto(16,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticon' );
+
+			calcularViaticoPorConcepto(17,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticoo' );
+
+			calcularViaticoPorConcepto(18,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticop' );
+
+			calcularViaticoPorConcepto(19,1, $('#viaticosj').val(),$('#viaticosk').val(),$('#viaticosl').val(),$('#viaticosm').val(),$('#viaticosn').val(),$('#viaticoso').val(),$('#viaticosp').val(),$('#viaticosr').val(), $('#viaticoss').val(), 'totalviaticor' );
+		});
 
 
 		$(".button-demo").on("click",'.btnPreview', function(){

@@ -9,6 +9,33 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReferencias {
 
+	function calcularViaticoPorConcepto($idconcepto, $cantidad, $j, $k, $l, $m, $n, $o, $p, $r, $s) {
+		$sql = "select
+						cv.valor, cv.formula
+					from		dbconceptosviaticos cv
+					inner
+					join		dbconceptos c
+					on			cv.refconceptos = c.idconcepto
+					where		c.idconcepto = ".$idconcepto;
+		$res = $this->query($sql,0);
+
+		$nuevaFormula = '';
+
+		if (mysql_num_rows($res)>0) {
+			$valor = mysql_result($res,0,0);
+			$formula = mysql_result($res,0,1);
+
+			$nuevaFormula = str_replace('J',$j,str_replace('K',$k,str_replace('L',$l,str_replace('M',$m,str_replace('N',$n,str_replace('O',$o,str_replace('P',$p,str_replace('R',$r,str_replace('S',$s,$formula)))))))));
+
+			$nuevaFormula = $nuevaFormula.$valor;
+
+			$sqlFormula =  'select round('.$nuevaFormula.',2)';
+			$resultado = mysql_result($this->query($sqlFormula,0),0,0);
+			return $resultado;
+		}
+
+		return 0;
+	}
 
 function traerPrecioPorIdConcepto($idconcepto, $idcliente) {
 	$resEstadoCliente = $this->traerClienteestadosPorCliente($idcliente);
